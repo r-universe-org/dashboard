@@ -120,9 +120,12 @@ $(function(){
 				var pkglink = $("<a>").text(pkg.package).
 					attr("href", src.builder ? src.builder.upstream : undefined).
 					attr("target", "_blank");
+				if(src.builder){
 				tbody.append(tr([published, pkg.user, pkglink, pkg.version, pkg.maintainer, docs_icon(info), run_icon(src),
 					builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
-				
+				} else {
+					console.log("Not listing old version: " + name + " " + pkg.version )
+				}
 			});
 		}).catch(alert).then(function(x){
 			var defs = [{
