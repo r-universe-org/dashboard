@@ -98,43 +98,35 @@ Date.prototype.yyyymmdd = function() {
 
 $(function(){
 	let tbody = $("tbody");
-	var jobs = {};
-	get_json('https://dev.ropensci.org/api/json').then(function(jenkins){
-		jenkins.jobs.forEach(function(x){
-			jobs[x.name.toLowerCase()] = x;
+	get_ndjson('https://cran.dev/:any/stats/checks?limit=500').then(function(cranlike){
+		cranlike.forEach(function(pkg){
+			//console.log(pkg)
+			var name = pkg.package;
+			var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
+			var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
+			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
+			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '3.6') || {};
+			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '3.6') || {};
+			var published = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.timestamp * 1000 || NaN)).yyyymmdd();
+			var builddate = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.date * 1000 || NaN)).yyyymmdd();
+			var sysdeps = make_sysdeps(src.builder);
+			var pkglink = $("<a>").text(pkg.package).
+				attr("href", src.builder ? src.builder.upstream : undefined).
+				attr("target", "_blank");
+			if(src.builder){
+			tbody.append(tr([published, pkg.user, pkglink, pkg.version, pkg.maintainer, run_icon(src),
+				builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
+			} else {
+				console.log("Not listing old version: " + name + " " + pkg.version )
+			}
 		});
-	}).finally(function(){
-		get_ndjson('https://cran.dev/:any/stats/checks').then(function(cranlike){
-			cranlike.forEach(function(pkg){
-				//console.log(pkg)
-				var name = pkg.package;
-				var info = jobs[name.toLowerCase()] || {};
-				var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
-				var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
-				var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
-				var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '3.6') || {};
-				var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '3.6') || {};
-				var published = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.timestamp * 1000 || NaN)).yyyymmdd();
-				var builddate = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.date * 1000 || NaN)).yyyymmdd();
-				var sysdeps = make_sysdeps(src.builder);
-				var pkglink = $("<a>").text(pkg.package).
-					attr("href", src.builder ? src.builder.upstream : undefined).
-					attr("target", "_blank");
-				if(src.builder){
-				tbody.append(tr([published, pkg.user, pkglink, pkg.version, pkg.maintainer, docs_icon(info), run_icon(src),
-					builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
-				} else {
-					console.log("Not listing old version: " + name + " " + pkg.version )
-				}
-			});
-		}).catch(alert).then(function(x){
-			var defs = [{
-				targets: [5, 6, 8, 9],
-				className: 'dt-body-center',
-				orderable: false
-			}];
-			$("table").DataTable({pageLength: 100, fixedHeader: true, columnDefs: defs, order: [[ 0, "desc" ]]});
-			//$('div.dataTables_filter').appendTo("thead").css('margin-bottom', '-80px').css('padding', 0).css('float', 'right');
-		});
+	}).catch(alert).then(function(x){
+		var defs = [{
+			targets: [5, 6, 7, 8],
+			className: 'dt-body-center',
+			orderable: false
+		}];
+		$("table").DataTable({pageLength: 100, fixedHeader: true, columnDefs: defs, order: [[ 0, "desc" ]]});
+		//$('div.dataTables_filter').appendTo("thead").css('margin-bottom', '-80px').css('padding', 0).css('float', 'right');
 	});
 });
