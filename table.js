@@ -98,7 +98,7 @@ Date.prototype.yyyymmdd = function() {
 
 $(function(){
 	let tbody = $("tbody");
-	get_ndjson('https://r-universe.dev/:any/stats/checks?limit=500').then(function(cranlike){
+	get_ndjson('https://r-universe.dev/:any/stats/checks?limit=1000').then(function(cranlike){
 		cranlike.forEach(function(pkg){
 			//console.log(pkg)
 			var name = pkg.package;
