@@ -9,38 +9,93 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
-	<link rel="stylesheet", href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
-	<title>Status Board</title>
+	<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+	<link rel="stylesheet" href="https://getbootstrap.com/docs/4.5/examples/dashboard/dashboard.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <title>Status Board</title>
 </head>
 <body>
-	<table class="table display compact">
-		<thead>
-			<tr>
-				<th scope="col">Published</th>
-				<th scope="col">Organization</th>
-				<th scope="col">Package</th>
-				<th scope="col">Version</th>
-				<th scope="col">Maintainer</th>
-				<th scope="col">Src</th>
-				<th scope="col">Built</th>
-				<th scope="col">R-4.0</th>
-				<th scope="col">R-3.6</th>
-				<th scope="col">System Dependencies</th>
-			</tr>
-		</thead>
-		<tbody>
+  <div class="container-fluid">
+    <div class="row">
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <div class="sidebar-sticky pt-3">
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Dashboard</span>
+          </h6>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">
+                <span data-feather="home"></span>
+                Builds
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="file"></span>
+                Organizations
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="shopping-cart"></span>
+                Maintainers
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="users"></span>
+                System Libraries
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="bar-chart-2"></span>
+                Dependencies
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="layers"></span>
+                Metrics
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-		</tbody>
-	</table>
+      <main role="main" class="col-sm-12 main">
+       <table class="table display compact">
+         <thead>
+          <tr>
+           <th scope="col">Published</th>
+           <th scope="col">Organization</th>
+           <th scope="col">Package</th>
+           <th scope="col">Version</th>
+           <th scope="col">Maintainer</th>
+           <th scope="col">Src</th>
+           <th class="text-nowrap" scope="col">Build date</th>
+           <th class="text-nowrap" scope="col">R-4.0</th>
+           <th class="text-nowrap" scope="col">R-3.6</th>
+           <th scope="col">System Dependencies</th>
+         </tr>
+       </thead>
+       <tbody></tbody>
+     </table>
+   </main>
+ </div>
+</div>
 
-	<!-- Optional JavaScript -->
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
-	<script src="https://cdn.datatables.net/plug-ins/1.10.21/filtering/type-based/accent-neutralise.js"></script>
-	<script src="table.js"></script>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.21/filtering/type-based/accent-neutralise.js"></script>
+<script src="table.js"></script>
+<script>feather.replace()</script>
 </body>
 </html>

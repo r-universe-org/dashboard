@@ -126,7 +126,13 @@ $(function(){
 			className: 'dt-body-center',
 			orderable: false
 		}];
-		$("table").DataTable({pageLength: 100, fixedHeader: true, columnDefs: defs, order: [[ 0, "desc" ]]});
+		$("table").DataTable({
+			pageLength: 100,
+			lengthChange: false,
+			fixedHeader: true,
+			columnDefs: defs,
+			order: [[ 0, "desc" ]]
+		});
 		//$('div.dataTables_filter').appendTo("thead").css('margin-bottom', '-80px').css('padding', 0).css('float', 'right');
 	});
 });
