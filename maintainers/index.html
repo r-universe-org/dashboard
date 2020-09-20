@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="maintainers.css">
+    <link rel="stylesheet" href="../dashboard.css">
+    <title>Status Board</title>
+</head>
+<body>
+
+<!-- Bootstrap row -->
+<div class="row" id="body-row">
+    <!-- Sidebar -->
+    <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+        <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
+        <!-- Bootstrap List Group -->
+        <ul class="sticky-top sticky-offset list-group">
+            <!-- Separator with title -->
+            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <small>PACKAGES</small>
+            </li>
+
+            <a href="../builds" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-rocket fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Builds</span>
+                </div>
+            </a>
+
+            <a href="../organizations" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-sitemap fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Organizations</span>
+                </div>
+            </a>
+
+            <a href="../maintainers" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-user-friends fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Maintainers</span>
+                </div>
+            </a>
+
+            <!-- Separator with title -->
+            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <small>METRICS</small>
+            </li>
+            <!-- /END Separator -->
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-project-diagram fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Dependencies</span>
+                </div>
+            </a>
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-cog fa-fw mr-3"></span>
+                    <span class="menu-collapsed">System Libraries</span>
+                </div>
+            </a>
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-calendar fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Citations</span>
+                </div>
+            </a>
+
+            <!-- Separator without title -->
+            <li class="list-group-item sidebar-separator menu-collapsed"></li>
+            <!-- /END Separator -->
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action disabled">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-question fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Help</span>
+                </div>
+            </a>
+            <a href="#top" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span id="collapse-icon" class="fa fa-2x mr-3"></span>
+                    <span id="collapse-text" class="menu-collapsed">Collapse</span>
+                </div>
+            </a>
+        </ul><!-- List Group END-->
+    </div><!-- sidebar-container END -->
+    <!-- MAIN -->
+    <div class="col p-4">
+        <div class="container-flex">
+            <div id="maintainer-profile-list" class="row el-element-overlay"></div>
+        </div>
+    </div><!-- Main Col END -->
+</div><!-- body-row END -->
+
+<div id="templatezone" class="d-none">
+    <div class="maintainer-profile col-xl-2 col-lg-3 col-md-4 col-4">
+        <div class="card border">
+            <div class="el-card-item">
+                <div class="el-card-avatar el-overlay-1">
+                    <img src="https://i.imgur.com/do14eYc.jpg" class="lazyload maintainer-image" alt="user">
+                    <div class="el-overlay">
+                        <span class="badge badge-dark border float-right p-1 m-2 maintainer-packages"></span>
+                        <p class="float-left maintainer-organizations"></p>
+                        <ul class="list-style-none el-info">
+                            <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                            <li class="el-item"><a class="btn default btn-outline el-link maintainer-homepage" href="javascript:void(0);"><i class="fa fa-link" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="el-card-content pb-2">
+                    <h5 class="maintainer-name m-0"></h5>
+                    <p class="card-text">
+                        <small class="maintainer-more text-muted"></small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+<script src="../dashboard.js"></script>
+<script src="maintainers.js"></script>
+
+</body>
+</html>

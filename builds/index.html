@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="../dashboard.css">
+    <title>Status Board</title>
+</head>
+<body>
+
+<!-- Bootstrap row -->
+<div class="row" id="body-row">
+    <!-- Sidebar -->
+    <div id="sidebar-container" class="fixed-top sidebar-expanded d-none d-md-block">
+        <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
+        <!-- Bootstrap List Group -->
+        <ul class="list-group">
+            <!-- Separator with title -->
+            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <small>PACKAGES</small>
+            </li>
+
+            <a href="../builds" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-rocket fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Builds</span>
+                </div>
+            </a>
+
+            <a href="../organizations" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-sitemap fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Organizations</span>
+                </div>
+            </a>
+
+            <a href="../maintainers" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-user-friends fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Maintainers</span>
+                </div>
+            </a>
+
+            <!-- Separator with title -->
+            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <small>METRICS</small>
+            </li>
+            <!-- /END Separator -->
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-project-diagram fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Dependencies</span>
+                </div>
+            </a>
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-cog fa-fw mr-3"></span>
+                    <span class="menu-collapsed">System Libraries</span>
+                </div>
+            </a>
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-calendar fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Citations</span>
+                </div>
+            </a>
+
+            <!-- Separator without title -->
+            <li class="list-group-item sidebar-separator menu-collapsed"></li>
+            <!-- /END Separator -->
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action disabled">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-question fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Help</span>
+                </div>
+            </a>
+            <a href="#top" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span id="collapse-icon" class="fa fa-2x mr-3"></span>
+                    <span id="collapse-text" class="menu-collapsed">Collapse</span>
+                </div>
+            </a>
+        </ul><!-- List Group END-->
+    </div><!-- sidebar-container END -->
+
+    <!-- MAIN -->
+    <div id="table-container" class="table-expanded col">
+        <table class="table compact">
+            <thead><tr>
+                <th scope="col">Published</th>
+                <th scope="col">Organization</th>
+                <th scope="col">Package</th>
+                <th scope="col">Version</th>
+                <th scope="col">Maintainer</th>
+                <th scope="col">Src</th>
+                <th class="text-nowrap" scope="col">Build date</th>
+                <th class="text-nowrap" scope="col">R-4.0</th>
+                <th class="text-nowrap" scope="col">R-3.6</th>
+                <th scope="col">System Dependencies</th>
+            </tr></thead>
+            <tbody></tbody>
+        </table>
+    </div><!-- Main Col END -->
+</div><!-- body-row END -->
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.21/filtering/type-based/accent-neutralise.js"></script>
+<script src="../dashboard.js"></script>
+<script src="table.js"></script>
+
+</body>
+</html>

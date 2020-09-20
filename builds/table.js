@@ -38,7 +38,7 @@ function run_icon(run){
 		mac : "apple"
 	};
 	if(run && run.builder){
-		var i = $("<i>", {class : 'fa fa-' + iconmap[run.type]});
+		var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
 		var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
 		 // can be "success" or "Succeeded"
 		if(run.builder.status.match(/succ/i)){
@@ -98,7 +98,7 @@ Date.prototype.yyyymmdd = function() {
 
 $(function(){
 	let tbody = $("tbody");
-	get_ndjson('https://r-universe.dev/:any/stats/checks?limit=1000').then(function(cranlike){
+	get_ndjson('https://r-universe.dev/:any/stats/checks?limit=500').then(function(cranlike){
 		cranlike.forEach(function(pkg){
 			//console.log(pkg)
 			var name = pkg.package;
@@ -126,7 +126,13 @@ $(function(){
 			className: 'dt-body-center',
 			orderable: false
 		}];
-		$("table").DataTable({pageLength: 100, fixedHeader: true, columnDefs: defs, order: [[ 0, "desc" ]]});
+		window.table = $("table").DataTable({
+			paging: false,
+			lengthChange: false,
+			fixedHeader: true,
+			columnDefs: defs,
+			order: [[ 0, "desc" ]]
+		});
 		//$('div.dataTables_filter').appendTo("thead").css('margin-bottom', '-80px').css('padding', 0).css('float', 'right');
 	});
 });
