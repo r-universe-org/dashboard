@@ -6,6 +6,7 @@ $(function(){
 		  return 0;
 		}
 		x.sort(order).forEach(function(org){
+			if(org.organization == 'test') return;
 			var profile = $("#templatezone .organization-profile").clone();
 			profile.find(".organization-image").attr('data-src', 'https://github.com/' + org.organization + ".png")
 			profile.find(".organization-homepage").attr('href', 'https://github.com/' + org.organization)
