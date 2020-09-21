@@ -1,11 +1,26 @@
+/* Combine maintainers with multiple emails, based on Github login (if known) */ 
+function combine_duplicates(maintainer){
+	var list = {};
+	maintainer.forEach(function(x){
+		var key = x.login || x.email;
+		if(list[key]){
+			list[key].packages = list[key].packages.concat(x.packages);
+			list[key].email = list[key].email + "\n" + x.email;
+		} else {
+			list[key] = x;
+		}
+	});
+	return Object.keys(list).map(key => list[key]);
+}
+
 $(function(){
 	get_ndjson('https://r-universe.dev/:any/stats/maintainers').then(function(x){
 		function order( a, b ) {
-		  if(a.packages.length < b.packages.length) return 1;
-		  if(a.packages.length > b.packages.length) return -1;
-		  return 0;
+			if(a.packages.length < b.packages.length) return 1;
+			if(a.packages.length > b.packages.length) return -1;
+			return 0;
 		}
-		x.sort(order).forEach(function(maintainer){
+		combine_duplicates(x).sort(order).forEach(function(maintainer){
 			var organizations = {};
 			maintainer.packages.forEach(function(pkg){
 				if(pkg.user == 'test') return;
