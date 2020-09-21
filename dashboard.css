@@ -2,6 +2,10 @@ body {
   font-size: .875rem; 
 }
 
+#sidebar-container .fa {
+  font-size: 1rem;
+}
+
 #body-row {
     margin-left:0;
     margin-right:0;
