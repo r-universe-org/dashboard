@@ -13,17 +13,12 @@ $(function(){
 				organization = organization.split("_")[0];
 				profile.find(".organization-homepage").attr('href', 'https://gitlab.com/' + organization);
 				profile.find(".organization-name").text(organization + "@gitlab");
-				$.get("https://gitlab.com/api/v4/users?username=" + organization, function(res) {
-					if(res.length){
-						var url = res[0].avatar_url.replace(/s=\d+/, 's=400');
-						profile.find(".organization-image").attr('src', url);
-					} else {
-						$.get("https://gitlab.com/api/v4/groups/" + organization, function(res) {
-							var url = res.avatar_url.replace(/s=\d+/, 's=400');
-							profile.find(".organization-image").attr('src', url);
-						});
-					}
-				});
+				function set_org_image(res){
+					if(!res || !res.avatar_url) return;
+					profile.find(".organization-image").attr('src', res.avatar_url.replace(/s=\d+/, 's=400'));
+				}
+				$.get("https://gitlab.com/api/v4/users?username=" + organization, res => set_org_image(res[0]));
+				$.get("https://gitlab.com/api/v4/groups/" + organization, res => set_org_image(res));
 			} else {
 				profile.find(".organization-image").attr('data-src', 'https://github.com/' + organization + ".png");
 				profile.find(".organization-homepage").attr('href', 'https://github.com/' + organization);
