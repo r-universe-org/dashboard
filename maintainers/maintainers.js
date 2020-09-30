@@ -5,7 +5,7 @@ function combine_duplicates(maintainer){
 		var key = x.login || x.email;
 		if(list[key]){
 			list[key].packages = list[key].packages.concat(x.packages);
-			list[key].email = list[key].email + "\n" + x.email;
+			list[key].email = list[key].email + "<br/>" + x.email;
 		} else {
 			list[key] = x;
 		}
@@ -33,12 +33,17 @@ $(function(){
 				profile.find(".maintainer-homepage").attr('href', 'https://github.com/' + login)
 			}
 			profile.find(".maintainer-name").text(maintainer.name);
-			profile.find(".maintainer-more").text(maintainer.email);
+			profile.find(".maintainer-more").append(maintainer.email);
 			var total = 0;
 			for (const [org, count] of Object.entries(organizations)) {
 				total = total + count;
 				if(login.toLowerCase() != org.toLowerCase()){
-					var icon = $("<img/>").addClass("lazyload maintainer-org-icon border border-light rounded m-2").attr('src', 'https://github.com/' + org + ".png?size=60").width(30);
+					if(org.includes("gitlab.com")){
+						var url = "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg";
+					} else {
+						var url = 'https://github.com/' + org + ".png?size=60";
+					}
+					var icon = $("<img/>").addClass("lazyload maintainer-org-icon border border-light rounded m-2").attr('src', url).width(30);
 					profile.find(".maintainer-organizations").append(icon);
 				}		
 			}
