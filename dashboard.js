@@ -33,7 +33,7 @@ $(function(){
         $('.sidebar-submenu').toggleClass('d-none');
         $('.submenu-icon').toggleClass('d-none');
         $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
-        $('#table-container').toggleClass('table-expanded table-collapsed');
+        $('#content-container').toggleClass('content-expanded content-collapsed');
 
         // Treating d-flex/d-none on separators with title
         var SeparatorTitle = $('.sidebar-separator-title');

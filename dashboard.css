@@ -25,10 +25,10 @@ body {
 }
 
 @media (min-width: 768px) {
-  .table-expanded {
+  .content-expanded {
       margin-left: 230px;
   }
-  .table-collapsed {
+  .content-collapsed {
       margin-left: 60px;
   }
 }
