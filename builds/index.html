@@ -105,7 +105,7 @@
                 <th class="text-nowrap" scope="col">R-3.6</th>
                 <th scope="col">System Dependencies</th>
             </tr></thead>
-            <tbody></tbody>
+            <tbody id="packages-table-body"></tbody>
         </table>
     </div><!-- Main Col END -->
 </div><!-- body-row END -->
@@ -119,7 +119,12 @@
 <script src="https://cdn.datatables.net/fixedheader/3.1.7/js/dataTables.fixedHeader.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.21/filtering/type-based/accent-neutralise.js"></script>
 <script src="../dashboard.js"></script>
-<script src="table.js"></script>
+<script src="../table.js"></script>
+<script>
+$(function(){
+    init_packages_table()
+});
+</script>
 
 </body>
 </html>

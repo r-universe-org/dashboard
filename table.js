@@ -96,9 +96,10 @@ Date.prototype.yyyymmdd = function() {
 	}
 };
 
-$(function(){
-	let tbody = $("tbody");
-	get_ndjson('https://r-universe.dev/:any/stats/checks?limit=300').then(function(cranlike){
+function init_packages_table(org = ":any", maintainer = ""){
+	let tbody = $("#packages-table-body");
+	var checkurl = 'https://r-universe.dev/' + org + '/stats/checks?limit=300&maintainer=' + maintainer;
+	get_ndjson(checkurl).then(function(cranlike){
 		cranlike.forEach(function(pkg){
 			//console.log(pkg)
 			var name = pkg.package;
@@ -135,4 +136,4 @@ $(function(){
 		});
 		//$('div.dataTables_filter').appendTo("thead").css('margin-bottom', '-80px').css('padding', 0).css('float', 'right');
 	});
-});
+};
