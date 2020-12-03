@@ -118,12 +118,14 @@ install.packages('curl', repos = 'https://jeroen.r-universe.dev')</code></pre>
 
         <p class="lead my-3">Or enable a universe globally:</p>
 
-        <pre><code class="language-r"># Enable the 'ropensci' universe globally
-repos <- getOption('repos')
-options(repos = c(ropensci = 'https://ropensci.r-universe.dev', repos))
+        <pre><code class="language-r"># Enable multiple universes
+options(repos = c(
+    ropensci = 'https://ropensci.r-universe.dev',
+    jeroen = 'https://jeroen.r-universe.dev',
+    cran = 'https://cran.r-project.org'))
 
 # Update some packages
-install.packages(c("magick", "pdftools", "drake"))</code></pre>
+install.packages(c("magick", "openssl", "pdftools", "drake"))</code></pre>
 
 
         <p class="lead my-3">Package source code for all universes is tracked on <a href="https://github.com/r-universe">https://github.com/r-universe</a>.</p>
@@ -131,15 +133,26 @@ install.packages(c("magick", "pdftools", "drake"))</code></pre>
         <h2 class="display-5 font-italic border-bottom"><span class="fa fa-satellite-dish fa-fw m-2"></span>Enable your universe</h2>
 
         <div class = "lead">
-        <p>To setup a universe for your own GitHub user or organization:</p>
-        <ol>
-            <li>Install the <a href="https://github.com/apps/r-universe/installations/new">r-universe app</a> on the GitHub account that you want to enable.</li>
-            <li>After a few minutes, your source universe will appear on: <tt>https://github.com/r-universe/:yourname</tt></li>
-            <li>This universe will automatically add all CRAN packages that are <a href="https://github.com/r-universe-org/cran-to-git">listed under that GitHub account</a>. In addition, it will include packages that referenced as <tt>Remotes</tt> in the description file of one of those packages.</li>
-            <li>The universe automatically syncs and builds your package git repos once per hour.</li>
-        </ol>
+            <p>To setup a universe for your own GitHub user or organization:</p>
+            <ol>
+                <li>Install the <a href="https://github.com/apps/r-universe/installations/new">r-universe app</a> on the GitHub account that you want to enable.</li>
+                <li>After a few minutes, your source universe will appear on: <tt>https://github.com/r-universe/:yourname</tt></li>
+                <li>This universe will automatically add all CRAN packages that are <a href="https://github.com/r-universe-org/cran-to-git">listed under that GitHub account</a>. In addition, it will include packages that referenced as <tt>Remotes</tt> in the description file of one of those packages.</li>
+                <li>The universe automatically syncs and builds your package git repos once per hour.</li>
+            </ol>
+        </div>
+
+        <h2 class="display-5 font-italic border-bottom"><span class="fa fa-meteor fa-fw m-2"></span>FAQ</h2>
+
+        <div class = "lead">
+            <ul>
+                <li><strong>How do I change my <a href="../maintainers">maintainer picture</a>?</strong> — <i>They are taken from your GitHub profile. If no picture shows up, you need to register the email address that you use as R package maintainer in <a href="https://github.com/settings/emails">your github settings</a>.</i></li>.
+            </ul>
+        </div>
+
+
+
     </div>
-</div>
 </div><!-- body-row END -->
 
 
