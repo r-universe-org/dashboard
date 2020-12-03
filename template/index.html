@@ -46,39 +46,52 @@
                 </div>
             </a>
 
+            <!-- Separator without title -->
+            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+                <small>PARTICIPATE</small>
+            </li>
+            <!-- /END Separator -->
+
+            <a href="https://github.com/apps/r-universe/installations/new" target="_blank" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fab fa-github fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Setup</span>
+                </div>
+            </a>
+
+            <a href="../help" class="bg-dark list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-start align-items-center">
+                    <span class="fa fa-question fa-fw mr-3"></span>
+                    <span class="menu-collapsed">Help</span>
+                </div>
+            </a>
+
             <!-- Separator with title -->
             <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
                 <small>METRICS</small>
             </li>
             <!-- /END Separator -->
-            <a href="#" class="bg-dark list-group-item list-group-item-action">
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-start align-items-center">
                     <span class="fa fa-project-diagram fa-fw mr-3"></span>
                     <span class="menu-collapsed">Dependencies</span>
                 </div>
             </a>
-            <a href="#" class="bg-dark list-group-item list-group-item-action">
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-start align-items-center">
                     <span class="fa fa-cog fa-fw mr-3"></span>
                     <span class="menu-collapsed">System Libraries</span>
                 </div>
             </a>
-            <a href="#" class="bg-dark list-group-item list-group-item-action">
+            <a href="#" class="disabled bg-dark list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-start align-items-center">
                     <span class="fa fa-calendar fa-fw mr-3"></span>
                     <span class="menu-collapsed">Citations</span>
                 </div>
             </a>
 
-            <!-- Separator without title -->
             <li class="list-group-item sidebar-separator menu-collapsed"></li>
-            <!-- /END Separator -->
-            <a href="#" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-question fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Help</span>
-                </div>
-            </a>
+
             <a href="#top" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
                 <div class="d-flex w-100 justify-content-start align-items-center">
                     <span id="collapse-icon" class="fa fa-2x mr-3"></span>
@@ -88,19 +101,41 @@
         </ul><!-- List Group END-->
     </div><!-- sidebar-container END -->
     <!-- MAIN -->
-    <div class="col p-4">
-        <h1 class="display-4">Collapsing Sidebar Menu</h1>
-        <div class="card">
-            <h5 class="card-header font-weight-light">Requirements</h5>
-            <div class="card-body">
-                <ul>
-                    <li>JQuery</li>
-                    <li>Bootstrap 4.3</li>
-                    <li>FontAwesome</li>
-                </ul>
-            </div>
-        </div>
-    </div><!-- Main Col END -->
+
+    <div class="col p-4 m-4">
+    <div class="col-md-12 px-0">
+        <h1 class="display-4 font-italic border-bottom">Welcome to R universe!</h1>
+        <p class="lead my-3">We are running a pilot based on selected GitHub users and organizations that have existing CRAN packages.</p>
+
+      <pre><code class="language-r"># Install 'magick' from 'ropensci' universe
+install.packages('magick', repos = 'https://ropensci.r-universe.dev')
+
+# Install 'curl' from 'jeroen' universe
+install.packages('curl', repos = 'https://jeroen.r-universe.dev')
+</code></pre>
+
+        <p class="lead my-3">Or enable a universe globally:</p>
+
+      <pre><code class="language-r"># Enable the 'ropensci' universe
+options(repos = c(ropensci = 'https://ropensci.r-universe.dev', getOption("repos")))
+
+# Install some packages
+install.packages(c("magick", "pdftools", "drake"))
+</code></pre>
+
+
+        <p class="lead my-3">The source code for all packages in all universes is tracked on <a href="https://github.com/r-universe">https://github.com/r-universe</a>.</p>
+
+        <h2 class="display-5 font-italic border-bottom">Join the pilot</h2>
+    </div>
+</div>
+
+
+
+
+
+
+</div>
 </div><!-- body-row END -->
 
 
@@ -108,6 +143,9 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
 <script src="../dashboard.js"></script>
 
 </body>
