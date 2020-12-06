@@ -22,6 +22,7 @@ $(function(){
 			} else {
 				profile.find(".organization-image").attr('data-src', 'https://github.com/' + organization + ".png");
 				profile.find(".organization-homepage").attr('href', 'https://github.com/' + organization);
+				profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + organization);
 				profile.find(".organization-name").text(organization);
 			}
 			//profile.find(".maintainer-more").text(maintainer.email);
