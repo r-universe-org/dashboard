@@ -14,7 +14,7 @@ function combine_duplicates(maintainer){
 }
 
 $(function(){
-	get_ndjson('https://r-universe.dev/:any/stats/maintainers').then(function(x){
+	get_ndjson('https://r-universe.dev/stats/maintainers').then(function(x){
 		function order( a, b ) {
 			if(a.packages.length < b.packages.length) return 1;
 			if(a.packages.length > b.packages.length) return -1;

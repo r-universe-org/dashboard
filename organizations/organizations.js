@@ -1,5 +1,5 @@
 $(function(){
-	get_ndjson('https://r-universe.dev/:any/stats/organizations').then(function(x){
+	get_ndjson('https://r-universe.dev/stats/organizations').then(function(x){
 		function order( a, b ) {
 		  if(a.packages.length < b.packages.length) return 1;
 		  if(a.packages.length > b.packages.length) return -1;
