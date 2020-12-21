@@ -108,7 +108,19 @@
 
         <h1 class="display-4 font-italic border-bottom"><span class="fa fa-user-astronaut fa-fw ml-3"></span> Welcome to R-universe! </h1>
 
-        <p class="lead my-3">We are running a pilot based on GitHub users and organizations with existing CRAN packages.</p>
+        <p class="lead my-3">Thank you for installing the R-universe app. What happens next?</p>
+
+        <h2 class="display-5 font-italic border-bottom"><span class="fa fa-satellite-dish fa-fw m-2"></span>Your Universe</h2>
+
+       <div class = "lead">
+            <ol>
+                <li>In a few minutes, your source universe will appear on: <a href="https://github.com/r-universe/"><tt>https://github.com/r-universe/:yourname</tt></a>, where "yourname" is the GitHub user or organization where the GitHub app was installed.</li>
+                <li>This universe will automatically add all existing CRAN packages that <a href="https://github.com/r-universe-org/cran-to-git">reference this GitHub user or organization</a>. In addition, it will include packages that listed as <tt>Remotes</tt> in the description file of one of these packages.</li>
+                <li>The universe automatically syncs and builds your package git repos once per hour.</li>
+            </ol>
+        </div> 
+
+        <div class = "lead">The packages automatically become available on the package repository under your own subdomain <tt>https://yourname.r-universe.dev</tt></div>      
 
         <pre><code class="language-r"># Install 'magick' from 'ropensci' universe
 install.packages('magick', repos = 'https://ropensci.r-universe.dev')
@@ -127,34 +139,8 @@ options(repos = c(
 # Update some packages
 install.packages(c("magick", "openssl", "pdftools", "drake"))</code></pre>
 
-
-        <p class="lead my-3">Package source code for all universes is tracked on <a href="https://github.com/r-universe">https://github.com/r-universe</a>.</p>
-
-        <h2 class="display-5 font-italic border-bottom"><span class="fa fa-satellite-dish fa-fw m-2"></span>Enable your universe</h2>
-
-        <div class = "lead">
-            <p>To setup a universe for your own GitHub user or organization:</p>
-            <ol>
-                <li>Install the <a href="https://github.com/apps/r-universe/installations/new">r-universe app</a> on the GitHub account that you want to enable.</li>
-                <li>After a few minutes, your source universe will appear on: <tt>https://github.com/r-universe/:yourname</tt></li>
-                <li>This universe will automatically add all CRAN packages that are <a href="https://github.com/r-universe-org/cran-to-git">listed under that GitHub account</a>. In addition, it will include packages that referenced as <tt>Remotes</tt> in the description file of one of those packages.</li>
-                <li>The universe automatically syncs and builds your package git repos once per hour.</li>
-            </ol>
-        </div>
-
-        <h2 id="FAQ" class="display-5 font-italic border-bottom"><span class="fa fa-meteor fa-fw m-2"></span>FAQ</h2>
-
-        <div class = "lead">
-            <ul>
-                <li><strong><i>How do I change my <a href="../maintainers">maintainer picture</a>?</i></strong> — <small>They are taken from your GitHub profile. If no picture shows up, you need to register the email address that you use as R package maintainer in <a href="https://github.com/settings/emails">your github settings</a>.</small></li>
-                <li><strong><i>How do I add my packages to r-universe?</i></strong> — <small>Install the <a href="https://github.com/apps/r-universe/installations/new">app</a> on the GitHub accounts that contain your R packages. The system will automatically start adding existing CRAN packages that contain a link to a GitHub repo in the package description URL or BugReports field.</small></li>
-                <li><strong><i>Can I customize the package build process with custom options/tools/variables?</i></strong> — <small>No. Think of R-universe more like your own mini-CRAN. The build environment is very similar to that of CRAN, if the package can build on CRAN, it will probably work on r-universe.</small></li>
-                <li><strong><i>Are packages on r-universe required to pass CMD check?</i></strong> — <small>No. The system just builds and deploys your R packages from git into your personal universe. You are responsible for your own quality control.</small></li>
-            </ul>
-        </div>
-
-
-
+        <p class="lead my-3">See the <a href="../help#FAQ">FAQ</a> for more information.</p>
+ 
     </div>
 </div><!-- body-row END -->
 
