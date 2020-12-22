@@ -21,7 +21,7 @@ $(function(){
 				$.get("https://gitlab.com/api/v4/groups/" + organization, res => set_org_image(res));
 			} else {
 				profile.find(".organization-image").attr('data-src', 'https://github.com/' + organization + ".png");
-				profile.find(".organization-homepage").attr('href', 'https://github.com/' + organization);
+				profile.find(".organization-homepage").attr('href', 'https://' + organization + '.r-universe.dev');
 				profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + organization);
 				profile.find(".organization-name").text(organization);
 			}
