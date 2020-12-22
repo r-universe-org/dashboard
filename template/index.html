@@ -102,40 +102,19 @@
     </div><!-- sidebar-container END -->
     <!-- MAIN -->
 
-    <div class="col p-4 m-4">
-    <div class="col-md-12 px-0">
-        <h1 class="display-4 font-italic border-bottom">Welcome to R universe!</h1>
-        <p class="lead my-3">We are running a pilot based on selected GitHub users and organizations that have existing CRAN packages.</p>
-
-      <pre><code class="language-r"># Install 'magick' from 'ropensci' universe
-install.packages('magick', repos = 'https://ropensci.r-universe.dev')
-
-# Install 'curl' from 'jeroen' universe
-install.packages('curl', repos = 'https://jeroen.r-universe.dev')
-</code></pre>
-
-        <p class="lead my-3">Or enable a universe globally:</p>
-
-      <pre><code class="language-r"># Enable the 'ropensci' universe
-options(repos = c(ropensci = 'https://ropensci.r-universe.dev', getOption("repos")))
-
-# Install some packages
-install.packages(c("magick", "pdftools", "drake"))
-</code></pre>
-
-
-        <p class="lead my-3">The source code for all packages in all universes is tracked on <a href="https://github.com/r-universe">https://github.com/r-universe</a>.</p>
-
-        <h2 class="display-5 font-italic border-bottom">Join the pilot</h2>
-    </div>
-</div>
-
-
-
-
-
-
-</div>
+    <div class="col p-4">
+        <h1 class="display-4">Collapsing Sidebar Menu</h1>
+        <div class="card">
+            <h5 class="card-header font-weight-light">Requirements</h5>
+            <div class="card-body">
+                <ul>
+                    <li>JQuery</li>
+                    <li>Bootstrap 4.3</li>
+                    <li>FontAwesome</li>
+                </ul>
+            </div>
+        </div>
+    </div><!-- Main Col END -->
 </div><!-- body-row END -->
 
 
