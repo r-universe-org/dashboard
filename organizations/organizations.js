@@ -22,10 +22,10 @@ $(function(){
 			} else {
 				profile.find(".organization-image").attr('data-src', 'https://github.com/' + organization + ".png");
 				profile.find(".organization-homepage").attr('href', 'https://' + organization + '.r-universe.dev');
-				profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + organization);
 				profile.find(".organization-name").text(organization);
 			}
 			//profile.find(".maintainer-more").text(maintainer.email);
+			profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + org.organization);
 			profile.find(".organization-packages").text(org.packages.length + " packages");
 			profile.find(".organization-maintainers").text(org.maintainers.length + " maintainers");
 			profile.appendTo("#organization-profile-list");
