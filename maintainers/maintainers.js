@@ -32,7 +32,7 @@ $(function(){
 				profile.find(".maintainer-image").attr('data-src', 'https://github.com/' + login + ".png")
 				profile.find(".maintainer-homepage").attr('href', 'https://github.com/' + login)
 			}
-			profile.find(".maintainer-name").text(maintainer.name);
+			profile.find(".maintainer-name").text((maintainer.name || "").replace(/^'(.*)'$/, '$1')); //remove quoted names
 			profile.find(".maintainer-more").append(maintainer.email);
 			var total = 0;
 			for (const [org, count] of Object.entries(organizations)) {
