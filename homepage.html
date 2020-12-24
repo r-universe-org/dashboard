@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://r-universe.dev/dashboard.css">
     <style>#sidebar-container{transition: 0.15s;}</style>
     <title>Universe homepage</title>
@@ -97,23 +98,48 @@
     <!-- MAIN -->
     <div class="col p-4">
         <div class="container-flex">
+
             <div class="row el-element-overlay">
 
                 <div class="col-md col-12">
-                    <table class="table table-sm compact">
-                        <thead><tr>
-                            <th scope="col">Commit</th>
-                            <th scope="col">Package</th>
-                            <th scope="col">Version</th>
-                            <th scope="col">Maintainer</th>
-                            <th scope="col">Src</th>
-                            <th class="text-nowrap" scope="col">Build</th>
-                            <th class="text-nowrap" scope="col">R-4.0</th>
-                            <th class="text-nowrap" scope="col">R-3.6</th>
-                            <th scope="col" style="width: 25%">System Dependencies</th>
-                        </tr></thead>
-                        <tbody id="packages-table-body"></tbody>
-                    </table>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Builds</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Packages</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" data-toggle="tab" href="#contact" role="tab">Articles</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel">
+
+
+                            <div class="card-body">
+                                <h3 class="display-5 font-italic">The '<span id="title-universe-name">...</span>' universe</h3>
+                                <pre id="example-install-code" class="border rounded"></pre>
+                            </div>
+                            <table class="table table-sm compact">
+                                <thead><tr>
+                                    <th scope="col">Commit</th>
+                                    <th scope="col">Package</th>
+                                    <th scope="col">Version</th>
+                                    <th scope="col">Maintainer</th>
+                                    <th scope="col">Src</th>
+                                    <th class="text-nowrap" scope="col">Build</th>
+                                    <th class="text-nowrap" scope="col">R-4.0</th>
+                                    <th class="text-nowrap" scope="col">R-3.6</th>
+                                    <th scope="col" style="width: 25%">System Dependencies</th>
+                                </tr></thead>
+                                <tbody id="packages-table-body"></tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                    </div>
                 </div>
                 <div class="col-md-auto col-12">
                     <div style="width:280px;">
@@ -141,7 +167,7 @@
                             </ul>
                         </div>
                         <div class="card mt-3">
-                            <div class="card-header">Maintainers</div>
+                            <div class="card-header"><span class="fa fa-user-astronaut fa-fw mr-3"></span>Maintainers</div>
                             <ul id="maintainer-list" class="list-group list-group-flush"></ul>
                         </div>
                     </div>
@@ -164,6 +190,8 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="homepage/homepage.js"></script>
 </body>
 </html>

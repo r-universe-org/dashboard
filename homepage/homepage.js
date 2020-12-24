@@ -112,9 +112,12 @@ Date.prototype.yyyymmdd = function() {
     }
 };
 
-function init_packages_table(server){
+function init_packages_table(server, user){
     let tbody = $("#packages-table-body");
     get_ndjson(server + '/stats/checks').then(function(cranlike){
+        if(cranlike.length > 0){
+            init_syntax_block(user, cranlike[0].package);
+        }
         cranlike.forEach(function(pkg){
             //console.log(pkg)
             var name = pkg.package;
@@ -140,6 +143,7 @@ function init_packages_table(server){
 };
 
 function init_github_info(user){
+    $("#title-universe-name").text(user);
     $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, user));
     get_json('https://api.github.com/users/' + user).then(function(user){
@@ -194,10 +198,25 @@ function init_maintainer_list(server){
     });
 }
 
+function init_syntax_block(user, package){
+    var template = `# Enable this universe
+options(repos = c(
+    {{opt}} = 'https://{{user}}.r-universe.dev',
+    CRAN = 'https://cloud.r-project.org'))
+
+# Install some packages
+install.packages('{{package}}')`
+    var cleanuser = user.replace(/\W/g, '');
+    var text = template.replace("{{opt}}", cleanuser).replace('{{user}}', user).replace('{{package}}', package);
+    var code = $("<code>").addClass("language-r").text(text).appendTo('#example-install-code');
+    Prism.highlightAll();
+}
+    
 //INIT
+var devtest = 'r-lib'
 var host = location.hostname;
-var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : 'r-lib';
+var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_packages_table(server);
+init_packages_table(server, user);
 init_maintainer_list(server);
 init_github_info(user);
