@@ -111,11 +111,10 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var published = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.timestamp * 1000 || NaN)).yyyymmdd();
 			var builddate = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.date * 1000 || NaN)).yyyymmdd();
 			var sysdeps = make_sysdeps(src.builder);
-			var pkglink = $("<a>").text(pkg.package).
-				attr("href", src.builder ? src.builder.upstream : undefined).
-				attr("target", "_blank");
+			var userlink =  $("<a>").text(pkg.user).
+				attr("href", "https://" + pkg.user + ".r-universe.dev");
 			if(src.builder){
-			tbody.append(tr([published, pkg.user, pkglink, pkg.version, pkg.maintainer, run_icon(src),
+			tbody.append(tr([published, userlink, pkg.package, pkg.version, pkg.maintainer, run_icon(src),
 				builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
 			} else {
 				console.log("Not listing old version: " + name + " " + pkg.version )
