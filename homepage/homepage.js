@@ -219,7 +219,12 @@ function pretty_time_diff(ts){
 function init_package_descriptions(server){
     $('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
-            x.forEach(function(pkg){
+            function order( a, b ) {
+                if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
+                if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
+                return 0;
+            }
+            x.sort(order).forEach(function(pkg, i){
                 //console.log(pkg)
                 var item = $("#templatezone .package-description-item").clone();
                 item.find('.package-name').text(pkg.Package);
@@ -231,7 +236,7 @@ function init_package_descriptions(server){
                 if(pkg['_builder'].maintainerlogin){
                     item.find('.package-image').attr('src', 'https://github.com/' + pkg['_builder'].maintainerlogin + '.png');
                 }
-                item.appendTo('#package-description-row');
+                item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
             });
         });
     });
