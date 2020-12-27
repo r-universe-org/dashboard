@@ -1,12 +1,12 @@
 /* Menu example: https://www.codeply.com/p/eDmT9PMWW3 */
 $(function(){
-    $("#sidebar-container").mouseover(SidebarCollapse);
-    $("#sidebar-container").mouseout(SidebarCollapse);
     function SidebarCollapse() {
         $('.menu-collapsed').toggleClass('d-none');
         $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
         $('.sidebar-separator-title').toggleClass('d-flex');
     }
+    $("#sidebar-container").mouseenter(SidebarCollapse);
+    $("#sidebar-container").mouseleave(SidebarCollapse);
 });
 
 /* Fill table */
