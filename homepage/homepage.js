@@ -192,7 +192,7 @@ function init_maintainer_list(server){
             var item = $("#templatezone .maintainer-item").clone();
             item.find('.maintainer-name').text(maintainer.name)
             if(maintainer.login){
-                item.find('.maintainer-avatar').attr('src', 'https://github.com/' + maintainer.login + '.png');
+                item.find('.maintainer-avatar').attr('src', 'https://github.com/' + maintainer.login + '.png?size=140');
             }
             item.appendTo('#maintainer-list');
         });
