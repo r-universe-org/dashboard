@@ -216,6 +216,10 @@ function pretty_time_diff(ts){
     }
 }
 
+function pretty_dependencies(pkg){
+    return pkg['_hard_deps'].map(x => x.package).join(', ');
+}
+
 function init_package_descriptions(server){
     $('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
@@ -228,8 +232,10 @@ function init_package_descriptions(server){
                 //console.log(pkg)
                 var item = $("#templatezone .package-description-item").clone();
                 item.find('.package-name').text(pkg.Package);
+                item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
                 item.find('.package-title').text(pkg.Title);
                 item.find('.package-description').text(pkg.Description.replace('\n', ' '));
+                //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
                 if(pkg['_builder'].timestamp){
                     item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg['_builder'].timestamp));
                 }
@@ -238,6 +244,7 @@ function init_package_descriptions(server){
                 }
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
             });
+            $("#package-description-placeholder").hide();
         });
     });
 }

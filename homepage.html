@@ -139,6 +139,7 @@
                             <div id="package-description-row" class="row">
                                 <div id="package-description-col-one" class = "col-md-12 col-xl-6"></div>
                                 <div id="package-description-col-two" class = "col-md-12 col-xl-6"></div>
+                                <span id="package-description-placeholder">Please wait...</span>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="articles-tab" role="tabpanel">...</div>
@@ -191,15 +192,22 @@
     <div class="package-description-item">
         <div class="card mt-4">
             <div class="row no-gutters">
-                <div class="col-md-10">
+                <div class="col-md-9">
                   <div class="card-body">
                     <h5 class="card-title"><span class="package-name"></span>: <small class="text-secondary package-title"></small></h5>
                     <p class="card-text package-description font-italic"></p>
                     <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>
                   </div>
                 </div>
-                <div class="col-md-2">
-                    <img src="https://i.imgur.com/do14eYc.jpg" class="card-img package-image p-1">
+                <div class="col-md-3">
+                    <ul class="list-group list-group-flush pb-2">
+                        <li class="list-group-item border-light">
+                            <img src="" class="img-fluid img-thumbnail package-image">
+                        </li>
+                        <li class="list-group-item border-light">
+                            <span class="fa fa-user-astronaut fa-fw mr-1"></span><span class="package-maintainer"></span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
