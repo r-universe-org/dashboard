@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://r-universe.dev/dashboard.css">
     <style>#sidebar-container{transition: 0.15s;}</style>
-    <title>Universe homepage</title>
+    <title>R-universe</title>
 </head>
 <body>
 
@@ -105,19 +105,17 @@
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Builds</a>
+                            <a class="nav-link active" data-toggle="tab" href="#home-tab" role="tab">Builds</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Packages</a>
+                            <a class="nav-link" id="packages-tab-link" data-toggle="tab" href="#packages-tab" role="tab">Packages</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" data-toggle="tab" href="#contact" role="tab">Articles</a>
+                            <a class="nav-link" data-toggle="tab" href="#articles-tab" role="tab">Articles</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel">
-
-
+                        <div class="tab-pane fade show active" id="home-tab" role="tabpanel">
                             <div class="card-body">
                                 <h3 class="display-5 font-italic">The '<span id="title-universe-name">...</span>' universe</h3>
                                 <pre id="example-install-code" class="border rounded"></pre>
@@ -137,8 +135,10 @@
                                 <tbody id="packages-table-body"></tbody>
                             </table>
                         </div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                        <div class="tab-pane fade" id="packages-tab" role="tabpanel"> 
+                            <div id="package-description-row" class="row"></div>           
+                        </div>
+                        <div class="tab-pane fade" id="articles-tab" role="tabpanel">...</div>
                     </div>
                 </div>
                 <div class="col-md-auto col-12">
@@ -184,6 +184,24 @@
             <div class="col-md-9"><div class="card-body"><p class="card-text maintainer-name"></p></div></div>
         </div>
     </li>
+
+    <div class="package-description-item col-md-12 col-xl-6">
+        <div class="card mt-4">
+            <div class="row no-gutters">
+                <div class="col-md-10">
+                  <div class="card-body">
+                    <h5 class="card-title"><span class="package-name"></span>: <small class="text-secondary package-title"></small></h5>
+                    <p class="card-text package-description font-italic">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                    <img src="https://i.imgur.com/do14eYc.jpg" class="card-img package-image p-1">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- Optional JavaScript -->

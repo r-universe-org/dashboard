@@ -143,6 +143,7 @@ function init_packages_table(server, user){
 };
 
 function init_github_info(user){
+    $("head title").text("R-universe: " + user);
     $("#title-universe-name").text(user);
     $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
@@ -198,6 +199,24 @@ function init_maintainer_list(server){
     });
 }
 
+function init_package_descriptions(server){
+    $('#packages-tab-link').one('shown.bs.tab', function (e) {
+        get_ndjson(server + '/stats/descriptions').then(function(x){
+            x.forEach(function(pkg){
+                console.log(pkg['_builder'])
+                var item = $("#templatezone .package-description-item").clone();
+                item.find('.package-name').text(pkg.Package);
+                item.find('.package-title').text(pkg.Title);
+                item.find('.package-description').text(pkg.Description);
+                if(pkg['_builder'].maintainerlogin){
+                    item.find('.package-image').attr('src', 'https://github.com/' + pkg['_builder'].maintainerlogin + '.png');                    
+                }
+                item.appendTo('#package-description-row');
+            });
+        });
+    });
+}
+
 function init_syntax_block(user, package){
     var template = `# Enable this universe
 options(repos = c(
@@ -213,10 +232,11 @@ install.packages('{{package}}')`
 }
     
 //INIT
-var devtest = 'r-lib'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
 init_packages_table(server, user);
 init_maintainer_list(server);
+init_package_descriptions(server);
 init_github_info(user);
