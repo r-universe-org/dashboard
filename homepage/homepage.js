@@ -199,17 +199,37 @@ function init_maintainer_list(server){
     });
 }
 
+function pretty_time_diff(ts){
+    var date = new Date(ts*1000);
+    var now = new Date();
+    var diff_time = now.getTime() - date.getTime();
+    var diff_hours = Math.round(diff_time / (1000 * 3600));
+    var diff_days = Math.round(diff_hours / 24);
+    if(diff_hours < 24){
+        return diff_hours + " hours ago"
+    } else if(diff_days < 31){
+        return diff_days + " days ago";
+    } else if (diff_days < 365){
+        return Math.round(diff_days / 30) + " months ago";
+    } else {
+        return Math.round(diff_days / 365) + " years ago";
+    }
+}
+
 function init_package_descriptions(server){
     $('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
             x.forEach(function(pkg){
-                console.log(pkg['_builder'])
+                //console.log(pkg)
                 var item = $("#templatezone .package-description-item").clone();
                 item.find('.package-name').text(pkg.Package);
                 item.find('.package-title').text(pkg.Title);
-                item.find('.package-description').text(pkg.Description);
+                item.find('.package-description').text(pkg.Description.replace('\n', ' '));
+                if(pkg['_builder'].timestamp){
+                    item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg['_builder'].timestamp));
+                }
                 if(pkg['_builder'].maintainerlogin){
-                    item.find('.package-image').attr('src', 'https://github.com/' + pkg['_builder'].maintainerlogin + '.png');                    
+                    item.find('.package-image').attr('src', 'https://github.com/' + pkg['_builder'].maintainerlogin + '.png');
                 }
                 item.appendTo('#package-description-row');
             });
