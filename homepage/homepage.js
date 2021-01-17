@@ -157,7 +157,8 @@ function init_github_info(user){
             $("#github-user-location").toggleClass("d-none").find('.content').text(user.location);
         }
         if(user.blog){
-            $("#github-user-blog").toggleClass("d-none").find('.content').append(a(user.blog));
+          var blog = user.blog.startsWith("http") ? user.blog : "https://" + user.blog;
+          $("#github-user-blog").toggleClass("d-none").find('.content').append(a(blog));
         }
         if(user.twitter_username){
             $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
