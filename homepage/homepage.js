@@ -237,11 +237,15 @@ function init_package_descriptions(server){
                 item.find('.package-title').text(pkg.Title);
                 item.find('.package-description').text(pkg.Description.replace('\n', ' '));
                 //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
-                if(pkg['_builder'].timestamp){
-                    item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg['_builder'].timestamp));
+                const buildinfo = pkg['_builder'];
+                if(buildinfo.timestamp){
+                    item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.timestamp));
                 }
-                if(pkg['_builder'].maintainerlogin){
-                    item.find('.package-image').attr('src', 'https://github.com/' + pkg['_builder'].maintainerlogin + '.png');
+                if(buildinfo.pkglogo){
+                    const url = buildinfo.upstream + '/raw/HEAD/' + buildinfo.pkglogo;
+                    item.find('.package-image').attr('src', url);
+                } else if(buildinfo.maintainerlogin){
+                    item.find('.package-image').attr('src', 'https://github.com/' + buildinfo.maintainerlogin + '.png');
                 }
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
             });
