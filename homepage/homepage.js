@@ -149,6 +149,7 @@ function init_github_info(user){
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
     get_json('https://api.github.com/users/' + user).then(function(user){
         $("#github-user-name").text(user.name);
+        $("#title-universe-name").text(user.name);
         $("#github-user-bio").text(user.bio);
         if(user.company){
             $("#github-user-company").toggleClass("d-none").find('.content').text(user.company);
