@@ -267,7 +267,7 @@ function init_article_list(server){
                 if(buildinfo.vignettes){
                     buildinfo.vignettes.forEach(function(vignette){
                         var item = $("#templatezone .article-item").clone();
-                        //item.attr("href", "/articles/" + pkg.Package + "/" + vignette.filename);
+                        item.attr("href", server + "/articles/" + pkg.Package + "/" + vignette.filename);
                         item.find('.article-title').text(vignette.title);
                         item.find('.article-package-version').text(pkg.Package + " " + pkg.Version);
                         item.find('.article-author-name').text(pkg.Maintainer.split("<")[0]);
