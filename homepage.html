@@ -125,10 +125,10 @@
                             <a class="nav-link" id="packages-tab-link" data-toggle="tab" href="#packages-tab" role="tab">Packages</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api-tab" role="tab">API</a>
+                            <a class="nav-link" id="articles-tab-link" data-toggle="tab" href="#articles-tab" role="tab">Articles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="disabled nav-link" data-toggle="tab" href="#articles-tab" role="tab">Articles</a>
+                            <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api-tab" role="tab">API</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -159,10 +159,14 @@
                                 <span id="package-description-placeholder">Please wait...</span>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="articles-tab" role="tabpanel">
+                            <div id="article-list-group" class="list-group mt-4">
+                                <span id="article-list-placeholder">Please wait...</span>
+                            </div>
+                        </div>
                         <div class="tab-pane fade" id="api-tab" role="tabpanel">
                             <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
                         </div>
-                        <div class="tab-pane fade" id="articles-tab" role="tabpanel">...</div>
                     </div>
                 </div>
                 <div class="col-md-auto col-12">
@@ -232,6 +236,17 @@
             </div>
         </div>
     </div>
+
+    <a href="#" class="article-item list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1 article-title"></h5>
+            <small class="article-package-version"></small>
+        </div>
+        <div class="d-flex w-100 justify-content-between">
+        <p class="mb-1 article-author-name"></p>
+        <small class="text-muted article-last-updated"></small>
+        </div>
+    </a>
 
 </div>
 

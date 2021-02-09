@@ -254,6 +254,35 @@ function init_package_descriptions(server){
     });
 }
 
+function init_article_list(server){
+    $('#articles-tab-link').one('shown.bs.tab', function (e) {
+        get_ndjson(server + '/stats/descriptions').then(function(x){
+            function order( a, b ) {
+                if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
+                if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
+                return 0;
+            }
+            x.sort(order).forEach(function(pkg, i){
+                const buildinfo = pkg['_builder'];
+                if(buildinfo.vignettes){
+                    buildinfo.vignettes.forEach(function(vignette){
+                        var item = $("#templatezone .article-item").clone();
+                        //item.attr("href", "/articles/" + pkg.Package + "/" + vignette.filename);
+                        item.find('.article-title').text(vignette.title);
+                        item.find('.article-package-version').text(pkg.Package + " " + pkg.Version);
+                        item.find('.article-author-name').text(pkg.Maintainer.split("<")[0]);
+                        item.find('.article-last-updated').text('Rendered ' + pretty_time_diff(buildinfo.timestamp));
+                        item.appendTo('#article-list-group');
+                    });
+                    $("#article-list-placeholder").hide();
+                } else {
+                    $("#article-list-placeholder").text("No articles found for this organization.");
+                }
+            });
+        });
+    });
+}
+
 function init_syntax_block(user, package){
     var template = `# Enable this universe
 options(repos = c(
@@ -276,4 +305,5 @@ var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-univ
 init_packages_table(server, user);
 init_maintainer_list(server);
 init_package_descriptions(server);
+init_article_list(server);
 init_github_info(user);
