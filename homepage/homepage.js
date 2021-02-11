@@ -274,7 +274,7 @@ function init_article_list(server){
             if(x.length){
               $("#article-list-placeholder").hide();
             } else {
-              ("#article-list-placeholder").text("No articles found for this organization.");
+              $("#article-list-placeholder").text("No rmarkdown vignettes found in this universe.");
             }
         });
     });
