@@ -269,7 +269,11 @@ function init_article_list(server){
                 item.find('.article-title').text(pkg.vignette.title);
                 item.find('.article-package-version').text(pkg.package + " " + pkg.version);
                 item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
-                item.find('.article-last-updated').text('Last update: ' + pkg.vignette.modified);
+                item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 16));
+                item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 16));
+                if(pkg.maintainerlogin){
+                  item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
+                }
                 item.appendTo('#article-list-group');
               }
             });
