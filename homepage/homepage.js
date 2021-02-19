@@ -256,7 +256,7 @@ function init_package_descriptions(server){
 
 function init_article_list(server){
     $('#articles-tab-link').one('shown.bs.tab', function (e) {
-        get_ndjson(server + '/stats/vignettes').then(function(x){
+        get_ndjson(server + '/stats/vignettes?limit=500').then(function(x){
             function order( a, b ) {
                 if(a.vignette.modified < b.vignette.modified) return 1;
                 if(a.vignette.modified > b.vignette.modified) return -1;
