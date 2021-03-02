@@ -242,8 +242,10 @@ function init_package_descriptions(server){
                     item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.timestamp));
                 }
                 if(buildinfo.pkglogo){
-                    const url = buildinfo.upstream + '/raw/HEAD/' + buildinfo.pkglogo;
-                    item.find('.package-image').attr('src', url);
+                    if(!buildinfo.pkglogo.startsWith('http')){
+                        buildinfo.pkglogo = buildinfo.upstream + '/raw/HEAD/' + buildinfo.pkglogo;
+                    }
+                    item.find('.package-image').attr('src', buildinfo.pkglogo);
                 } else if(buildinfo.maintainerlogin){
                     item.find('.package-image').attr('src', 'https://github.com/' + buildinfo.maintainerlogin + '.png');
                 }
