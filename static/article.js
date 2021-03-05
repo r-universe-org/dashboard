@@ -1,7 +1,8 @@
 /* Bootstrap styles to tables */
 function bootstrapStylePandocTables() {
-$$('tr.header').parent('thead').parent('table').addClass('table table-condensed'); }
-$$(document).ready(function () { bootstrapStylePandocTables(); });
+	$('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(bootstrapStylePandocTables);
 
 /* Adjust the height when click the toc */
 var shiftWindow = function() { scrollBy(0, -60) };
