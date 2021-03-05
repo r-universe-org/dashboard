@@ -257,7 +257,7 @@ function init_package_descriptions(server){
 }
 
 function init_article_list(server){
-    iFrameResize({ log: true }, '#browserframe');
+    iFrameResize({ log: true, checkOrigin: false }, '#browserframe');
     $('#articles-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/vignettes?limit=500').then(function(x){
             function order( a, b ) {
