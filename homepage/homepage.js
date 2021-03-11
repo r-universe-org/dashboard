@@ -273,6 +273,7 @@ function init_article_list(server){
                     item.attr("target", "_blank")
                 } else {
                     item.click(function(e){
+                        $("#browser-tab-link").tab('show');
                         $('html, body').animate({ scrollTop: 0 });
                     });
                 }
@@ -285,9 +286,6 @@ function init_article_list(server){
                   item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
                 }
                 item.appendTo('#article-list-group');
-                item.click(function(){
-                  $("#browser-tab-link").tab('show')
-                });
               }
             });
             if(x.length){
