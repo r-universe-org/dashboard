@@ -257,6 +257,7 @@ function init_package_descriptions(server){
 }
 
 function init_article_list(server){
+    iFrameResize({ log: true, checkOrigin: false }, '#browserframe');
     $('#articles-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/vignettes?limit=500').then(function(x){
             function order( a, b ) {
@@ -277,6 +278,9 @@ function init_article_list(server){
                   item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
                 }
                 item.appendTo('#article-list-group');
+                item.click(function(){
+                  $("#browser-tab-link").tab('show')
+                });
               }
             });
             if(x.length){

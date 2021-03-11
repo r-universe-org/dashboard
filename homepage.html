@@ -140,6 +140,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api-tab" role="tab">API</a>
                         </li>
+                        <li class="nav-item d-none">
+                            <a class="nav-link" id="browser-tab-link" data-toggle="tab" href="#browser-tab" role="tab">Browser</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="home-tab" role="tabpanel">
@@ -175,6 +178,9 @@
                         </div>
                         <div class="tab-pane fade" id="api-tab" role="tabpanel">
                             <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
+                        </div>
+                        <div class="tab-pane fade" id="browser-tab" role="tabpanel">
+                            <iframe scrolling="no" name="browserframe" id="browserframe"></iframe>
                         </div>
                     </div>
                 </div>
@@ -246,7 +252,7 @@
         </div>
     </div>
 
-    <a href="#" target="_blank" class="article-item list-group-item list-group-item-action border-light pb-0">
+    <a href="#" target="browserframe" class="article-item list-group-item list-group-item-action border-light pb-0">
       <div class="row no-gutters">
         <div class="col-2 col-xl-1">
           <img src="https://i.imgur.com/do14eYc.jpg" class="rounded-circle maintainer-avatar card-img pr-2" style="max-width: 80px">
@@ -275,6 +281,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.min.js"></script>
 <script src="homepage/homepage.js"></script>
 </body>
 </html>
