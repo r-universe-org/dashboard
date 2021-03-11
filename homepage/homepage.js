@@ -269,8 +269,13 @@ function init_article_list(server){
               if(pkg.vignette.modified){
                 var item = $("#templatezone .article-item").clone();
                 item.attr("href", server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-                if(!pkg.vignette.filename.endsWith('html'))
+                if(!pkg.vignette.filename.endsWith('html')){
                     item.attr("target", "_blank")
+                } else {
+                    item.click(function(e){
+                        $('html, body').animate({ scrollTop: 0 });
+                    });
+                }
                 item.find('.article-title').text(pkg.vignette.title);
                 item.find('.article-package-version').text(pkg.package + " " + pkg.version);
                 item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
