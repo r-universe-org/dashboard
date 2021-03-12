@@ -266,27 +266,25 @@ function init_article_list(server){
                 return 0;
             }
             x.sort(order).forEach(function(pkg, i){
-              if(pkg.vignette.modified){
-                var item = $("#templatezone .article-item").clone();
-                item.attr("href", server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-                if(!pkg.vignette.filename.endsWith('html')){
-                    item.attr("target", "_blank")
-                } else {
-                    item.click(function(e){
-                        $("#browser-tab-link").tab('show');
-                        $('html, body').animate({ scrollTop: 0 });
-                    });
-                }
-                item.find('.article-title').text(pkg.vignette.title);
-                item.find('.article-package-version').text(pkg.package + " " + pkg.version);
-                item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
-                item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 10));
-                item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
-                if(pkg.maintainerlogin){
-                  item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
-                }
-                item.appendTo('#article-list-group');
+              var item = $("#templatezone .article-item").clone();
+              item.attr("href", server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
+              if(!pkg.vignette.filename.endsWith('html')){
+                  item.attr("target", "_blank")
+              } else {
+                  item.click(function(e){
+                      $("#browser-tab-link").tab('show');
+                      $('html, body').animate({ scrollTop: 0 });
+                  });
               }
+              item.find('.article-title').text(pkg.vignette.title);
+              item.find('.article-package-version').text(pkg.package + " " + pkg.version);
+              item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
+              item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
+              item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
+              if(pkg.maintainerlogin){
+                item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
+              }
+              item.appendTo('#article-list-group');
             });
             if(x.length){
               $("#article-list-placeholder").hide();
