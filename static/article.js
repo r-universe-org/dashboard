@@ -16,6 +16,11 @@ function bootstrapStylePandocTables() {
 }
 $(document).ready(bootstrapStylePandocTables);
 
+/* Make width dynamic when loaded within iframe */
+if (window.self != window.top) {
+	document.getElementsByClassName('container')[0].className = "container-fluid";
+}
+
 /* Adjust the height when click the toc */
 var shiftWindow = function() { scrollBy(0, -60) };
 window.addEventListener("hashchange", shiftWindow);
