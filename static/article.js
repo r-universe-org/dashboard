@@ -19,6 +19,11 @@ $(document).ready(bootstrapStylePandocTables);
 /* Make width dynamic when loaded within iframe */
 if (window.self != window.top) {
 	document.getElementsByClassName('container')[0].className = "container-fluid";
+
+  /* prevent navigating to other sites within iframe */
+  $('a').filter(function() {
+     return this.hostname && this.hostname !== location.hostname;
+  }).attr("target", "_blank");
 }
 
 /* Adjust the height when click the toc */
