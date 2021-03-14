@@ -79,7 +79,7 @@ body {
   padding-left: 10px;
 }
 
-#browserframe {
+#browserframe,#viewerframe {
   border: none;
   width: 1px;
   min-width: 100%;
