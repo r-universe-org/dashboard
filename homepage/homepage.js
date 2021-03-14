@@ -256,9 +256,10 @@ function init_package_descriptions(server){
     });
 }
 
+var viewerurl = "";
 function init_article_list(server){
-    iFrameResize({ log: true, checkOrigin: false }, '#browserframe');
-    $('#articles-tab-link').one('shown.bs.tab', function (e) {
+    iFrameResize({ log: true, checkOrigin: false }, '#viewerframe');
+    $('#articles-tab-link').one('show.bs.tab', function (e) {
         get_ndjson(server + '/stats/vignettes').then(function(x){
             function order( a, b ) {
                 if(a.vignette.modified < b.vignette.modified) return 1;
@@ -272,7 +273,8 @@ function init_article_list(server){
                   item.attr("target", "_blank")
               } else {
                   item.click(function(e){
-                      $("#browser-tab-link").tab('show');
+                      viewerurl = pkg.package + "/" + pkg.vignette.filename;
+                      $("#viewer-tab-link").tab('show');
                       $('html, body').animate({ scrollTop: 0 });
                   });
               }
@@ -308,7 +310,51 @@ install.packages('{{package}}')`
     var code = $("<code>").addClass("language-r").text(text).appendTo('#example-install-code');
     Prism.highlightAll();
 }
-    
+
+/* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
++(function ($) {
+  'use strict';
+  $.fn.historyTabs = function () {
+    var that = this;
+    window.addEventListener('popstate', function (event) {
+      if (event.state) {
+        $(that)
+          .filter('[href="' + event.state.url + '"]')
+          .tab('show');
+      }
+    });
+    return this.each(function (index, element) {
+      $(element).on('show.bs.tab', function () {
+        var stateObject = { 
+          url: $(this).attr('href')
+        };
+
+        if (window.location.hash && stateObject.url !== window.location.hash) {
+          window.history.pushState(
+            stateObject,
+            document.title,
+            window.location.pathname + $(this).attr('href')
+          );
+        } else {
+          window.history.replaceState(
+            stateObject,
+            document.title,
+            window.location.pathname + $(this).attr('href')
+          );
+        }
+      });
+      if (!window.location.hash && $(element).is('.active')) {
+        // Shows the first element if there are no query parameters.
+        $(element).tab('show').trigger('show.bs.tab');
+      } else if ($(this).attr('href') === window.location.hash) {
+        $(element).tab('show');
+      }
+    });
+  };
+})(jQuery);
+
+$('a[data-toggle="tab"]').historyTabs();
+
 //INIT
 var devtest = 'ropensci'
 var host = location.hostname;

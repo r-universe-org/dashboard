@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=1">
+    <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=2">
     <style>#sidebar-container{transition: 0.15s;}</style>
     <title>R-universe</title>
 </head>
@@ -126,23 +126,23 @@
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#home-tab" role="tab">Builds</a>
+                            <a class="nav-link active" id="builds-tab-link" data-toggle="tab" href="#builds" role="tab">Builds</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="packages-tab-link" data-toggle="tab" href="#packages-tab" role="tab">Packages</a>
+                            <a class="nav-link" id="packages-tab-link" data-toggle="tab" href="#packages" role="tab">Packages</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="articles-tab-link" data-toggle="tab" href="#articles-tab" role="tab">Articles</a>
+                            <a class="nav-link" id="articles-tab-link" data-toggle="tab" href="#articles" role="tab">Articles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api-tab" role="tab">API</a>
+                            <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api" role="tab">API</a>
                         </li>
                         <li class="nav-item d-none">
-                            <a class="nav-link" id="browser-tab-link" data-toggle="tab" href="#browser-tab" role="tab">Browser</a>
+                            <a class="nav-link" id="viewer-tab-link" data-toggle="tab" href="#viewer" role="tab">Viewer</a>
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="home-tab" role="tabpanel">
+                        <div class="tab-pane fade show active" id="builds" role="tabpanel">
                             <div class="card-body">
                                 <h3 class="display-5 font-italic">The '<span id="title-universe-name">...</span>' universe</h3>
                                 <pre id="example-install-code" class="border rounded"></pre>
@@ -162,23 +162,23 @@
                                 <tbody id="packages-table-body"></tbody>
                             </table>
                         </div>
-                        <div class="tab-pane fade" id="packages-tab" role="tabpanel"> 
+                        <div class="tab-pane fade" id="packages" role="tabpanel">
                             <div id="package-description-row" class="row">
                                 <div id="package-description-col-one" class = "col-md-12 col-xl-6"></div>
                                 <div id="package-description-col-two" class = "col-md-12 col-xl-6"></div>
                                 <span id="package-description-placeholder">Please wait...</span>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="articles-tab" role="tabpanel">
+                        <div class="tab-pane fade" id="articles" role="tabpanel">
                             <div id="article-list-group" class="list-group mt-4">
                                 <span id="article-list-placeholder">Please wait...</span>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="api-tab" role="tabpanel">
+                        <div class="tab-pane fade" id="api" role="tabpanel">
                             <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
                         </div>
-                        <div class="tab-pane fade" id="browser-tab" role="tabpanel">
-                            <iframe scrolling="no" name="browserframe" id="browserframe"></iframe>
+                        <div class="tab-pane fade" id="viewer" role="tabpanel">
+                            <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
                         </div>
                     </div>
                 </div>
@@ -252,7 +252,7 @@
         </div>
     </div>
 
-    <a href="#" target="browserframe" class="article-item list-group-item list-group-item-action border-light pb-0">
+    <a href="#" target="viewerframe" class="article-item list-group-item list-group-item-action border-light pb-0">
       <div class="row no-gutters">
         <div class="col-2 col-xl-1">
           <img src="https://i.imgur.com/do14eYc.jpg" class="rounded-circle maintainer-avatar card-img pr-2" style="max-width: 80px">
