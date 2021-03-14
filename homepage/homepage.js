@@ -256,7 +256,6 @@ function init_package_descriptions(server){
     });
 }
 
-var viewerurl = "";
 function init_article_list(server){
     iFrameResize({ log: true, checkOrigin: false }, '#viewerframe');
     $('#articles-tab-link').one('show.bs.tab', function (e) {
@@ -273,7 +272,8 @@ function init_article_list(server){
                   item.attr("target", "_blank")
               } else {
                   item.click(function(e){
-                      viewerurl = pkg.package + "/" + pkg.vignette.filename;
+                      e.preventDefault();
+                      frames['viewerframe'].location.replace(server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
                       $("#viewer-tab-link").tab('show');
                       $('html, body').animate({ scrollTop: 0 });
                   });
