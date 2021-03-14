@@ -258,7 +258,7 @@ function init_package_descriptions(server){
 
 function init_article_list(server){
     iFrameResize({ log: true, checkOrigin: false }, '#viewerframe');
-    $('#articles-tab-link').one('show.bs.tab', function (e) {
+    $('#articles-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/vignettes').then(function(x){
             function order( a, b ) {
                 if(a.vignette.modified < b.vignette.modified) return 1;
