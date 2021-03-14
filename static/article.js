@@ -25,8 +25,3 @@ if (window.self != window.top) {
      return this.hostname && this.hostname !== location.hostname;
   }).attr("target", "_blank");
 }
-
-/* Adjust the height when click the toc */
-var shiftWindow = function() { scrollBy(0, -60) };
-window.addEventListener("hashchange", shiftWindow);
-function load() { if (window.location.hash) shiftWindow(); }
