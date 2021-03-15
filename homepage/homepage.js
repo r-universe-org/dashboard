@@ -276,7 +276,8 @@ function init_article_list(server){
                       var iframe = frames['viewerframe'];
                       iframe.location.replace('about:blank');
                       iframe.location.replace(server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-                      $('html, body').animate({ scrollTop: 0 }, 200, function(){$("#viewer-tab-link").tab('show')});
+                      $("#viewer-tab-link").tab('show');
+                      window.scrollTo(0,0);
                   });
               }
               item.find('.article-title').text(pkg.vignette.title);
