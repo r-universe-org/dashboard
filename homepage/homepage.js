@@ -273,9 +273,10 @@ function init_article_list(server){
               } else {
                   item.click(function(e){
                       e.preventDefault();
-                      frames['viewerframe'].location.replace(server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-                      $("#viewer-tab-link").tab('show');
-                      $('html, body').animate({ scrollTop: 0 });
+                      var iframe = frames['viewerframe'];
+                      iframe.location.replace('about:blank');
+                      iframe.location.replace(server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
+                      $('html, body').animate({ scrollTop: 0 }, 200, function(){$("#viewer-tab-link").tab('show')});
                   });
               }
               item.find('.article-title').text(pkg.vignette.title);
