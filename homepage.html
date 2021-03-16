@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=6">
+    <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=7">
     <style>#sidebar-container{transition: 0.15s;}</style>
     <title>R-universe</title>
 </head>
@@ -160,17 +160,18 @@
                                 </tr></thead>
                                 <tbody id="packages-table-body"></tbody>
                             </table>
+                            <p id="package-builds-placeholder"><span class="spinner-border spinner-border-sm" role="status"></span> Loading build data, please wait...</p>
                         </div>
                         <div class="tab-pane fade" id="packages" role="tabpanel">
                             <div id="package-description-row" class="row">
                                 <div id="package-description-col-one" class = "col-md-12 col-xl-6"></div>
                                 <div id="package-description-col-two" class = "col-md-12 col-xl-6"></div>
-                                <span id="package-description-placeholder">Please wait...</span>
+                                <p id="package-description-placeholder" class="m-3"><span class="spinner-border spinner-border-sm" role="status"></span> Loading package descriptions, please wait...</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="articles" role="tabpanel">
                             <div id="article-list-group" class="list-group mt-4">
-                                <span id="article-list-placeholder">Please wait...</span>
+                                <p id="article-list-placeholder"><span class="spinner-border spinner-border-sm" role="status"></span> Loading articles, please wait...</p>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="api" role="tabpanel">
@@ -281,6 +282,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.min.js"></script>
-<script src="homepage/homepage.js?nocache=6"></script>
+<script src="homepage/homepage.js?nocache=7"></script>
 </body>
 </html>

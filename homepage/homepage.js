@@ -139,6 +139,7 @@ function init_packages_table(server, user){
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
         });
+        $("#package-builds-placeholder").hide();
     }).catch(alert);
 };
 
