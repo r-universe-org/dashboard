@@ -31,7 +31,7 @@ $(function(){
     item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
     item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 10));
     item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
-    item.find('.article-universe').text('@' + pkg.universe).attr("href", universe);
+    item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '#articles');
     if(pkg.maintainerlogin){
       item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
     }
@@ -48,7 +48,7 @@ $(function(){
 		articles.sort(order_by_modified).slice(0, 250).forEach(function(pkg){
       pkg_to_el(pkg).appendTo('#articles-list-updated');
 		});
-    $("#articles-list-placeholder").hide();
+    $("#placeholder").hide();
 		lazyload();
 	});
 });

@@ -98,7 +98,7 @@ Date.prototype.yyyymmdd = function() {
 
 function init_packages_table(org = ":any", maintainer = ""){
 	let tbody = $("#packages-table-body");
-	var checkurl = 'https://r-universe.dev/stats/checks?limit=300&maintainer=' + maintainer;
+	var checkurl = 'https://r-universe.dev/stats/checks?limit=200&maintainer=' + maintainer;
 	get_ndjson(checkurl).then(function(cranlike){
 		cranlike.forEach(function(pkg){
 			//console.log(pkg)
@@ -121,6 +121,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 			}
 		});
 	}).catch(alert).then(function(x){
+    $("#placeholder").hide();
 		var defs = [{
 			targets: [5, 6, 7, 8],
 			className: 'dt-body-center',
