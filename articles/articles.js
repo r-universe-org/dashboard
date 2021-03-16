@@ -20,8 +20,12 @@ $(function(){
     var item = $("#templatezone .article-item").clone();
     var universe = "https://" + pkg.universe + ".r-universe.dev";
     item.find('.article-link').attr("href", universe + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-    if(!pkg.vignette.filename.endsWith('html'))
-        item.attr("target", "_blank");
+    if(pkg.vignette.filename.endsWith('html')){
+      item.find('.article-link').attr("href", universe + "/#view:" + pkg.package + "/" + pkg.vignette.filename);
+    } else {
+      item.find('.article-link').attr("href", universe + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
+      item.attr("target", "_blank");
+    }
     item.find('.article-title').text(pkg.vignette.title);
     item.find('.article-package-version').text(pkg.package + " " + pkg.version);
     item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);

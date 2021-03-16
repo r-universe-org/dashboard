@@ -283,7 +283,7 @@ function init_article_list(server){
                   item.click(function(e){
                       e.preventDefault();
                       navigate_iframe(pkg.package + "/" + pkg.vignette.filename);
-                      $("#viewer-tab-link").tab('show');
+                      $("#view-tab-link").tab('show');
                       window.scrollTo(0,0);
                   });
               }
@@ -330,7 +330,7 @@ install.packages('{{package}}')`
     /* Create back-button handler */
     window.addEventListener('popstate', function (event) {
       if (event.state) {
-        navigate_iframe(event.state.viewer);
+        navigate_iframe(event.state.view);
         $(that)
           .filter('[href="' + event.state.tab + '"]')
           .tab('show');
@@ -343,10 +343,10 @@ install.packages('{{package}}')`
       $(element).on('show.bs.tab', function () {
         var stateObject = { 
           tab: tab,
-          viewer: tab == '#viewer' ? window.iframestate : null,
+          view: tab == '#view' ? window.iframestate : null,
         };
         var url = tab;
-        if (tab == '#viewer') {
+        if (tab == '#view') {
             url = tab + ":" + window.iframestate;
         } else {
             navigate_iframe(null);
@@ -368,8 +368,8 @@ install.packages('{{package}}')`
       });
 
       /* Once on page load */
-      if (tab === '#viewer' && window.location.hash.startsWith("#viewer:")){
-        navigate_iframe(window.location.hash.substring(8));
+      if (tab === '#view' && window.location.hash.startsWith("#view:")){
+        navigate_iframe(window.location.hash.substring(6));
         $(element).tab('show');
       } else if (!window.location.hash && $(element).is('.active')) {
         // Shows the first element if there are no query parameters.
