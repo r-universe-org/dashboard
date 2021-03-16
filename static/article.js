@@ -18,8 +18,8 @@ $(document).ready(bootstrapStylePandocTables);
 
 /* Make width dynamic when loaded within iframe */
 if (window.self != window.top) {
-  var container = document.getElementsByClassName('container')[0];
-  if(container) container.className = "container-fluid";
+  //var container = document.getElementsByClassName('container')[0];
+  //if(container) container.className = "container-fluid";
 
   /* prevent navigating to other sites within iframe */
   $('a').filter(function() {
