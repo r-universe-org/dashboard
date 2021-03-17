@@ -152,7 +152,7 @@ function init_github_info(user){
     $(".title-universe-name").text(user);
     $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
-    get_json('https://api.github.com/users/' + user).then(function(user){
+    return get_json('https://api.github.com/users/' + user).then(function(user){
         $("#github-user-name").text(user.name);
         $("#github-user-bio").text(user.bio);
         if(user.company){
@@ -396,8 +396,7 @@ var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_github_info(user);
-init_maintainer_list(server);
+init_github_info(user).then(function(){init_maintainer_list(server)});
 init_packages_table(server, user);
 init_package_descriptions(server);
 init_article_list(server);
