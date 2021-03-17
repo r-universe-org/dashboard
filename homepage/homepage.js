@@ -139,7 +139,11 @@ function init_packages_table(server, user){
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
         });
-        $("#package-builds-placeholder").hide();
+        if(cranlike.length){
+          $("#package-builds-placeholder").hide();
+        } else {
+          $("#package-builds-placeholder").text("No packages found in this username.");
+        }
     }).catch(alert);
 };
 
@@ -252,7 +256,11 @@ function init_package_descriptions(server){
                 }
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
             });
-            $("#package-description-placeholder").hide();
+            if(x.length){
+              $("#package-description-placeholder").hide();
+            } else {
+              $("#package-description-placeholder").text("No packages found in this username.");
+            }
         });
     //});
 }
