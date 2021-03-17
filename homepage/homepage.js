@@ -388,10 +388,10 @@ var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_packages_table(server, user);
+init_github_info(user);
 init_maintainer_list(server);
+init_packages_table(server, user);
 init_package_descriptions(server);
 init_article_list(server);
-init_github_info(user);
 
 $('a[data-toggle="tab"]').historyTabs();
