@@ -200,8 +200,9 @@ function init_maintainer_list(server){
             if(maintainer.login){
                 item.find('.maintainer-avatar').attr('src', 'https://github.com/' + maintainer.login + '.png?size=140');
             }
-            item.appendTo('#maintainer-list');
+            $('#maintainer-list').append(item);
         });
+        //$('#maintainer-list').collapse('show');
     });
 }
 
