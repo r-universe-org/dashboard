@@ -145,7 +145,7 @@ function init_packages_table(server, user){
 
 function init_github_info(user){
     $("head title").text("R-universe: " + user);
-    $("#title-universe-name").text(user);
+    $(".title-universe-name").text(user);
     $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
     get_json('https://api.github.com/users/' + user).then(function(user){
