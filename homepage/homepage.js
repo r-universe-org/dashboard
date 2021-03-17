@@ -152,24 +152,18 @@ function init_github_info(user){
     $(".title-universe-name").text(user);
     $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
-    get_json('https://api.github.com/users/' + user).then(function(user){
+    return get_json('https://api.github.com/users/' + user).then(function(user){
         $("#github-user-name").text(user.name);
         $("#github-user-bio").text(user.bio);
         if(user.company){
-            $("#github-user-company").find('.content').text(user.company);
-        } else {
-            $("#github-user-company").addClass('d-none');
+            $("#github-user-company").toggleClass("d-none").find('.content').text(user.company);
         }
         if(user.location){
-            $("#github-user-location").find('.content').text(user.location);
-        } else {
-            $("#github-user-location").addClass('d-none');
+            $("#github-user-location").toggleClass("d-none").find('.content').text(user.location);
         }
         if(user.blog){
-            var blog = user.blog.startsWith("http") ? user.blog : "https://" + user.blog;
-            $("#github-user-blog").find('.content').append(a(blog));
-        } else {
-            $("#github-user-blog").addClass('d-none');
+          var blog = user.blog.startsWith("http") ? user.blog : "https://" + user.blog;
+          $("#github-user-blog").toggleClass("d-none").find('.content').append(a(blog));
         }
         if(user.twitter_username){
             $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
@@ -402,8 +396,7 @@ var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_github_info(user);
-init_maintainer_list(server);
+init_github_info(user).then(function(){init_maintainer_list(server)});
 init_packages_table(server, user);
 init_package_descriptions(server);
 init_article_list(server);
