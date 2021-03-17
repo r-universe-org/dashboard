@@ -223,7 +223,7 @@ function pretty_dependencies(pkg){
 }
 
 function init_package_descriptions(server){
-    $('#packages-tab-link').one('shown.bs.tab', function (e) {
+    //$('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
             function order( a, b ) {
                 if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
@@ -254,7 +254,7 @@ function init_package_descriptions(server){
             });
             $("#package-description-placeholder").hide();
         });
-    });
+    //});
 }
 
 function navigate_iframe(state){
@@ -268,7 +268,7 @@ function navigate_iframe(state){
 
 function init_article_list(server){
     iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
-    $('#articles-tab-link').one('shown.bs.tab', function (e) {
+    //$('#articles-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/vignettes').then(function(x){
             function order( a, b ) {
                 if(a.vignette.modified < b.vignette.modified) return 1;
@@ -304,7 +304,7 @@ function init_article_list(server){
               $("#article-list-placeholder").text("No rmarkdown vignettes found in this universe.");
             }
         });
-    });
+    //});
 }
 
 function init_syntax_block(user, package){
