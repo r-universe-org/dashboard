@@ -140,12 +140,12 @@ Date.prototype.yyyymmdd = function() {
 function init_packages_table(server, user){
     let tbody = $("#packages-table-body");
     var initiated = false;
-    ndjson_batch_stream(server + '/stats/checks', function(cranlike){
-        if(!initiated && cranlike.length > 0){
+    ndjson_batch_stream(server + '/stats/checks', function(batch){
+        if(!initiated && batch.length > 0){
             initiated = true;
-            init_syntax_block(user, cranlike[0].package);
+            init_syntax_block(user, batch[0].package);
         }
-        cranlike.forEach(function(pkg){
+        batch.forEach(function(pkg){
             //console.log(pkg)
             var name = pkg.package;
             var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
@@ -166,7 +166,8 @@ function init_packages_table(server, user){
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
         });
-        if(cranlike.length){
+    }).then(function(){
+        if(initiated){
           $("#package-builds-placeholder").hide();
         } else {
           $("#package-builds-placeholder").text("No packages found in this username.");
