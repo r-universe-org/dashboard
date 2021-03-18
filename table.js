@@ -1,20 +1,3 @@
-function get_path(path){
-	return new Promise(function(resolve, reject) {
-		$.get(path).done(function(txt){
-			resolve(txt);
-		}).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
-		   + jqXHR.status + "\n\n" + jqXHR.responseText));
-	});	
-}
-
-function get_json(path){
-	return get_path(path);
-}
-
-function get_ndjson(path){
-	return get_path(path).then(txt => txt.split('\n').filter(x => x.length).map(JSON.parse));
-}
-
 function td(el){
 	return $('<td>').append(el);
 }

@@ -1,3 +1,27 @@
+function ndjson_batch_stream(path, cb){
+    var start = 0;
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: path,
+            xhrFields: {
+                // Getting on progress streaming response
+                onprogress: function(e){
+                    var res = e.currentTarget.response;
+                    var end = res.lastIndexOf('\n', e.currentTarget.response - start);
+                    if(end > 0){
+                        var batch = res.substring(start, end).split('\n').map(JSON.parse);
+                        start = end + 1;
+                        cb(batch);
+                    }
+                }
+            }
+        }).done(function(){
+            resolve();
+        }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
+            + jqXHR.status + "\n\n" + jqXHR.responseText));
+    });
+}
+
 function get_path(path){
     return new Promise(function(resolve, reject) {
         $.get(path).done(function(txt){
