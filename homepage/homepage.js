@@ -9,6 +9,31 @@ $(function(){
     $("#sidebar-container").mouseleave(SidebarCollapse);
 });
 
+function ndjson_batch_stream(path, cb){
+    var start = 0;
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            url: path,
+            xhrFields: {
+                // Getting on progress streaming response
+                onprogress: function(e){
+                    var res = e.currentTarget.response;
+                    var end = res.lastIndexOf('\n', e.currentTarget.response - start);
+                    if(end > 0){
+                        var batch = res.substring(start, end).split('\n').map(JSON.parse);
+                        start = end + 1;
+                        cb(batch);
+                    }
+                }
+            }
+        }).done(function(){
+            resolve();
+        }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
+            + jqXHR.status + "\n\n" + jqXHR.responseText));
+    });
+}
+
+
 /* Fill table */
 function get_path(path){
     return new Promise(function(resolve, reject) {
@@ -114,8 +139,10 @@ Date.prototype.yyyymmdd = function() {
 
 function init_packages_table(server, user){
     let tbody = $("#packages-table-body");
-    get_ndjson(server + '/stats/checks').then(function(cranlike){
-        if(cranlike.length > 0){
+    var initiated = false;
+    ndjson_batch_stream(server + '/stats/checks', function(cranlike){
+        if(!initiated && cranlike.length > 0){
+            initiated = true;
             init_syntax_block(user, cranlike[0].package);
         }
         cranlike.forEach(function(pkg){
