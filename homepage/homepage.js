@@ -299,6 +299,10 @@ function navigate_iframe(state){
         iframe.location.replace(state ? server + "/articles/" + state : 'about:blank');
         window.iframestate = state;
         console.log('Navigating iframe to: ' + state);
+        if(state){
+          document.getElementById('viewerframe').onload=function(){$('#article-placeholder').hide()};
+          $('#article-placeholder').show();
+        }
     }
 }
 
