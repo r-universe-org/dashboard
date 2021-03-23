@@ -175,13 +175,13 @@ function init_packages_table(server, user){
     }).catch(alert);
 };
 
-function init_github_info(user){
-    $("head title").text("R-universe: " + user);
-    $(".title-universe-name").text(user);
-    $("#github-user-avatar").attr('src', 'https://github.com/' + user + '.png');
-    $("#github-user-universe").append(a('https://github.com/r-universe/' + user, "r-universe/" + user));
-    return get_json('https://api.github.com/users/' + user).then(function(user){
-        $("#github-user-name").text(user.name);
+function init_github_info(ghuser){
+    $("head title").text("R-universe: " + ghuser);
+    $(".title-universe-name").text(ghuser);
+    $("#github-user-avatar").attr('src', 'https://github.com/' + ghuser + '.png');
+    $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
+    return get_json('https://api.github.com/users/' + ghuser).then(function(user){
+        $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
         if(user.company){
             $("#github-user-company").toggleClass("d-none").find('.content').text(user.company);
