@@ -28,7 +28,7 @@ $(function(){
     }
     item.find('.article-title').text(pkg.vignette.title);
     item.find('.article-package-version').text(pkg.package + " " + pkg.version);
-    item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
+    item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
     item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 10));
     item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
     item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '#articles');

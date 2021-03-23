@@ -311,7 +311,7 @@ window.articledata = {};
 function update_article_info(){
     var pkg = articledata[window.iframestate];
     if(pkg){
-        $('#article-info-author').text(pkg.maintainer.split("<")[0]);
+        $('#article-info-author').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
         $('#article-info-package').text(pkg.package + " " + pkg.version);
         $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
         $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
@@ -345,7 +345,7 @@ function init_article_list(server){
               }
               item.find('.article-title').text(pkg.vignette.title);
               item.find('.article-package-version').text(pkg.package + " " + pkg.version);
-              item.find('.article-author-name').text(pkg.maintainer.split("<")[0]);
+              item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
               item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
               item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
               if(pkg.maintainerlogin){
@@ -440,7 +440,7 @@ install.packages('{{package}}')`
 
 
 //INIT
-var devtest = 'r-spatial'
+var devtest = 'r-lib'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
