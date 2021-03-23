@@ -299,10 +299,23 @@ function navigate_iframe(state){
         iframe.location.replace(state ? server + "/articles/" + state : 'about:blank');
         window.iframestate = state;
         console.log('Navigating iframe to: ' + state);
+        update_article_info();
         if(state){
           document.getElementById('viewerframe').onload=function(){$('#article-placeholder').hide()};
           $('#article-placeholder').show();
         }
+    }
+}
+
+window.articledata = {};
+function update_article_info(){
+    var pkg = articledata[window.iframestate];
+    if(pkg){
+        $('#article-info-author').text(pkg.maintainer.split("<")[0]);
+        $('#article-info-package').text(pkg.package + " " + pkg.version);
+        $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
+        $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
+        $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
     }
 }
 
@@ -317,13 +330,15 @@ function init_article_list(server){
             }
             x.sort(order).forEach(function(pkg, i){
               var item = $("#templatezone .article-item").clone();
-              item.attr("href", server + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
+              var minilink = pkg.package + "/" + pkg.vignette.filename;
+              articledata[minilink] = pkg;
+              item.attr("href", server + "/articles/" + minilink);
               if(!pkg.vignette.filename.endsWith('html')){
                   item.attr("target", "_blank")
               } else {
                   item.click(function(e){
                       e.preventDefault();
-                      navigate_iframe(pkg.package + "/" + pkg.vignette.filename);
+                      navigate_iframe(minilink);
                       $("#view-tab-link").tab('show');
                       window.scrollTo(0,0);
                   });
@@ -343,6 +358,7 @@ function init_article_list(server){
             } else {
               $("#article-list-placeholder").text("No rmarkdown vignettes found in this universe.");
             }
+            update_article_info();
         });
     //});
 }
@@ -424,7 +440,7 @@ install.packages('{{package}}')`
 
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'r-spatial'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';

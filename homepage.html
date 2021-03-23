@@ -190,7 +190,16 @@
                             <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
                         </div>
                         <div class="tab-pane" id="view" role="tabpanel">
-                          <p id="article-placeholder" class="m-3"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading article...</p>
+
+                            <div class="pl-3 pt-1">
+                                <small>
+                                    Authored by: <span id="article-info-author">...</span> in <b id="article-info-package">...</b>.
+                                    Source: <a href="#" target="_blank" id="article-info-source">...</a>,
+                                    Vignette: <a href="#" target="_blank" id="article-info-html">...</a>.
+                                    Last updated: <code id="article-info-date">2021-03-14</code>.
+                                </small>
+                                <div id="article-placeholder" class="float-right"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading article...</div>
+                            </div>
                           <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
                         </div>
                     </div>
@@ -295,6 +304,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.min.js"></script>
-<script src="homepage/homepage.js?nocache=15"></script>
+<script src="homepage/homepage.js?nocache=16"></script>
 </body>
 </html>
