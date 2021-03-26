@@ -353,11 +353,9 @@ function init_article_list(server){
               item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
               item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
               item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
-              if(pkg.pkglogo && pkg.maintainerlogin === pkg.universe){
-                item.find('.maintainer-avatar').attr('src', get_package_image(pkg)).removeClass('rounded-circle');
-              } else {
-                item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
-              }
+              var img = item.find('.maintainer-avatar').attr('src', get_package_image(pkg));
+              if(pkg.pkglogo)
+                img.removeClass('rounded-circle');
               item.appendTo('#article-list-group');
             });
             if(x.length){
