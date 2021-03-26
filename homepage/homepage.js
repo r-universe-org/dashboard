@@ -276,7 +276,8 @@ function init_package_descriptions(server){
                 }
                 if(buildinfo.pkglogo){
                     if(!buildinfo.pkglogo.startsWith('http')){
-                        buildinfo.pkglogo = buildinfo.upstream + '/raw/HEAD/' + buildinfo.pkglogo;
+                        var upstream = buildinfo.upstream.replace(/\.git$/, '');
+                        buildinfo.pkglogo = upstream + '/raw/HEAD/' + buildinfo.pkglogo;
                     }
                     item.find('.package-image').attr('src', buildinfo.pkglogo);
                 } else if(buildinfo.maintainerlogin){
