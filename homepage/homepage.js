@@ -254,6 +254,18 @@ function pretty_dependencies(pkg){
     return pkg['_hard_deps'].map(x => x.package).join(', ');
 }
 
+function get_package_image(buildinfo){
+    if(buildinfo.pkglogo){
+        if(!buildinfo.pkglogo.startsWith('http')){
+            var upstream = buildinfo.upstream.replace(/\.git$/, '');
+            buildinfo.pkglogo = upstream + '/raw/HEAD/' + buildinfo.pkglogo;
+        }
+        return buildinfo.pkglogo;
+    }
+    var ghuser = buildinfo.maintainerlogin || "r-universe";
+    return 'https://github.com/' + ghuser + '.png?size=140';
+}
+
 function init_package_descriptions(server){
     //$('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
@@ -274,15 +286,7 @@ function init_package_descriptions(server){
                 if(buildinfo.timestamp){
                     item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.timestamp));
                 }
-                if(buildinfo.pkglogo){
-                    if(!buildinfo.pkglogo.startsWith('http')){
-                        var upstream = buildinfo.upstream.replace(/\.git$/, '');
-                        buildinfo.pkglogo = upstream + '/raw/HEAD/' + buildinfo.pkglogo;
-                    }
-                    item.find('.package-image').attr('src', buildinfo.pkglogo);
-                } else if(buildinfo.maintainerlogin){
-                    item.find('.package-image').attr('src', 'https://github.com/' + buildinfo.maintainerlogin + '.png');
-                }
+                item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
             });
             if(x.length){
@@ -349,7 +353,9 @@ function init_article_list(server){
               item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
               item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
               item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
-              if(pkg.maintainerlogin){
+              if(pkg.pkglogo && pkg.maintainerlogin === pkg.universe){
+                item.find('.maintainer-avatar').attr('src', get_package_image(pkg)).removeClass('rounded-circle');
+              } else {
                 item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
               }
               item.appendTo('#article-list-group');
