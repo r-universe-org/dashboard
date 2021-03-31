@@ -84,6 +84,8 @@ function run_icon(run){
          // can be "success" or "Succeeded"
         if(run.builder.status.match(/succ/i)){
             i.css('color', '#22863a');
+        } else if(run.type == 'src'){
+            i.css('color', '#cb2431');
         } else {
             i.css('color', 'slategrey');
         }
