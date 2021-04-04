@@ -1,5 +1,4 @@
 /* Some parts are based on bs4_book, but TOC menu is custom */
-
 img {
   max-width: 100%;
 }
@@ -246,4 +245,11 @@ main ol > li:first-child, main ul > li:first-child {
 
 .toc-entry ul {
     list-style: none;
+}
+
+/* remove padding within iframe */
+@media (max-width: 767px) {
+  #topcontainer.container-fluid {
+    padding: 0;
+  }
 }
