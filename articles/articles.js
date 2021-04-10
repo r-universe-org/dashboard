@@ -40,7 +40,7 @@ $(function(){
 
 	get_ndjson('https://r-universe.dev/stats/vignettes?limit=500').then(function(res){
     var articles = res.filter(function(x){
-      return x.universe != 'test' && x.vignette.created
+      return (x.universe !== 'test') && (x.registered !== 'false') && x.vignette.created
     });
     articles.sort(order_by_created).slice(0, 250).forEach(function(pkg){
       pkg_to_el(pkg).appendTo('#articles-list-created');
