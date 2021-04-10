@@ -279,7 +279,7 @@ function init_package_descriptions(server){
                 if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
                 return 0;
             }
-            x.sort(order).forEach(function(pkg, i){
+            x.filter(x => x['_builder'].registered !== 'false').sort(order).forEach(function(pkg, i){
                 //console.log(pkg)
                 var item = $("#templatezone .package-description-item").clone();
                 item.find('.package-name').text(pkg.Package);
@@ -338,7 +338,7 @@ function init_article_list(server){
                 if(a.vignette.modified > b.vignette.modified) return -1;
                 return 0;
             }
-            x.sort(order).forEach(function(pkg, i){
+            x.filter(x => x.registered !== 'false').sort(order).forEach(function(pkg, i){
               var item = $("#templatezone .article-item").clone();
               var minilink = pkg.package + "/" + pkg.vignette.filename;
               articledata[minilink] = pkg;
