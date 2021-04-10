@@ -161,6 +161,9 @@ function init_packages_table(server, user){
             var pkglink = $("<a>").text(pkg.package).
                 attr("href", src.builder ? src.builder.upstream : undefined).
                 attr("target", "_blank");
+            if(pkg.runs[0].builder.registered === 'false'){
+              pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
+            }
             if(src.builder){
             tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, run_icon(src),
                 builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
