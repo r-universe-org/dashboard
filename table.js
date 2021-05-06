@@ -15,6 +15,8 @@ function href(doc){
 }
 
 function run_icon(run){
+  if(run.type == 'pending')
+    return $('<span></span>')
 	var iconmap = {
 		src : "linux",
 		win : "windows",
@@ -89,10 +91,10 @@ function init_packages_table(org = ":any", maintainer = ""){
 			//console.log(pkg)
 			var name = pkg.package;
 			var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
-			var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
-			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
-			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '3.6') || {};
-			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '3.6') || {};
+			var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {type:'pending'};
+			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {type:'pending'}
+			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
+			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
 			var published = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.timestamp * 1000 || NaN)).yyyymmdd();
 			var builddate = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.date * 1000 || NaN)).yyyymmdd();
 			var sysdeps = make_sysdeps(src.builder);
