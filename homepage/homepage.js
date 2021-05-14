@@ -189,7 +189,7 @@ function init_packages_table(server, user){
                 var row = pkgs.find(x => x.package == name);
                 if(row && row.oncran !== undefined){
                     var oncran = row.oncran;
-                    var icon = $("<small>").addClass(oncran ? "fa fa-award" : "fa fa-question-circle popover-dismiss").
+                    var icon = $("<i>").addClass(oncran ? "fa fa-award" : "fa fa-question-circle popover-dismiss").
                         css('color', oncran ? color_ok : color_bad);
                     cranlink.
                         attr("href", "https://cran.r-project.org/package=" + name).
