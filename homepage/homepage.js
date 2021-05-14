@@ -1,3 +1,7 @@
+const color_ok = '#22863a';
+const color_bad = '#cb2431';
+const color_meh = 'slategrey';
+
 /* Menu example: https://www.codeply.com/p/eDmT9PMWW3 */
 $(function(){
     function SidebarCollapse() {
@@ -85,11 +89,11 @@ function run_icon(run){
         var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
          // can be "success" or "Succeeded"
         if(run.builder.status.match(/succ/i)){
-            i.css('color', '#22863a');
+            i.css('color', color_ok);
         } else if(run.type == 'src'){
-            i.css('color', '#cb2431');
+            i.css('color', color_bad);
         } else {
-            i.css('color', 'slategrey');
+            i.css('color', color_meh);
         }
         return $('<span></span>').append(a);
     } else {
@@ -141,7 +145,14 @@ Date.prototype.yyyymmdd = function() {
     }
 };
 
+async function get_metadata(user){
+    var url = 'https://raw.githubusercontent.com/r-universe/' + user + '/master/.metadata.json';
+    const response = await fetch(url);
+    return response.json();
+}
+
 function init_packages_table(server, user){
+    const metadata = get_metadata(user);
     let tbody = $("#packages-table-body");
     var initiated = false;
     ndjson_batch_stream(server + '/stats/checks', function(batch){
@@ -173,6 +184,20 @@ function init_packages_table(server, user){
             } else {
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
+            metadata.then(function(pkgs){
+                var row = pkgs.find(x => x.package == name);
+                if(row && row.oncran){
+                    var icon = $("<i>").addClass("fa fa-award").css('color', color_ok);
+                    var cranlink = $("<a>").
+                        attr("href", "https://cran.r-project.org/package=" + name).
+                        attr("target", "_blank").
+                        css("margin-left", "5px").
+                        append(icon)
+                    pkglink.after(cranlink)
+                }
+            }).catch((error) => {
+               console.log('Failed to download metadata:', error);
+            });
         });
     }).then(function(){
         if(initiated){
