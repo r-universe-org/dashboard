@@ -187,13 +187,13 @@ function init_packages_table(server, user){
             metadata.then(function(pkgs){
                 var row = pkgs.find(x => x.package == name);
                 if(row && row.oncran){
-                    var icon = $("<i>").addClass("fa fa-award").css('color', 'goldenrod');
+                    var icon = $("<i>").addClass("fa fa-award").css('color', color_ok);
                     var cranlink = $("<a>").
                         attr("href", "https://cran.r-project.org/package=" + name).
                         attr("target", "_blank").
-                        css("margin-right", "5px").
+                        css("margin-left", "5px").
                         append(icon)
-                    pkglink.before(cranlink)
+                    pkglink.after(cranlink)
                 }
             }).catch((error) => {
                console.log('Failed to download metadata:', error);
