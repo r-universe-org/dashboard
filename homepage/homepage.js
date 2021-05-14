@@ -157,13 +157,14 @@ function init_packages_table(server, user){
             var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {type:'pending'};
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
-            var published = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.timestamp * 1000 || NaN)).yyyymmdd();
-            var builddate = (new Date(pkg.runs[0].builder && pkg.runs[0].builder.date * 1000 || NaN)).yyyymmdd();
+            var buildinfo = src.builder || pkg.runs[0].builder;
+            var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
+            var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
             var sysdeps = make_sysdeps(src.builder);
             var pkglink = $("<a>").text(pkg.package).
                 attr("href", src.builder ? src.builder.upstream : undefined).
                 attr("target", "_blank");
-            if(pkg.runs[0].builder.registered === 'false'){
+            if(buildinfo.registered === 'false'){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
             }
             if(src.builder){
