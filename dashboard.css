@@ -93,3 +93,7 @@ body {
 .collapsed .collapse-icon::before {
   content: " \f0ab";
 }
+
+.tooltip-inner {
+    max-width: 1000px !important;
+}

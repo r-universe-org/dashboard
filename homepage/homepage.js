@@ -175,6 +175,7 @@ function init_packages_table(server, user){
             var pkglink = $("<a>").text(pkg.package).
                 attr("href", src.builder ? src.builder.upstream : undefined).
                 attr("target", "_blank");
+            var cranlink = $("<a>")
             if(buildinfo.registered === 'false'){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
             }
@@ -186,14 +187,18 @@ function init_packages_table(server, user){
             }
             metadata.then(function(pkgs){
                 var row = pkgs.find(x => x.package == name);
-                if(row && row.oncran){
-                    var icon = $("<i>").addClass("fa fa-award").css('color', color_ok);
-                    var cranlink = $("<a>").
+                if(row && row.oncran !== undefined){
+                    var oncran = row.oncran;
+                    var icon = $("<i>").addClass(oncran ? "fa fa-award" : "fa fa-question-circle popover-dismiss").
+                        css('color', oncran ? color_ok : color_bad);
+                    cranlink.
                         attr("href", "https://cran.r-project.org/package=" + name).
                         attr("target", "_blank").
                         css("margin-left", "5px").
-                        append(icon)
-                    pkglink.after(cranlink)
+                        append(icon);
+                    pkglink.after(cranlink);
+                    var tiptext = oncran ? "Verified CRAN package!" : "A package '" + name + "' exists on CRAN but description does not link to:<br/><u>" + buildinfo.upstream + '</u>. This could be another source.';
+                    cranlink.tooltip({title: tiptext, html: true});
                 }
             }).catch((error) => {
                console.log('Failed to download metadata:', error);
