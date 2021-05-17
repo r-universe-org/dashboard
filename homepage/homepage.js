@@ -153,7 +153,7 @@ async function get_metadata(user){
     throw new Error("HTTP Error: " + response.status)
 }
 
-function attach_cran_badge(name, el){
+function attach_cran_badge(name, url, el){
     metadata.then(function(pkgs){
         var row = pkgs.find(x => x.package == name);
         if(row && row.oncran !== undefined){
@@ -168,7 +168,7 @@ function attach_cran_badge(name, el){
                 css("margin-right", "10px").
                 append(icon);
             el.after(cranlink);
-            var tiptext = oncran ? "Verified CRAN package!" : "A package '" + name + "' exists on CRAN but description does not link to:<br/><u>" + buildinfo.upstream + '</u>. This could be another source.';
+            var tiptext = oncran ? "Verified CRAN package!" : "A package '" + name + "' exists on CRAN but description does not link to:<br/><u>" + url + '</u>. This could be another source.';
             cranlink.tooltip({title: tiptext, html: true});
         }
     }).catch((error) => {
@@ -208,7 +208,7 @@ function init_packages_table(server, user){
             } else {
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
-            attach_cran_badge(name, pkglink);
+            attach_cran_badge(name, buildinfo.upstream, pkglink);
         });
     }).then(function(){
         if(initiated){
@@ -332,7 +332,7 @@ function init_package_descriptions(server){
                 }
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-                attach_cran_badge(pkg.Package, item.find('.cranbadge'));
+                attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
             });
             if(x.length){
               $("#package-description-placeholder").hide();
