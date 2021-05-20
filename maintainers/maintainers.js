@@ -24,7 +24,7 @@ $(function(){
 			var organizations = {};
 			var login = maintainer.login || "";
 			maintainer.packages.forEach(function(pkg){
-				if(pkg.user == 'test') return;
+				if(pkg.user == 'test' || (""+pkg.registered) == "false") return;
 				organizations[pkg.user] = organizations[pkg.user] ? organizations[pkg.user] + 1 : 1;
 			});
 			var profile = $("#templatezone .maintainer-profile").clone();
@@ -52,7 +52,7 @@ $(function(){
             	orglink.tooltip({title: tiptext, html: true});
 				profile.find(".maintainer-organizations").append(orglink);	
 			}
-			profile.find(".maintainer-packages").text(total + " packages total");
+			profile.find(".maintainer-packages").text(total + " packages");
 			//profile.find(".maintainer-organizations").text(JSON.stringify(organizations));
 			profile.appendTo("#maintainer-profile-list");
 		});
