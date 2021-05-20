@@ -35,19 +35,24 @@ $(function(){
 			profile.find(".maintainer-name").text((maintainer.name || "").replace(/^'(.*)'$/, '$1')); //remove quoted names
 			profile.find(".maintainer-more").append(maintainer.email);
 			var total = 0;
+			var orgcount = 0;
 			for (const [org, count] of Object.entries(organizations)) {
+				orgcount++;
 				total = total + count;
-				if(login.toLowerCase() != org.toLowerCase()){
-					if(org.includes("gitlab.com")){
-						var url = "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg";
-					} else {
-						var url = 'https://github.com/' + org + ".png?size=60";
-					}
-					var icon = $("<img/>").addClass("lazyload maintainer-org-icon border border-light rounded m-2").attr('src', url).width(30);
-					profile.find(".maintainer-organizations").append(icon);
-				}		
+				//if(login.toLowerCase() == org.toLowerCase()) continue;
+				if(org.includes("gitlab.com")){
+					var url = "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg";
+				} else {
+					var url = 'https://github.com/' + org + ".png?size=60";
+				}
+				var firstname = maintainer.name.split(' ').shift();
+				var icon = $("<img/>").addClass("zoom lazyload maintainer-org-icon border border-light rounded m-2").attr('src', url).width(45);
+				var orglink = $("<a/>").attr('href', 'https://' + org + '.r-universe.dev').append(icon);
+				var tiptext = firstname + ' maintains ' + count + " <b>" + org + "</b> package" + (count > 1 ? "s" : "");
+            	orglink.tooltip({title: tiptext, html: true});
+				profile.find(".maintainer-organizations").append(orglink);	
 			}
-			profile.find(".maintainer-packages").text(total + " packages");
+			profile.find(".maintainer-packages").text(total + " packages total");
 			//profile.find(".maintainer-organizations").text(JSON.stringify(organizations));
 			profile.appendTo("#maintainer-profile-list");
 		});
