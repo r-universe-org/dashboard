@@ -142,7 +142,7 @@
 
         <h1 class="display-4 font-italic border-bottom"><span class="fa fa-user-astronaut fa-fw ml-3"></span> Welcome to R-universe! </h1>
 
-        <p class="lead my-3">We are running a pilot based on GitHub users and organizations with existing CRAN packages.</p>
+        <p class="lead my-3">We are now running a pilot allowing anyone to add custom (non-cran) packages to their universe!</p>
 
         <pre><code class="language-r"># Install 'magick' from 'ropensci' universe
 install.packages('magick', repos = 'https://ropensci.r-universe.dev')
@@ -164,15 +164,17 @@ install.packages(c("magick", "openssl", "pdftools", "drake"))</code></pre>
 
         <p class="lead my-3">Package source code for all universes is tracked on <a href="https://github.com/r-universe">https://github.com/r-universe</a>.</p>
 
-        <h2 class="display-5 font-italic border-bottom"><span class="fa fa-satellite-dish fa-fw m-2"></span>Enable your universe</h2>
+        <h2 class="display-5 font-italic border-bottom"><span class="fa fa-satellite-dish fa-fw m-2"></span>Enable your personal universe</h2>
 
         <div class = "lead">
             <p>To setup a universe for your own GitHub user or organization:</p>
             <ol>
-                <li>Install the <a href="https://github.com/apps/r-universe/installations/new">r-universe app</a> on the GitHub account that you want to enable.</li>
+                <li>Create a repository called <tt>universe</tt> on the GitHub account for which you want to create a universe. The repository must contain a file called <a href="https://github.com/r-universe-org/demo-registry/blob/master/packages.json">packages.json</a> in the standard format, defining the <u>package</u> and git <u>url</u> for the packages you want to include. For example: <a href="https://github.com/maelle/universe">https://github.com/maelle/universe</a>. Start by adding no more than a few packages, you can add more later.</li>
+                <li>Install the <a href="https://github.com/apps/r-universe/installations/new">r-universe app</a> on the GitHub account that you want to enable. Choose "enable for all repositories".</li>
                 <li>After a few minutes, your source universe will appear on: <tt>https://github.com/r-universe/:yourname</tt></li>
-                <li>This universe will automatically add all CRAN packages that are <a href="https://github.com/r-universe-org/cran-to-git">listed under that GitHub account</a>. In addition, it will include packages that referenced as <tt>Remotes</tt> in the description file of one of those packages.</li>
+                <li>The universe automatically starts building the packages from your registry. In addition, it will include packages that referenced as <tt>Remotes</tt> in the description file of one of those packages.</li>
                 <li>The universe automatically syncs and builds your package git repos once per hour.</li>
+                <li>If you encounter any issues, the actions tab in your source universe may show what is going on, for example: <a href="https://github.com/r-universe/maelle/actions">https://github.com/r-universe/maelle/actions</a></li> 
             </ol>
         </div>
 
