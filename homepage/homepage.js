@@ -188,8 +188,8 @@ function init_packages_table(server, user){
             //console.log(pkg)
             var name = pkg.package;
             var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
-            var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {type:'pending'};
-            var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {type:'pending'};
+            var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'};
+            var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'};
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
             var buildinfo = src.builder || pkg.runs[0].builder;
