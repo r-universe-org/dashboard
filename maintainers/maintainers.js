@@ -29,7 +29,7 @@ $(function(){
 			});
 			var profile = $("#templatezone .maintainer-profile").clone();
 			if(login){
-				profile.find(".maintainer-image").attr('data-src', 'https://github.com/' + login + ".png")
+				profile.find(".maintainer-image").attr('data-src', 'https://r-universe.dev/avatars/' + login + ".png")
 				profile.find(".maintainer-homepage").attr('href', 'https://github.com/' + login)
 			}
 			profile.find(".maintainer-name").text((maintainer.name || "").replace(/^'(.*)'$/, '$1')); //remove quoted names
@@ -43,7 +43,7 @@ $(function(){
 				if(org.includes("gitlab.com")){
 					var url = "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg";
 				} else {
-					var url = 'https://github.com/' + org + ".png?size=60";
+					var url = 'https://r-universe.dev/avatars/' + org + ".png?size=60";
 				}
 				var firstname = maintainer.name.split(' ').shift();
 				var icon = $("<img/>").addClass("zoom lazyload maintainer-org-icon border border-light rounded m-2").attr('src', url).width(45);

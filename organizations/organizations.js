@@ -20,7 +20,7 @@ $(function(){
 				$.get("https://gitlab.com/api/v4/users?username=" + organization, res => set_org_image(res[0]));
 				$.get("https://gitlab.com/api/v4/groups/" + organization, res => set_org_image(res));
 			} else {
-				profile.find(".organization-image").attr('data-src', 'https://github.com/' + organization + ".png");
+				profile.find(".organization-image").attr('data-src', 'https://r-universe.dev/avatars/' + organization + ".png");
 				profile.find(".organization-homepage").attr('href', 'https://' + organization + '.r-universe.dev');
 				profile.find(".organization-name").text(organization);
 			}

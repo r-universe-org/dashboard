@@ -222,7 +222,7 @@ function init_packages_table(server, user){
 function init_github_info(ghuser){
     $("head title").text("R-universe: " + ghuser);
     $(".title-universe-name").text(ghuser);
-    $("#github-user-avatar").attr('src', 'https://github.com/' + ghuser + '.png');
+    $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
     return get_json('https://api.github.com/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
@@ -270,7 +270,7 @@ function init_maintainer_list(server){
             var item = $("#templatezone .maintainer-item").clone();
             item.find('.maintainer-name').text(maintainer.name)
             if(maintainer.login){
-                item.find('.maintainer-avatar').attr('src', 'https://github.com/' + maintainer.login + '.png?size=140');
+                item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
             }
             item.appendTo('#maintainer-list');
         });
@@ -307,7 +307,7 @@ function get_package_image(buildinfo){
         return buildinfo.pkglogo;
     }
     var ghuser = buildinfo.maintainerlogin || "r-universe";
-    return 'https://github.com/' + ghuser + '.png?size=140';
+    return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
 function init_package_descriptions(server){

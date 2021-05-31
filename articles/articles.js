@@ -33,7 +33,7 @@ $(function(){
     item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
     item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '#articles');
     if(pkg.maintainerlogin){
-      item.find('.maintainer-avatar').attr('src', 'https://github.com/' + pkg.maintainerlogin + '.png?size=140');
+      item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + pkg.maintainerlogin + '.png?size=140');
     }
     return item;
   }
