@@ -1,0 +1,173 @@
+body {
+  overflow: hidden;
+  background: #333;
+  margin: 0;
+  padding: 0;
+}
+
+#runiverselogo{
+  position: fixed;
+  top: 20px;
+  left: 20px;  
+  width: 200px;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#rocket {
+  animation: shakes 3s linear infinite;
+}
+
+@keyframes shakes {
+  10% {
+    transform: translate(5px, 4px);
+  }
+  20% {
+    transform: translate(1px, 4px);
+  }
+  30% {
+    transform: translate(1px, 4px);
+  }
+  40% {
+    transform: translate(1px, 1px);
+  }
+  50% {
+    transform: translate(5px, 3px);
+  }
+  60% {
+    transform: translate(2px, 4px);
+  }
+  70% {
+    transform: translate(3px, 3px);
+  }
+  80% {
+    transform: translate(4px, 3px);
+  }
+  90% {
+    transform: translate(4px, 3px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+#rocket path, #rocket circle, #rocket polygon {
+  fill: #FFF;
+}
+#rocket circle {
+  cx: 369.5;
+  cy: 331.8;
+  r: 7;
+}
+#rocket polygon {
+  animation: burst 0.5s infinite;
+  transform-origin: 363px 337px;
+}
+
+@keyframes burst {
+  20% {
+    transform: scale(0.8);
+  }
+  40% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#stars {
+  animation: starsMovement 480s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes starsMovement {
+  0% {
+    transform: scale(1.5) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.5) rotate(360deg);
+  }
+}
+#stars circle {
+  fill: #FFF;
+  animation: glow 1s infinite forwards;
+}
+
+@keyframes glow {
+  6% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 0.5;
+  }
+  18% {
+    opacity: 0.9;
+  }
+  24% {
+    opacity: 0.4;
+  }
+  30%, 100% {
+    opacity: 1;
+  }
+}
+
+#comets line {
+  fill: none;
+  stroke: #FFF;
+  stroke-width: 1;
+  stroke-dasharray: 150 980;
+  stroke-dashoffset: 150;
+  -webkit-animation: cometFall 10s ease-out infinite;
+          animation: cometFall 10s ease-out infinite;
+}
+
+@keyframes cometFall {
+  5%, 100% {
+    stroke-dashoffset: -980;
+  }
+}
+#comets line:nth-child(1) {
+  -webkit-animation-delay: 9.8s;
+          animation-delay: 9.8s;
+}
+#comets line:nth-child(2) {
+  -webkit-animation-delay: 1.4s;
+          animation-delay: 1.4s;
+}
+#comets line:nth-child(3) {
+  -webkit-animation-delay: 1.3s;
+          animation-delay: 1.3s;
+}
+#comets line:nth-child(4) {
+  -webkit-animation-delay: 10s;
+          animation-delay: 10s;
+}
+#comets line:nth-child(5) {
+  -webkit-animation-delay: 5.6s;
+          animation-delay: 5.6s;
+}
+#comets line:nth-child(6) {
+  -webkit-animation-delay: 8.5s;
+          animation-delay: 8.5s;
+}
+#comets line:nth-child(7) {
+  -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+}
+#comets line:nth-child(8) {
+  -webkit-animation-delay: 5.2s;
+          animation-delay: 5.2s;
+}
