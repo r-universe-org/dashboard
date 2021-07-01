@@ -15,6 +15,8 @@ function href(doc){
 }
 
 function run_icon(run){
+  if(run.skip)
+    return $("<b>").text("—").css('margin-left', '5px').css('color', 'slategrey');
   if(run.type == 'pending')
     return $('<span></span>')
 	var iconmap = {
@@ -91,18 +93,22 @@ function init_packages_table(org = ":any", maintainer = ""){
 			//console.log(pkg)
 			var name = pkg.package;
 			var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
-			var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'};
-			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'}
-			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
-			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
+			var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
+			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
+			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
+			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
 			var buildinfo = src.builder || pkg.runs[0].builder;
 			var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
 			var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
 			var sysdeps = make_sysdeps(src.builder);
 			var userlink =  $("<a>").text(pkg.user).
 				attr("href", "https://" + pkg.user + ".r-universe.dev");
+			var pkgname = pkg.package;
+			if(pkg.os_restriction){
+				pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
+			}
 			if(src.builder){
-			tbody.append(tr([published, userlink, pkg.package, pkg.version, pkg.maintainer, run_icon(src),
+			tbody.append(tr([published, userlink, pkgname, pkg.version, pkg.maintainer, run_icon(src),
 				builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
 			} else {
 				console.log("Not listing old version: " + name + " " + pkg.version )
