@@ -77,6 +77,8 @@ function a(link, txt){
 }
 
 function run_icon(run){
+    if(run.skip)
+        return $("<b>").text("—").css('margin-left', '5px').css('color', color_meh);
     if(run.type == 'pending')
       return $('<span></span>')
     var iconmap = {
@@ -188,10 +190,10 @@ function init_packages_table(server, user){
             //console.log(pkg)
             var name = pkg.package;
             var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
-            var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'};
-            var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {}; //{type:'pending'};
-            var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {};
-            var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {};
+            var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
+            var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
+            var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
+            var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
             var buildinfo = src.builder || pkg.runs[0].builder;
             var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
             var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
@@ -201,6 +203,9 @@ function init_packages_table(server, user){
                 attr("target", "_blank");
             if(buildinfo.registered === 'false'){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
+            }
+            if(pkg.os_restriction){
+              pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
             if(src.builder){
             tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, run_icon(src),
