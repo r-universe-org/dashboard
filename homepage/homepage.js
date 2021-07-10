@@ -78,7 +78,7 @@ function a(link, txt){
 
 function run_icon(run){
     if(run.skip)
-        return $("<b>").text("-").css('padding', '5px').css('color', color_meh);
+        return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
     if(run.type == 'pending')
       return $('<span></span>')
     var iconmap = {
@@ -495,7 +495,7 @@ install.packages('{{package}}')`
 
 
 //INIT
-var devtest = 'r-lib'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
