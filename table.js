@@ -16,7 +16,7 @@ function href(doc){
 
 function run_icon(run){
   if(run.skip)
-    return $("<b>").text("—").css('margin-left', '5px').css('color', 'slategrey');
+    return $("<b>").text("-").css('padding', '5px').css('color', 'slategrey');
   if(run.type == 'pending')
     return $('<span></span>')
 	var iconmap = {

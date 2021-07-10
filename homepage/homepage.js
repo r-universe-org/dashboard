@@ -78,7 +78,7 @@ function a(link, txt){
 
 function run_icon(run){
     if(run.skip)
-        return $("<b>").text("—").css('margin-left', '5px').css('color', color_meh);
+        return $("<b>").text("-").css('padding', '5px').css('color', color_meh);
     if(run.type == 'pending')
       return $('<span></span>')
     var iconmap = {
