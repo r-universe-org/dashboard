@@ -170,6 +170,9 @@ function attach_cran_badge(name, url, el){
                 css("margin-right", "10px").
                 append(icon);
             el.after(cranlink);
+            if(url.substring(0,27) == 'https://github.com/r-forge/'){
+                url = 'https://r-forge.r-project.org';
+            }
             var tiptext = oncran ? "Verified CRAN package!" : "A package '" + name + "' exists on CRAN but description does not link to:<br/><u>" + url + '</u>. This could be another source.';
             cranlink.tooltip({title: tiptext, html: true});
         }
