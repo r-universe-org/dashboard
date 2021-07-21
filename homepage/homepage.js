@@ -76,7 +76,7 @@ function a(link, txt){
     return $('<a>').text(txt || link).attr('href', link);
 }
 
-function run_icon(run){
+function run_icon(run, src){
     if(run.skip)
         return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
     if(run.type == 'pending')
@@ -97,10 +97,11 @@ function run_icon(run){
         } else {
             i.css('color', color_meh);
         }
-        return $('<span></span>').append(a);
     } else {
-        return $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+        var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+        var a = $("<a>").attr('href', src.builder.url).append(i);
     }
+    return $('<span></span>').append(a);
 }
 
 function docs_icon(job){
@@ -211,8 +212,8 @@ function init_packages_table(server, user){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
             if(src.builder){
-            tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, run_icon(src),
-                builddate, [run_icon(win), run_icon(mac)], [run_icon(oldwin), run_icon(oldmac)], sysdeps]));
+                tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, run_icon(src), builddate,
+                  [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
             } else {
                 console.log("Not listing old version: " + name + " " + pkg.version )
             }
