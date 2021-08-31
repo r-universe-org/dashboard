@@ -76,6 +76,22 @@ function a(link, txt){
     return $('<a>').text(txt || link).attr('href', link);
 }
 
+function docs_icon(pkg, run){
+    if(run && run.builder){
+        var i = $("<i>", {class : 'fa fa-book'});
+        var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
+        if(run.builder.pkgdocs){
+            if(run.builder.pkgdocs.match(/succ/i)){
+                i.css('color', color_ok);
+                a.attr('href', 'https://docs.ropensci.org/' + pkg).attr("target", "_blank");
+            } else {
+                i.css('color', color_bad);
+            }
+            return $('<span></span>').append(a);
+        }
+    }
+}
+
 function run_icon(run, src){
     if(run.skip)
         return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
@@ -102,17 +118,6 @@ function run_icon(run, src){
         var a = $("<a>").attr('href', src.builder.url).append(i);
     }
     return $('<span></span>').append(a);
-}
-
-function docs_icon(job){
-    if(job && job.url){
-        var i = $("<i>", {class : 'fa fa-book'});
-        var a = $("<a>").attr('href', job.url).append(i);
-        if(job.color == 'red'){
-            a.css('color', '#e05d44');
-        }
-        return $('<span></span>').append(a);
-    }
 }
 
 function make_sysdeps(builder){
@@ -183,6 +188,7 @@ function attach_cran_badge(name, url, el){
 }
 
 function init_packages_table(server, user){
+    if(user == 'ropensci') $("#thdocs").text("Docs");
     let tbody = $("#packages-table-body");
     var initiated = false;
     ndjson_batch_stream(server + '/stats/checks', function(batch){
@@ -212,7 +218,8 @@ function init_packages_table(server, user){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
             if(src.builder){
-                tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, run_icon(src), builddate,
+                var docslink = (user == 'ropensci') ? docs_icon(name, src) : "";
+                tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
             } else {
                 console.log("Not listing old version: " + name + " " + pkg.version )
