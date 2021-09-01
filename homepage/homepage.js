@@ -80,7 +80,11 @@ function docs_icon(pkg, run){
     if(run && run.builder){
         var i = $("<i>", {class : 'fa fa-book'});
         var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
-        if(run.builder.pkgdocs && run.builder.registered !== 'false'){
+        if(run.builder.pkgdocs){
+            if(run.builder.registered === 'false'){
+              /* This is a 'remote' package */
+              return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
+            }
             if(run.builder.pkgdocs.match(/succ/i)){
                 i.css('color', color_ok);
                 a.attr('href', 'https://docs.ropensci.org/' + pkg).attr("target", "_blank");
