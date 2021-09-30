@@ -102,17 +102,18 @@ function run_icon(run, src){
     if(run.type == 'pending')
       return $('<span></span>')
     var iconmap = {
-        src : "linux",
-        win : "windows",
-        mac : "apple"
+        src : "fab fa-linux",
+        win : "fab fa-windows",
+        mac : "fab fa-apple",
+        failure: "fa fa-times"
     };
     if(run && run.builder){
-        var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
+        var i = $("<i>", {class : iconmap[run.type]});
         var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
          // can be "success" or "Succeeded"
-        if(run.builder.status.match(/succ/i)){
+        if(run.builder.status && run.builder.status.match(/succ/i)){
             i.css('color', color_ok);
-        } else if(run.type == 'src'){
+        } else if(run.type == 'src' || run.type == 'failure'){
             i.css('color', color_bad);
         } else {
             i.css('color', color_meh);
@@ -195,6 +196,7 @@ function init_packages_table(server, user){
     if(user == 'ropensci') $("#thdocs").text("Docs");
     let tbody = $("#packages-table-body");
     var initiated = false;
+    var rows = {};
     ndjson_batch_stream(server + '/stats/checks', function(batch){
         if(!initiated && batch.length > 0){
             initiated = true;
@@ -203,7 +205,7 @@ function init_packages_table(server, user){
         batch.forEach(function(pkg){
             //console.log(pkg)
             var name = pkg.package;
-            var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
+            var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
             var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
             var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
@@ -223,12 +225,18 @@ function init_packages_table(server, user){
             }
             if(src.builder){
                 var docslink = (user == 'ropensci') ? docs_icon(name, src) : "";
-                tbody.append(tr([published, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
-                  [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
+                var row = tr([published, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
+                  [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
+                if(src.type === 'failure'){
+                  pkglink.after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+                } else {
+                  attach_cran_badge(name, buildinfo.upstream, pkglink);
+                }
+                rows[name] ? rows[name].after(row) : tbody.append(row);
+                rows[name] = row;
             } else {
-                console.log("Not listing old version: " + name + " " + pkg.version )
+                console.log("Not listing old win/mac binaries: " + name + " " + pkg.version )
             }
-            attach_cran_badge(name, buildinfo.upstream, pkglink);
         });
     }).then(function(){
         if(initiated){
