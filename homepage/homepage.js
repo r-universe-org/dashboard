@@ -228,7 +228,7 @@ function init_packages_table(server, user){
                 var row = tr([published, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
-                  pkglink.after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+                  pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
                 } else {
                   attach_cran_badge(name, buildinfo.upstream, pkglink);
                 }
