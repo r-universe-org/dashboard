@@ -252,6 +252,8 @@ function init_github_info(ghuser){
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
+    $("#sync-badge-url").attr('href', 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml');
+    $("#sync-badge-img").attr('src', 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml/badge.svg');
     return get_json('https://api.github.com/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
