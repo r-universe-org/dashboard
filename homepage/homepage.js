@@ -362,9 +362,22 @@ function get_package_image(buildinfo){
     return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
+
+
 function init_package_descriptions(server){
+    function add_badge_row(name){
+        var tr = $("<tr>").appendTo($("#badges-table-body"));
+        const badge_url = server + "/badges/" + name;
+        const badge_text = server + "/badges/<b>" + name + "</b>";
+        $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
+        $("<td>").append($("<img>").attr("src", badge_url)).appendTo(tr);
+
+    }
     //$('#packages-tab-link').one('shown.bs.tab', function (e) {
         get_ndjson(server + '/stats/descriptions').then(function(x){
+            add_badge_row(":name");
+            add_badge_row(":registry");
+            add_badge_row(":total");
             function order( a, b ) {
                 if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
                 if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
@@ -385,6 +398,7 @@ function init_package_descriptions(server){
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
                 attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
+                add_badge_row(pkg.Package);
             });
             if(x.length){
               $("#package-description-placeholder").hide();

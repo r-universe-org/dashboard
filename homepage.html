@@ -149,6 +149,9 @@
                         <li class="nav-item">
                             <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api" role="tab">API</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="badges-tab-link" data-toggle="tab" href="#badges" role="tab">Badges</a>
+                        </li>
                         <li class="nav-item d-none">
                             <a class="nav-link" id="view-tab-link" data-toggle="tab" href="#view" role="tab">Viewer</a>
                         </li>
@@ -190,6 +193,18 @@
                         </div>
                         <div class="tab-pane" id="api" role="tabpanel">
                             <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
+                        </div>
+                        <div class="tab-pane" id="badges" role="tabpanel">
+                          <p class="pt-2"> Badges can be customized with <tt>color</tt>, <tt>scale</tt>, and <tt>style</tt>, parameters from <a href="https://www.npmjs.com/package/badgen">badgen</a>. For example: <a target="_blank" href="https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat"><tt>https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat</tt></a>
+                          <table id="badges-table" class="table table-sm compact">
+                            <thead>
+                              <tr>
+                                <th scope="col">URL</th>
+                                <th scope="col">Preview</th>
+                              </tr>
+                            </thead>
+                            <tbody id="badges-table-body"></tbody>
+                          </table>
                         </div>
                         <div class="tab-pane" id="view" role="tabpanel">
 
@@ -309,6 +324,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.min.js"></script>
-<script src="ui/homepage.js?nocache=5"></script>
+<script src="ui/homepage.js?nocache=6"></script>
 </body>
 </html>
