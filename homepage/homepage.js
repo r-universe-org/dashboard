@@ -248,15 +248,13 @@ function init_packages_table(server, user){
 };
 
 function update_registry_status(ghuser){
+  const tooltip_success = "Universe registry is up to date";
+  const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
   const url = 'https://api.github.com/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
+  $("#registry-status-link").attr("href", 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml');
   return get_json(url).then(function(data){
+    const success = data.workflow_runs[0].conclusion == 'success';
     if(data && data.workflow_runs && data.workflow_runs.length) {
-      const success = data.workflow_runs[0].conclusion == 'success';
-      const linkto = 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml';
-      const tooltip_success = "Universe registry is up to date";
-      const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
-      $("#registry-status-spinner").hide();
-      $("#registry-status-link").attr("href", linkto);
       $("#registry-status-icon")
         .addClass(success ? 'fa-check' : 'fa-exclamation-triangle')
         .addClass(success ? 'text-success' : 'text-danger')
@@ -265,7 +263,10 @@ function update_registry_status(ghuser){
       throw "Failed to get workflow data";
     }
   }).catch(function(err){
+    $("#registry-status-icon").addClass('fa-times').addClass('text-danger');
     console.log(err);
+  }).finally(function(e){
+     $("#registry-status-spinner").hide();
   });
 }
 
