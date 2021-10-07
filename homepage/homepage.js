@@ -364,11 +364,11 @@ function get_package_image(buildinfo){
 
 
 
-function init_package_descriptions(server){
+function init_package_descriptions(server, user){
     function add_badge_row(name){
         var tr = $("<tr>").appendTo($("#badges-table-body"));
-        const badge_url = server + "/badges/" + name;
-        const badge_text = server + "/badges/<b>" + name + "</b>";
+        const badge_url = "https://" + user + ".r-universe.dev/badges/" + name;
+        const badge_text = "https://" + user + ".r-universe.dev/badges/<b>" + name + "</b>";
         $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
         $("<td>").append($("<img>").attr("src", badge_url)).appendTo(tr);
 
@@ -563,7 +563,7 @@ var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-univ
 const metadata = get_metadata(user);
 init_github_info(user).then(function(){init_maintainer_list(server)});
 init_packages_table(server, user);
-init_package_descriptions(server);
+init_package_descriptions(server, user);
 init_article_list(server);
 
 $('a[data-toggle="tab"]').historyTabs();
