@@ -247,13 +247,33 @@ function init_packages_table(server, user){
     }).catch(alert);
 };
 
+function update_registry_status(ghuser){
+  const url = 'https://api.github.com/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
+  return get_json(url).then(function(data){
+    if(data && data.workflow_runs && data.workflow_runs.length) {
+      const success = data.workflow_runs[0].conclusion == 'success';
+      const linkto = 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml';
+      const tooltip_success = "Universe registry is up to date";
+      const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
+      $("#registry-status-spinner").hide();
+      $("#registry-status-link").attr("href", linkto);
+      $("#registry-status-icon")
+        .addClass(success ? 'fa-check' : 'fa-exclamation-triangle')
+        .addClass(success ? 'text-success' : 'text-danger')
+        .tooltip({title: success ? tooltip_success : tooltip_failure});
+    } else {
+      throw "Failed to get workflow data";
+    }
+  }).catch(function(err){
+    console.log(err);
+  });
+}
+
 function init_github_info(ghuser){
     $("head title").text("R-universe: " + ghuser);
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
-    $("#sync-badge-url").attr('href', 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml');
-    $("#sync-badge-img").attr('src', 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml/badge.svg');
     return get_json('https://api.github.com/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
@@ -270,6 +290,7 @@ function init_github_info(ghuser){
         if(user.twitter_username){
             $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
         }
+        update_registry_status(ghuser);
     }).catch(alert);
 }
 
