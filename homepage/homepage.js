@@ -289,6 +289,14 @@ function combine_duplicates(maintainer){
     return Object.keys(list).map(key => list[key]);
 }
 
+function any_registered(x){
+    for (const pkg of x.packages){
+        if (pkg.registered != "false")
+            return true;
+    }
+    return false;
+}
+
 function init_maintainer_list(server){
     get_ndjson(server + '/stats/maintainers').then(function(x){
         function order( a, b ) {
@@ -296,7 +304,7 @@ function init_maintainer_list(server){
             if(a.packages.length > b.packages.length) return -1;
             return 0;
         }
-        combine_duplicates(x).sort(order).forEach(function(maintainer){
+        combine_duplicates(x).filter(any_registered).sort(order).forEach(function(maintainer){
             var item = $("#templatezone .maintainer-item").clone();
             item.find('.maintainer-name').text(maintainer.name)
             if(maintainer.login){
