@@ -46,7 +46,7 @@ $(function(){
 					var url = 'https://r-universe.dev/avatars/' + org + ".png?size=60";
 				}
 				var firstname = maintainer.name.split(' ').shift();
-				var icon = $("<img/>").addClass("zoom lazyload maintainer-org-icon border border-light rounded m-2").attr('src', url).width(45);
+				var icon = $("<img/>").addClass("zoom lazyload maintainer-org-icon border border-light rounded m-2").attr('data-src', url).width(45);
 				var orglink = $("<a/>").attr('href', 'https://' + org + '.r-universe.dev').append(icon);
 				var tiptext = firstname + ' maintains ' + count + " <b>" + org + "</b> package" + (count > 1 ? "s" : "");
             	orglink.tooltip({title: tiptext, html: true});

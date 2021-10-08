@@ -15,7 +15,7 @@ $(function(){
 				profile.find(".organization-name").text(organization + "@gitlab");
 				function set_org_image(res){
 					if(!res || !res.avatar_url) return;
-					profile.find(".organization-image").attr('src', res.avatar_url.replace(/s=\d+/, 's=400'));
+					profile.find(".organization-image").attr('data-src', res.avatar_url.replace(/s=\d+/, 's=400'));
 				}
 				$.get("https://gitlab.com/api/v4/users?username=" + organization, res => set_org_image(res[0]));
 				$.get("https://gitlab.com/api/v4/groups/" + organization, res => set_org_image(res));

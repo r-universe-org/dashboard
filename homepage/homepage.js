@@ -370,7 +370,7 @@ function init_package_descriptions(server, user){
         const badge_url = "https://" + user + ".r-universe.dev/badges/" + name;
         const badge_text = "https://" + user + ".r-universe.dev/badges/<b>" + name + "</b>";
         $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
-        $("<td>").append($("<img>").attr("src", badge_url)).appendTo(tr);
+        $("<td>").append($("<img>").attr("data-src", badge_url).addClass("lazyload")).appendTo(tr);
 
     }
     //$('#packages-tab-link').one('shown.bs.tab', function (e) {
@@ -405,6 +405,7 @@ function init_package_descriptions(server, user){
             } else {
               $("#package-description-placeholder").text("No packages found in this username.");
             }
+            lazyload();
         });
     //});
 }
