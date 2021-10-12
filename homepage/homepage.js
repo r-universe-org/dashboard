@@ -362,8 +362,6 @@ function get_package_image(buildinfo){
     return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
-
-
 function init_package_descriptions(server, user){
     function add_badge_row(name){
         var tr = $("<tr>").appendTo($("#badges-table-body"));
@@ -371,11 +369,15 @@ function init_package_descriptions(server, user){
         const badge_text = "https://" + user + ".r-universe.dev/badges/<b>" + name + "</b>";
         $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
         $("<td>").append($("<img>").attr("data-src", badge_url).addClass("lazyload")).appendTo(tr);
-        const md_icon = $('<a href="about:blank" class="fab fa-markdown fa-lg">');
+        const md_icon = $('<a class="fab fa-markdown fa-lg">');
+        const tooltip_text = 'Copy to clipboard';
+        md_icon.tooltip({title: tooltip_text, placement: 'left'});
         md_icon.on("click", function(e){
-            e.preventDefault();
-            const text = `[![${name}-badge](${badge_url})](https://${user}.r-universe.dev)`;
-            navigator.clipboard.writeText(text).then(x => alert("Markdown copied to clipboard"));
+            const text = `[![${name} status badge](${badge_url})](https://${user}.r-universe.dev)`;
+            navigator.clipboard.writeText(text).then(function(e){
+              md_icon.attr('data-original-title', 'Copied!').tooltip('show');
+              md_icon.attr('data-original-title', tooltip_text);
+            });
         });
         $("<td>").append(md_icon).appendTo(tr);
     }
