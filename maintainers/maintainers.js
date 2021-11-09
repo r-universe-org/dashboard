@@ -6,6 +6,7 @@ function combine_duplicates(maintainer){
 		if(list[key]){
 			list[key].packages = list[key].packages.concat(x.packages);
 			list[key].email = list[key].email + "<br/>" + x.email;
+			list[key].updated = Math.max(list[key].updated, x.updated);
 		} else {
 			list[key] = x;
 		}
@@ -15,12 +16,7 @@ function combine_duplicates(maintainer){
 
 $(function(){
 	get_ndjson('https://r-universe.dev/stats/maintainers').then(function(x){
-		function order( a, b ) {
-			if(a.packages.length < b.packages.length) return 1;
-			if(a.packages.length > b.packages.length) return -1;
-			return 0;
-		}
-		combine_duplicates(x).sort(order).forEach(function(maintainer){
+		combine_duplicates(x).forEach(function(maintainer){
 			var organizations = {};
 			var login = maintainer.login || "";
 			maintainer.packages.forEach(function(pkg){
