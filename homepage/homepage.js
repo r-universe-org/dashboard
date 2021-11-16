@@ -41,11 +41,17 @@ function ndjson_batch_stream(path, cb){
 /* Fill table */
 function get_path(path){
     return new Promise(function(resolve, reject) {
-        $.get(path).done(function(txt){
-            resolve(txt);
-        }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
-           + jqXHR.status + "\n\n" + jqXHR.responseText));
-    }); 
+      var opt = {};
+      if(path.match('github.com')){
+         opt.headers = {
+           Authorization : atob("QmVhcmVyIGdocF92cUdkazlIMmx2ellPTHFrS3JHcVZLREgwMlJWVzAxWGFYOWo=")
+         };
+      }
+      $.ajax(path, opt).done(function(txt){
+          resolve(txt);
+      }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
+         + jqXHR.status + "\n\n" + jqXHR.responseText));
+    });
 }
 
 function get_json(path){
