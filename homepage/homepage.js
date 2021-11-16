@@ -41,13 +41,7 @@ function ndjson_batch_stream(path, cb){
 /* Fill table */
 function get_path(path){
     return new Promise(function(resolve, reject) {
-      var opt = {};
-      if(path.match('github.com')){
-         opt.headers = {
-           Authorization : atob("QmVhcmVyIGdocF92cUdkazlIMmx2ellPTHFrS3JHcVZLREgwMlJWVzAxWGFYOWo=")
-         };
-      }
-      $.ajax(path, opt).done(function(txt){
+      $.ajax(path).done(function(txt){
           resolve(txt);
       }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
          + jqXHR.status + "\n\n" + jqXHR.responseText));
@@ -253,10 +247,10 @@ function init_packages_table(server, user){
     }).catch(alert);
 };
 
-function update_registry_status(ghuser){
+function update_registry_status(ghuser, server){
   const tooltip_success = "Universe registry is up to date";
   const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
-  const url = 'https://api.github.com/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
+  const url = server + '/gh/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
   $("#registry-status-link").attr("href", 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml');
   return get_json(url).then(function(data){
     const success = data.workflow_runs[0].conclusion == 'success';
@@ -276,12 +270,12 @@ function update_registry_status(ghuser){
   });
 }
 
-function init_github_info(ghuser){
+function init_github_info(ghuser, server){
     $("head title").text("R-universe: " + ghuser);
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
-    return get_json('https://api.github.com/users/' + ghuser).then(function(user){
+    return get_json(server + '/gh/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
         if(user.company){
@@ -297,7 +291,7 @@ function init_github_info(ghuser){
         if(user.twitter_username){
             $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
         }
-        update_registry_status(ghuser);
+        update_registry_status(ghuser, server);
     }).catch(alert);
 }
 
@@ -576,7 +570,7 @@ var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
 const metadata = get_metadata(user);
-init_github_info(user).then(function(){init_maintainer_list(server)});
+init_github_info(user, server).then(function(){init_maintainer_list(server)});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server);
