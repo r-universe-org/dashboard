@@ -275,6 +275,7 @@ function init_github_info(ghuser, server){
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
+    $("#rss-feed").attr("href", server + '/feed.xml');
     return get_json(server + '/gh/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
