@@ -298,31 +298,39 @@ function init_github_info(ghuser, server){
 
 
 /* Combine maintainers with multiple emails, based on Github login (if known) */ 
-function combine_duplicates(maintainer){
-    var list = {};
-    maintainer.forEach(function(x){
+function combine_maintainers(list, user){
+    var out = {};
+    list.forEach(function(x){
+        var org = x._user;
         var key = x.login || x.email;
-        if(list[key]){
-            list[key].packages = list[key].packages.concat(x.packages);
-            list[key].email = list[key].email + "<br/>" + x.email;
-        } else {
-            list[key] = x;
+        if(!out[key]){
+            out[key] = {name: x.name, login: x.login, count: 0}
         }
+        out[key].count = out[key].count + x.packages.length;
+        x.packages.forEach(function(pkg){
+            var org = pkg.user;
+            if(!out[org]){
+                out[org] = {name: org, login: org, count: 0}
+            }
+            out[org].count = out[org].count + 1;
+        });
     });
-    return Object.keys(list).map(key => list[key]);
+    return Object.keys(out).map(key => out[key]);
 }
 
-function init_maintainer_list(server){
-    get_ndjson(server + '/stats/maintainers').then(function(x){
+function init_maintainer_list(user, server){
+    get_ndjson(server + '/stats/maintainers?all=true').then(function(x){
         function order( a, b ) {
-            if(a.packages.length < b.packages.length) return 1;
-            if(a.packages.length > b.packages.length) return -1;
+            if(a.count < b.count) return 1;
+            if(a.count > b.count) return -1;
             return 0;
         }
-        combine_duplicates(x).sort(order).forEach(function(maintainer){
+        combine_maintainers(x).sort(order).forEach(function(maintainer){
+            if(maintainer.login == user || maintainer.login == 'test') return;
             var item = $("#templatezone .maintainer-item").clone();
             item.find('.maintainer-name').text(maintainer.name)
             if(maintainer.login){
+                item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
                 item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
             }
             item.appendTo('#maintainer-list');
@@ -571,7 +579,7 @@ var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
 const metadata = get_metadata(user);
-init_github_info(user, server).then(function(){init_maintainer_list(server)});
+init_github_info(user, server).then(function(){init_maintainer_list(user, server)});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server);
