@@ -214,7 +214,10 @@ function init_packages_table(server, user){
             var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
             var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
             var sysdeps = make_sysdeps(src.builder);
-            var pkglink = $("<a>").text(pkg.package).
+            var upstream = src.builder.upstream.split("/");
+            var owner = upstream[upstream.length - 2];
+            var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
+            var pkglink = $("<a>").text(longname).
                 attr("href", src.builder ? src.builder.upstream : undefined).
                 attr("target", "_blank");
             if(buildinfo.registered === 'false'){
