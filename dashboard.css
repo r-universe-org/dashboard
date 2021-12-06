@@ -48,6 +48,14 @@ body {
     font-size: 0.9rem;
 }
 
+.grow-on-over:hover {
+  transition: all .2s ease-in-out;
+}
+
+.grow-on-over:hover {
+  transform: scale(1.2);
+}
+
 /* Separators */
 .sidebar-separator-title {
     background-color: #333;
