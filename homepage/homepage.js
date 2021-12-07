@@ -504,6 +504,9 @@ function init_article_list(server, user){
               item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
               item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
               item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
+              if(pkg.user != user){
+                item.find('.article-author-name').append(`<i>(via <a href="https://${pkg.user}.r-universe.dev">${pkg.user}</a>)</i>`);
+              }
               var img = item.find('.maintainer-avatar').attr('src', get_package_image(pkg));
               if(pkg.pkglogo)
                 img.removeClass('rounded-circle');
