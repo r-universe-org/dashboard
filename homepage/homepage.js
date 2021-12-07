@@ -416,6 +416,7 @@ function init_package_descriptions(server, user){
             }
             x.sort(order).forEach(function(pkg, i){
                 //console.log(pkg)
+                var org = pkg['_user'];
                 var item = $("#templatezone .package-description-item").clone();
                 item.find('.package-name').text(pkg.Package);
                 item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
@@ -429,7 +430,10 @@ function init_package_descriptions(server, user){
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
                 attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
-                add_badge_row(pkg.Package, pkg['_user']);
+                add_badge_row(pkg.Package, org);
+                if(org != user){
+                  item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
+                }
             });
             if(x.length){
               $("#package-description-placeholder").hide();
