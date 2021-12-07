@@ -195,15 +195,16 @@ function attach_cran_badge(name, url, el){
 function init_packages_table(server, user){
     if(user == 'ropensci') $("#thdocs").text("Docs");
     let tbody = $("#packages-table-body");
-    var initiated = false;
     var rows = {};
-    ndjson_batch_stream(server + '/stats/checks', function(batch){
-        if(!initiated && batch.length > 0){
-            initiated = true;
-            init_syntax_block(user, batch[0].package);
-        }
-        batch.forEach(function(pkg){
-            //console.log(pkg)
+    var universes = [];
+    var firstpkg;
+    ndjson_batch_stream(server + '/stats/checks?all=true', function(batch){
+        batch.forEach(function(pkg, i){
+            if(universes.indexOf(pkg.user) < 0){
+                universes.push(pkg.user);
+                firstpkg = firstpkg || pkg.package;
+                update_syntax_block(universes, firstpkg, user);
+            }
             var name = pkg.package;
             var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
             var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
@@ -242,7 +243,7 @@ function init_packages_table(server, user){
             }
         });
     }).then(function(){
-        if(initiated){
+        if(universes.length){
           $("#package-builds-placeholder").hide();
         } else {
           $("#package-builds-placeholder").text("No packages found in this username.");
@@ -262,10 +263,13 @@ function update_registry_status(ghuser, server){
         .addClass(success ? 'fa-check' : 'fa-exclamation-triangle')
         .addClass(success ? 'text-success' : 'text-danger')
         .tooltip({title: success ? tooltip_success : tooltip_failure});
+      $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
     } else {
       throw "Failed to get workflow data";
     }
   }).catch(function(err){
+    //$("#github-user-universe")
+    $("#github-user-universe").append("No personal r-universe");
     $("#registry-status-icon").addClass('fa-times').addClass('text-danger');
     console.log(err);
   }).finally(function(e){
@@ -277,7 +281,6 @@ function init_github_info(ghuser, server){
     $("head title").text("R-universe: " + ghuser);
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
-    $("#github-user-universe").append(a('https://github.com/r-universe/' + ghuser, "r-universe/" + ghuser));
     $("#rss-feed").attr("href", server + '/feed.xml');
     return get_json(server + '/gh/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
@@ -381,17 +384,17 @@ function get_package_image(buildinfo){
 }
 
 function init_package_descriptions(server, user){
-    function add_badge_row(name){
-        var tr = $("<tr>").appendTo($("#badges-table-body"));
-        const badge_url = "https://" + user + ".r-universe.dev/badges/" + name;
-        const badge_text = "https://" + user + ".r-universe.dev/badges/<b>" + name + "</b>";
+    function add_badge_row(name, org){
+        var tr = $("<tr>").appendTo(name.startsWith(":") ? $("#badges-table-body1") : $("#badges-table-body2"));
+        const badge_url = "https://" + org + ".r-universe.dev/badges/" + name;
+        const badge_text = "https://" + org + ".r-universe.dev/badges/<b>" + name + "</b>";
         $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
         $("<td>").append($("<img>").attr("data-src", badge_url).addClass("lazyload")).appendTo(tr);
         const md_icon = $('<a class="fab fa-markdown fa-lg">');
         const tooltip_text = 'Copy to clipboard';
         md_icon.tooltip({title: tooltip_text, placement: 'left'});
         md_icon.on("click", function(e){
-            const text = `[![${name} status badge](${badge_url})](https://${user}.r-universe.dev)`;
+            const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev)`;
             navigator.clipboard.writeText(text).then(function(e){
               md_icon.attr('data-original-title', 'Copied!').tooltip('show');
               md_icon.attr('data-original-title', tooltip_text);
@@ -400,10 +403,12 @@ function init_package_descriptions(server, user){
         $("<td>").append(md_icon).appendTo(tr);
     }
     //$('#packages-tab-link').one('shown.bs.tab', function (e) {
-        get_ndjson(server + '/stats/descriptions').then(function(x){
-            add_badge_row(":name");
-            add_badge_row(":registry");
-            add_badge_row(":total");
+        get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
+            if(x.find(pkg => pkg['_user'] == user)){
+                add_badge_row(":name", user);
+                add_badge_row(":registry", user);
+                add_badge_row(":total", user);
+            }
             function order( a, b ) {
                 if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
                 if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
@@ -424,7 +429,7 @@ function init_package_descriptions(server, user){
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
                 attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
-                add_badge_row(pkg.Package);
+                add_badge_row(pkg.Package, pkg['_user']);
             });
             if(x.length){
               $("#package-description-placeholder").hide();
@@ -462,10 +467,10 @@ function update_article_info(){
     }
 }
 
-function init_article_list(server){
+function init_article_list(server, user){
     iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
     //$('#articles-tab-link').one('shown.bs.tab', function (e) {
-        get_ndjson(server + '/stats/vignettes').then(function(x){
+        get_ndjson(server + '/stats/vignettes?all=true').then(function(x){
             function order( a, b ) {
                 if(a.vignette.modified < b.vignette.modified) return 1;
                 if(a.vignette.modified > b.vignette.modified) return -1;
@@ -475,15 +480,23 @@ function init_article_list(server){
               var item = $("#templatezone .article-item").clone();
               var minilink = pkg.package + "/" + pkg.vignette.filename;
               articledata[minilink] = pkg;
-              item.attr("href", server + "/articles/" + minilink);
+              if(pkg.user == user){
+                item.attr("href", server + "/articles/" + minilink);
+              } else {
+                item.attr("href", "https://" + pkg.user + ".r-universe.dev/articles/" + minilink);
+              }
               if(!pkg.vignette.filename.endsWith('html')){
                   item.attr("target", "_blank")
               } else {
                   item.click(function(e){
                       e.preventDefault();
-                      navigate_iframe(minilink);
-                      $("#view-tab-link").tab('show');
-                      window.scrollTo(0,0);
+                      if(pkg.user == user){
+                          navigate_iframe(minilink);
+                          $("#view-tab-link").tab('show');
+                          window.scrollTo(0,0);
+                      } else {
+                          window.location.href = `https://${pkg.user}.r-universe.dev/ui#view:${minilink}`;
+                      }
                   });
               }
               item.find('.article-title').text(pkg.vignette.title);
@@ -506,20 +519,21 @@ function init_article_list(server){
     //});
 }
 
-function init_syntax_block(user, package){
-    var template = `# Enable this universe
-options(repos = c(
-    {{opt}} = 'https://{{user}}.r-universe.dev',
-    CRAN = 'https://cloud.r-project.org'))
+function update_syntax_block(universes, package, user){
+    var text = `# Enable universe(s) by ${user}
+options(repos = c(`;
+    for (const org of universes) {
+        var cleanorg = org.replace(/\W/g, '');
+        text = text + `\n    ${cleanorg} = 'https://${org}.r-universe.dev',`;
+    }
+    text = text +`\n    CRAN = 'https://cloud.r-project.org'))
 
 # Install some packages
-install.packages('{{package}}')`
-    var cleanuser = user.replace(/\W/g, '');
-    var text = template.replace("{{opt}}", cleanuser).replace('{{user}}', user).replace('{{package}}', package);
-    var code = $("<code>").addClass("language-r").text(text).appendTo('#example-install-code');
+install.packages('${package}')`;
+    var code = $("<code>").addClass("language-r").text(text);
+    $('#example-install-code').empty().append(code);
     Prism.highlightAll();
 }
-
 
 /* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
 +(function ($) {
@@ -591,6 +605,6 @@ const metadata = get_metadata(user);
 init_github_info(user, server).then(function(){init_maintainer_list(user, server)});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
-init_article_list(server);
+init_article_list(server, user);
 
 $('a[data-toggle="tab"]').historyTabs();
