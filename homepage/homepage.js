@@ -158,16 +158,19 @@ Date.prototype.yyyymmdd = function() {
     }
 };
 
-async function get_metadata(user){
-    var url = 'https://raw.githubusercontent.com/r-universe/' + user + '/master/.metadata.json';
+async function get_metadata(org){
+    console.log("Retrieving metadata for: " + org)
+    var url = 'https://raw.githubusercontent.com/r-universe/' + org + '/master/.metadata.json';
     const response = await fetch(url);
     if (response.ok)
         return response.json();
     throw new Error("HTTP Error: " + response.status)
 }
 
-function attach_cran_badge(name, url, el){
-    metadata.then(function(pkgs){
+var crandata = {};
+function attach_cran_badge(org, name, url, el){
+    crandata[org] = crandata[org] || get_metadata(org);
+    crandata[org].then(function(pkgs){
         var row = pkgs.find(x => x.package == name);
         if(row && row.oncran !== undefined){
             var oncran = row.oncran;
@@ -200,8 +203,9 @@ function init_packages_table(server, user){
     var firstpkg;
     ndjson_batch_stream(server + '/stats/checks?all=true', function(batch){
         batch.forEach(function(pkg, i){
-            if(universes.indexOf(pkg.user) < 0){
-                universes.push(pkg.user);
+            var org = pkg.user;
+            if(universes.indexOf(org) < 0){
+                universes.push(org);
                 firstpkg = firstpkg || pkg.package;
                 update_syntax_block(universes, firstpkg, user);
             }
@@ -234,7 +238,7 @@ function init_packages_table(server, user){
                 if(src.type === 'failure'){
                   pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
                 } else {
-                  attach_cran_badge(name, buildinfo.upstream, pkglink);
+                  attach_cran_badge(org, name, buildinfo.upstream, pkglink);
                 }
                 rows[name] ? rows[name].after(row) : tbody.append(row);
                 rows[name] = row;
@@ -429,7 +433,7 @@ function init_package_descriptions(server, user){
                 }
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-                attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
+                attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
                 add_badge_row(pkg.Package, org);
                 if(org != user){
                   item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
@@ -608,7 +612,6 @@ var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-const metadata = get_metadata(user);
 init_github_info(user, server).then(function(){init_maintainer_list(user, server)});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
