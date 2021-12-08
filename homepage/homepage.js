@@ -158,19 +158,27 @@ Date.prototype.yyyymmdd = function() {
     }
 };
 
-async function get_metadata(user){
-    var url = 'https://raw.githubusercontent.com/r-universe/' + user + '/master/.metadata.json';
-    const response = await fetch(url);
-    if (response.ok)
-        return response.json();
-    throw new Error("HTTP Error: " + response.status)
+function cran_metadata(){
+    return new Promise(function(resolve, reject) {
+        Papa.parse('https://r-universe-org.github.io/cran-to-git/crantogit.csv', {
+            download: true,
+            header: true,
+            delimiter: ",",
+            complete: function(results, file) {
+                resolve(results.data);
+            },
+            error: function(err, file){
+                reject(err)
+            }
+        });
+    });
 }
 
 function attach_cran_badge(name, url, el){
     metadata.then(function(pkgs){
         var row = pkgs.find(x => x.package == name);
-        if(row && row.oncran !== undefined){
-            var oncran = row.oncran;
+        if(row){
+            var oncran = url.toLowerCase().startsWith(row.url);
             var icon = $("<i>").addClass(oncran ? "fa fa-award" : "fa fa-question-circle popover-dismiss").
                 css('color', oncran ? color_ok : color_bad);
             var cranlink = $("<a>")
@@ -604,11 +612,11 @@ install.packages('${package}')`;
 
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'eddelbuettel'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-const metadata = get_metadata(user);
+const metadata = cran_metadata();
 init_github_info(user, server).then(function(){init_maintainer_list(user, server)});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
