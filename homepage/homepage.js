@@ -347,6 +347,7 @@ function init_maintainer_list(user, server){
             }
             if(maintainer.login == user && maintainer.emails && maintainer.emails.length){
               $("#github-user-emails").toggleClass("d-none").find(".content").append(maintainer.emails.join("<br/>"));
+              $("#github-user-emails").tooltip({title: `Public package maintainer email addressess`});
             }
             if(maintainer.login == user || maintainer.login == 'test') return;
             var item = $("#templatezone .maintainer-item").clone();
