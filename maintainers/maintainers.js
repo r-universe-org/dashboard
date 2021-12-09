@@ -24,11 +24,14 @@ $(function(){
 				organizations[pkg.user] = organizations[pkg.user] ? organizations[pkg.user] + 1 : 1;
 			});
 			var profile = $("#templatezone .maintainer-profile").clone();
+      var realname = (maintainer.name || "").replace(/^'(.*)'$/, '$1');
 			if(login){
 				profile.find(".maintainer-image").attr('data-src', 'https://r-universe.dev/avatars/' + login + ".png")
-				profile.find(".maintainer-homepage").attr('href', 'https://github.com/' + login)
-			}
-			profile.find(".maintainer-name").text((maintainer.name || "").replace(/^'(.*)'$/, '$1')); //remove quoted names
+				profile.find(".maintainer-homepage").attr('href', 'https://github.com/' + login);
+        profile.find(".maintainer-url").attr("href", `https://${login}.r-universe.dev`).text(realname);
+			} else {
+        profile.find(".maintainer-name").empty().text(realname).tooltip({title: `<${maintainer.email}> not associated with any GitHub account.`});
+      }
 			profile.find(".maintainer-more").append(maintainer.email);
 			var total = 0;
 			var orgcount = 0;
