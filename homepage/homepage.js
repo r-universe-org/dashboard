@@ -272,9 +272,9 @@ function update_registry_status(ghuser, server){
       throw "Failed to get workflow data";
     }
   }).catch(function(err){
-    //$("#github-user-universe")
-    $("#github-user-universe").append("No personal r-universe");
-    $("#registry-status-icon").addClass('fa-times').addClass('text-danger');
+    $("#github-user-universe").append("No personal package repository");
+    $("#github-user-universe-row").addClass("text-secondary");
+    //$("#registry-status-icon").addClass('fa-times').addClass('text-danger');
     console.log(err);
   }).finally(function(e){
      $("#registry-status-spinner").hide();
