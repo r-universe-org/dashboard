@@ -314,10 +314,13 @@ function combine_maintainers(list, user){
         var org = x._user;
         var key = x.login || x.email;
         if(!out[key]){
-            out[key] = {name: x.name, login: x.login, count: 0}
+            out[key] = {name: x.name, login: x.login, emails: [], count: 0}
         }
         if(x.orcids && x.orcids.length){
           out[key].orcid_id = x.orcids[0];
+        }
+        if(x.email){
+          out[key].emails.push(x.email);
         }
         out[key].count = out[key].count + x.packages.length;
         x.packages.forEach(function(pkg){
@@ -341,6 +344,9 @@ function init_maintainer_list(user, server){
         combine_maintainers(x).sort(order).forEach(function(maintainer){
             if(maintainer.login == user && maintainer.orcid_id){
               $("#github-user-orcid").toggleClass("d-none").attr('href', 'https://orcid.org/' + maintainer.orcid_id);
+            }
+            if(maintainer.login == user && maintainer.emails.length){
+              $("#github-user-emails").toggleClass("d-none").find(".content").append(maintainer.emails.join("<br/>"));
             }
             if(maintainer.login == user || maintainer.login == 'test') return;
             var item = $("#templatezone .maintainer-item").clone();
