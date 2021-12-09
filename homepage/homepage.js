@@ -219,7 +219,7 @@ function init_packages_table(server, user){
             var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
             var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
             var sysdeps = make_sysdeps(src.builder);
-            var upstream = src.builder.upstream.split("/");
+            var upstream = src.builder.upstream.toLowerCase().split("/");
             var owner = upstream[upstream.length - 2];
             var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
             var pkglink = $("<a>").text(longname).
