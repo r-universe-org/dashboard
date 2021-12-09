@@ -345,7 +345,7 @@ function init_maintainer_list(user, server){
             if(maintainer.login == user && maintainer.orcid_id){
               $("#github-user-orcid").toggleClass("d-none").attr('href', 'https://orcid.org/' + maintainer.orcid_id);
             }
-            if(maintainer.login == user && maintainer.emails.length){
+            if(maintainer.login == user && maintainer.emails && maintainer.emails.length){
               $("#github-user-emails").toggleClass("d-none").find(".content").append(maintainer.emails.join("<br/>"));
             }
             if(maintainer.login == user || maintainer.login == 'test') return;
