@@ -354,6 +354,8 @@ function init_maintainer_list(user, server){
             if(maintainer.login){
                 item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
                 item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
+            } else {
+                item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
             }
             item.appendTo('#maintainer-list');
         });
