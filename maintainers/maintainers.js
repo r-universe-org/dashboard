@@ -34,10 +34,9 @@ $(function(){
       }
 			profile.find(".maintainer-more").append(maintainer.email);
 			var total = 0;
-			var orgcount = 0;
 			for (const [org, count] of Object.entries(organizations)) {
-				orgcount++;
 				total = total + count;
+				if(org == login) continue;
 				//if(login.toLowerCase() == org.toLowerCase()) continue;
 				if(org.includes("gitlab.com")){
 					var url = "https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg";
