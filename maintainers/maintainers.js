@@ -15,7 +15,7 @@ function combine_duplicates(maintainer){
 }
 
 $(function(){
-	get_ndjson('https://r-universe.dev/stats/maintainers').then(function(x){
+	get_ndjson('https://r-universe.dev/stats/maintainers?all=1').then(function(x){
 		combine_duplicates(x).forEach(function(maintainer){
 			var organizations = {};
 			var login = maintainer.login || "";
