@@ -393,7 +393,7 @@ function get_package_image(buildinfo){
         }
         return buildinfo.pkglogo;
     }
-    var ghuser = buildinfo.maintainer.login || "r-universe";
+    var ghuser = buildinfo.login || buildinfo.maintainer.login || "r-universe";
     return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
