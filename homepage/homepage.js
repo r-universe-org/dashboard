@@ -76,12 +76,12 @@ function a(link, txt){
     return $('<a>').text(txt || link).attr('href', link);
 }
 
-function docs_icon(pkg, run){
+function docs_icon(pkg, run, registered){
     if(run && run.builder){
         var i = $("<i>", {class : 'fa fa-book'});
         var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
         if(run.builder.pkgdocs){
-            if(run.builder.registered === 'false'){
+            if(!registered){
               /* This is a 'remote' package */
               return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
             }
@@ -216,8 +216,8 @@ function init_packages_table(server, user){
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
             var buildinfo = src.builder || pkg.runs[0].builder;
-            var builddate = new Date(src.date || pkg.runs[0].date || NaN).yyyymmdd();
-            var commitdate = new Date(buildinfo && buildinfo.timestamp * 1000 || NaN).yyyymmdd();
+            var builddate = new Date(src.date || NaN).yyyymmdd();
+            var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
             var sysdeps = make_sysdeps(src.builder);
             var upstream = buildinfo.upstream.toLowerCase().split("/");
             var owner = upstream[upstream.length - 2];
@@ -225,14 +225,14 @@ function init_packages_table(server, user){
             var pkglink = $("<a>").text(longname).
                 attr("href", src.builder ? src.builder.upstream : undefined).
                 attr("target", "_blank");
-            if(buildinfo.registered === 'false'){
+            if(!pkg.registered){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
             }
             if(pkg.os_restriction){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
             if(src.builder){
-                var docslink = (user == 'ropensci') ? docs_icon(name, src) : "";
+                var docslink = (user == 'ropensci') ? docs_icon(name, src, pkg.registered) : "";
                 var row = tr([commitdate, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
@@ -423,12 +423,7 @@ function init_package_descriptions(server, user){
                 add_badge_row(":registry", user);
                 add_badge_row(":total", user);
             }
-            function order( a, b ) {
-                if(a['_builder'].timestamp < b['_builder'].timestamp) return 1;
-                if(a['_builder'].timestamp > b['_builder'].timestamp) return -1;
-                return 0;
-            }
-            x.sort(order).forEach(function(pkg, i){
+            x.forEach(function(pkg, i){
                 //console.log(pkg)
                 var org = pkg['_user'];
                 var item = $("#templatezone .package-description-item").clone();
@@ -438,8 +433,8 @@ function init_package_descriptions(server, user){
                 item.find('.package-description').text(pkg.Description.replace('\n', ' '));
                 //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
                 const buildinfo = pkg['_builder'];
-                if(buildinfo.timestamp){
-                    item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.timestamp));
+                if(buildinfo.commit.time){
+                    item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
                 }
                 item.find('.package-image').attr('src', get_package_image(buildinfo));
                 item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));

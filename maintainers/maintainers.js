@@ -20,7 +20,7 @@ $(function(){
 			var organizations = {};
 			var login = maintainer.login || "";
 			maintainer.packages.forEach(function(pkg){
-				if(pkg.user == 'test' || (""+pkg.registered) == "false") return;
+				if(pkg.user == 'test' || pkg.registered === false) return;
 				organizations[pkg.user] = organizations[pkg.user] ? organizations[pkg.user] + 1 : 1;
 			});
 			var profile = $("#templatezone .maintainer-profile").clone();
