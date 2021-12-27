@@ -216,8 +216,8 @@ function init_packages_table(server, user){
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
             var buildinfo = src.builder || pkg.runs[0].builder;
-            var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
-            var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
+            var builddate = new Date(src.date || pkg.runs[0].date || NaN).yyyymmdd();
+            var commitdate = new Date(buildinfo && buildinfo.timestamp * 1000 || NaN).yyyymmdd();
             var sysdeps = make_sysdeps(src.builder);
             var upstream = buildinfo.upstream.toLowerCase().split("/");
             var owner = upstream[upstream.length - 2];
@@ -233,7 +233,7 @@ function init_packages_table(server, user){
             }
             if(src.builder){
                 var docslink = (user == 'ropensci') ? docs_icon(name, src) : "";
-                var row = tr([published, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
+                var row = tr([commitdate, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
                   pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));

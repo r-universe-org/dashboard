@@ -100,8 +100,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
 			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
 			var buildinfo = src.builder || pkg.runs[0].builder;
-			var published = (new Date(buildinfo && buildinfo.timestamp * 1000 || NaN)).yyyymmdd();
-			var builddate = (new Date(buildinfo && buildinfo.date * 1000 || NaN)).yyyymmdd();
+			var commitdate = new Date(buildinfo && buildinfo.timestamp * 1000 || NaN).yyyymmdd();
 			var sysdeps = make_sysdeps(src.builder);
 			var userlink =  $("<a>").text(pkg.user).
 				attr("href", "https://" + pkg.user + ".r-universe.dev");
@@ -110,8 +109,8 @@ function init_packages_table(org = ":any", maintainer = ""){
 				pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
 			}
 			if(src.builder){
-			tbody.append(tr([published, userlink, pkgname, pkg.version, pkg.maintainer, run_icon(src),
-				builddate, [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
+			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, pkg.maintainer, run_icon(src),
+				[run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
 			} else {
 				console.log("Not listing old version: " + name + " " + pkg.version )
 			}
@@ -119,7 +118,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 	}).catch(alert).then(function(x){
     $("#placeholder").hide();
 		var defs = [{
-			targets: [5, 6, 7, 8],
+			targets: [5, 6, 7],
 			className: 'dt-body-center',
 			orderable: false
 		}];
