@@ -32,8 +32,8 @@ $(function(){
     item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 10));
     item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
     item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '#articles');
-    if(pkg.maintainerlogin){
-      item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + pkg.maintainerlogin + '.png?size=140');
+    if(pkg.login){
+      item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + pkg.login + '.png?size=140');
     }
     return item;
   }
