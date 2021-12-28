@@ -100,7 +100,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
 			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
 			var buildinfo = src.builder || pkg.runs[0].builder;
-			var commitdate = new Date(buildinfo && buildinfo.timestamp * 1000 || NaN).yyyymmdd();
+			var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
 			var sysdeps = make_sysdeps(src.builder);
 			var userlink =  $("<a>").text(pkg.user).
 				attr("href", "https://" + pkg.user + ".r-universe.dev");
