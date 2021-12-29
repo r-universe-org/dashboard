@@ -281,6 +281,11 @@ function init_github_info(ghuser, server){
     $(".title-universe-name").text(ghuser);
     $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
     $("#rss-feed").attr("href", server + '/feed.xml');
+    jQuery.get(`https://r-universe.dev/avatars/${user}.keys`).done(function(res){
+        if(res.length){
+            $("#github-user-keys").toggleClass("d-none").attr('href', `https://github.com/${user}.keys`);
+        }
+    });
     return get_json(server + '/gh/users/' + ghuser).then(function(user){
         $("#github-user-name").text(user.name || ghuser);
         $("#github-user-bio").text(user.bio);
@@ -300,7 +305,6 @@ function init_github_info(ghuser, server){
         update_registry_status(ghuser, server);
     }).catch(alert);
 }
-
 
 /* Combine maintainers with multiple emails, based on Github login (if known) */ 
 function combine_maintainers(list, user){
