@@ -76,53 +76,51 @@ function a(link, txt){
     return $('<a>').text(txt || link).attr('href', link);
 }
 
-function docs_icon(pkg, run, registered){
-    if(run && run.builder){
+function docs_icon(pkg, url){
+    if(pkg.pkgdocs){
         var i = $("<i>", {class : 'fa fa-book'});
-        var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
-        if(run.builder.pkgdocs){
-            if(!registered){
-              /* This is a 'remote' package */
-              return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
-            }
-            if(run.builder.pkgdocs.match(/succ/i)){
-                i.css('color', color_ok);
-                a.attr('href', 'https://docs.ropensci.org/' + pkg).attr("target", "_blank");
-            } else {
-                i.css('color', color_bad);
-            }
-            return $('<span></span>').append(a);
+        var a = $("<a>").attr('href', url).append(i).css('margin-left', '5px');
+        if(!pkg.registered){
+          /* This is a 'remote' package */
+          return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
         }
+        if(pkg.pkgdocs.match(/succ/i)){
+            i.css('color', color_ok);
+            a.attr('href', 'https://docs.ropensci.org/' + pkg.package).attr("target", "_blank");
+        } else {
+            i.css('color', color_bad);
+        }
+        return $('<span></span>').append(a);
     }
 }
 
 function run_icon(run, src){
-    if(run.skip)
-        return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
-    if(run.type == 'pending')
-      return $('<span></span>')
+  if(run.skip)
+    return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', 'slategrey');
+  if(run.type == 'pending')
+    return $('<span></span>')
     var iconmap = {
-        src : "fab fa-linux",
-        win : "fab fa-windows",
-        mac : "fab fa-apple",
-        failure: "fa fa-times"
+        src : "linux",
+        win : "windows",
+        mac : "apple"
     };
-    if(run && run.builder){
-        var i = $("<i>", {class : iconmap[run.type]});
-        var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
+    if(run && run.status){
+        var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
+        var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
          // can be "success" or "Succeeded"
-        if(run.builder.status && run.builder.status.match(/succ/i)){
-            i.css('color', color_ok);
-        } else if(run.type == 'src' || run.type == 'failure'){
-            i.css('color', color_bad);
+        if(run.status.match(/succ/i)){
+            i.css('color', '#22863a');
+        } else if(run.type == 'src'){
+            i.css('color', '#cb2431');
         } else {
-            i.css('color', color_meh);
+            i.css('color', 'slategrey');
         }
+        return $('<span></span>').append(a);
     } else {
-        var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-        var a = $("<a>").attr('href', src.builder.url).append(i);
-    }
-    return $('<span></span>').append(a);
+      var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+      var a = $("<a>").attr('href', src.url).append(i);
+  }
+  return $('<span></span>').append(a);
 }
 
 function make_sysdeps(builder){
@@ -201,7 +199,7 @@ function init_packages_table(server, user){
     var rows = {};
     var universes = [];
     var firstpkg;
-    ndjson_batch_stream(server + '/stats/checks?all=true', function(batch){
+    ndjson_batch_stream(server + '/stats/builds?all=true', function(batch){
         batch.forEach(function(pkg, i){
             var org = pkg.user;
             if(universes.indexOf(org) < 0){
@@ -215,30 +213,27 @@ function init_packages_table(server, user){
             var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
             var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
-            var buildinfo = src.builder || pkg.runs[0].builder;
             var builddate = new Date(src.date || NaN).yyyymmdd();
             var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-            var sysdeps = make_sysdeps(src.builder);
-            var upstream = buildinfo.upstream.toLowerCase().split("/");
+            var sysdeps = make_sysdeps(pkg);
+            var upstream = pkg.upstream.toLowerCase().split("/");
             var owner = upstream[upstream.length - 2];
             var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
-            var pkglink = $("<a>").text(longname).
-                attr("href", src.builder ? src.builder.upstream : undefined).
-                attr("target", "_blank");
+            var pkglink = $("<a>").text(longname).attr("href", pkg.upstream).attr("target", "_blank");
             if(!pkg.registered){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
             }
             if(pkg.os_restriction){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
-            if(src.builder){
-                var docslink = (user == 'ropensci') ? docs_icon(name, src, pkg.registered) : "";
+            if(src.type == 'src'){
+                var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
                 var row = tr([commitdate, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
                   pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
                 } else {
-                  attach_cran_badge(org, name, buildinfo.upstream, pkglink);
+                  attach_cran_badge(org, name, pkg.upstream, pkglink);
                 }
                 rows[name] ? rows[name].after(row) : tbody.append(row);
                 rows[name] = row;
@@ -613,7 +608,7 @@ install.packages('${package}')`;
 
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
