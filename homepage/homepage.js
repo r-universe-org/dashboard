@@ -472,7 +472,11 @@ function update_article_info(){
     var pkg = articledata[window.iframestate];
     if(pkg){
         $('#article-info-author').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
-        $('#article-info-author').attr("href", pkg.login ? `https://${pkg.login}.r-universe.dev` : "");
+        if(!pkg.vignette.author && pkg.login){
+            $('#article-info-author').attr("href", `https://${pkg.login}.r-universe.dev`);
+        } else {
+            $('#article-info-author').removeAttr("href");
+        }
         $('#article-info-package').text(pkg.package + " " + pkg.version);
         $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
         $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
