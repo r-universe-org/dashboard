@@ -123,16 +123,12 @@ function run_icon(run, src){
   return $('<span></span>').append(a);
 }
 
-function make_sysdeps(builder){
+function make_sysdeps(builder, distro){
     if(builder && builder.sysdeps){
         var div = $("<div>").css("max-width", "33vw");
         if(Array.isArray(builder.sysdeps)){
             builder.sysdeps.forEach(function(x){
                 var name = x.package;
-                //var url = 'https://packages.debian.org/testing/' + name;
-                var distro = builder.distro;
-                if(distro == "$(OS_DISTRO)")
-                    distro = 'bionic'
                 var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
                 $("<a>").text(name).attr("href", url).appendTo(div);
                 var version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
@@ -215,7 +211,7 @@ function init_packages_table(server, user){
             var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
             var builddate = new Date(src.date || NaN).yyyymmdd();
             var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-            var sysdeps = make_sysdeps(pkg);
+            var sysdeps = make_sysdeps(pkg, src.distro);
             var upstream = pkg.upstream.toLowerCase().split("/");
             var owner = upstream[upstream.length - 2];
             var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;

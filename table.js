@@ -54,16 +54,12 @@ function docs_icon(job){
 	}
 }
 
-function make_sysdeps(builder){
+function make_sysdeps(builder, distro){
 	if(builder && builder.sysdeps){
 		var div = $("<div>").css("max-width", "33vw");
 		if(Array.isArray(builder.sysdeps)){
 			builder.sysdeps.forEach(function(x){
 				var name = x.package;
-				//var url = 'https://packages.debian.org/testing/' + name;
-				var distro = builder.distro;
-				if(distro == "$(OS_DISTRO)")
-					distro = 'bionic'
 				var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
 				$("<a>").text(name).attr("href", url).appendTo(div);
 				var version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
@@ -100,7 +96,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
 			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
 			var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-			var sysdeps = make_sysdeps(pkg);
+			var sysdeps = make_sysdeps(pkg, src.distro);
 			var userlink =  $("<a>").text(pkg.user).
 				attr("href", "https://" + pkg.user + ".r-universe.dev");
 			var pkgname = pkg.package;
