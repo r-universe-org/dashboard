@@ -90,8 +90,8 @@ Date.prototype.yyyymmdd = function() {
 function init_packages_table(org = ":any", maintainer = ""){
 	let tbody = $("#packages-table-body");
 	var checkurl = 'https://r-universe.dev/stats/checks?limit=200&maintainer=' + maintainer;
-	get_ndjson(checkurl).then(function(cranlike){
-		cranlike.forEach(function(pkg){
+	ndjson_batch_stream(checkurl, function(batch){
+		batch.forEach(function(pkg){
 			//console.log(pkg)
 			var name = pkg.package;
 			var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
