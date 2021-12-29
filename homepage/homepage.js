@@ -22,8 +22,8 @@ function ndjson_batch_stream(path, cb){
                 // Getting on progress streaming response
                 onprogress: function(e){
                     var res = e.currentTarget.response;
-                    var end = res.lastIndexOf('\n', e.currentTarget.response - start);
-                    if(end > 0){
+                    var end = res.lastIndexOf('\n');
+                    if(end > start){
                         var batch = res.substring(start, end).split('\n').map(JSON.parse);
                         start = end + 1;
                         cb(batch);
