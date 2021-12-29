@@ -24,11 +24,11 @@ function run_icon(run, src){
 		win : "windows",
 		mac : "apple"
 	};
-	if(run && run.builder){
+	if(run && run.status){
 		var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
-		var a = $("<a>").attr('href', run.builder.url).append(i).css('margin-left', '5px');
+		var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
 		 // can be "success" or "Succeeded"
-		if(run.builder.status.match(/succ/i)){
+		if(run.status.match(/succ/i)){
 			i.css('color', '#22863a');
 		} else if(run.type == 'src'){
 			i.css('color', '#cb2431');
@@ -38,7 +38,7 @@ function run_icon(run, src){
 		return $('<span></span>').append(a);
 	} else {
       var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-      var a = $("<a>").attr('href', src.builder.url).append(i);
+      var a = $("<a>").attr('href', src.url).append(i);
   }
   return $('<span></span>').append(a);
 }
@@ -89,7 +89,7 @@ Date.prototype.yyyymmdd = function() {
 
 function init_packages_table(org = ":any", maintainer = ""){
 	let tbody = $("#packages-table-body");
-	var checkurl = 'https://r-universe.dev/stats/checks?limit=200&maintainer=' + maintainer;
+	var checkurl = 'https://r-universe.dev/stats/builds';
 	ndjson_batch_stream(checkurl, function(batch){
 		batch.forEach(function(pkg){
 			//console.log(pkg)
@@ -99,16 +99,15 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
 			var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
 			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
-			var buildinfo = src.builder || pkg.runs[0].builder;
 			var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-			var sysdeps = make_sysdeps(src.builder);
+			var sysdeps = make_sysdeps(pkg);
 			var userlink =  $("<a>").text(pkg.user).
 				attr("href", "https://" + pkg.user + ".r-universe.dev");
 			var pkgname = pkg.package;
 			if(pkg.os_restriction){
 				pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
 			}
-			if(src.builder){
+			if(src.type == 'src'){
 			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, pkg.maintainer, run_icon(src),
 				[run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
 			} else {
