@@ -422,6 +422,10 @@ function init_package_descriptions(server, user){
                 //console.log(pkg)
                 var org = pkg['_user'];
                 var item = $("#templatezone .package-description-item").clone();
+                var login = pkg['_builder'].maintainer.login;
+                if(login) {
+                    item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
+                }
                 item.find('.package-name').text(pkg.Package);
                 item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
                 item.find('.package-title').text(pkg.Title);
