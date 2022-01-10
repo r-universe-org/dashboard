@@ -12,7 +12,7 @@
 
 /* Bootstrap styles to tables */
 function bootstrapStylePandocTables() {
-	$('tr.header').parent('thead').parent('table').addClass('table table-sm');
+  $('tr.header').parent('thead').parent('table').addClass('table table-sm');
 }
 $(document).ready(bootstrapStylePandocTables);
 

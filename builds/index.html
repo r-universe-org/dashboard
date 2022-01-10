@@ -1,182 +1,178 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
-    <link rel="stylesheet" href="../dashboard.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.7/css/fixedHeader.dataTables.min.css">
+  <link rel="stylesheet" href="../dashboard.css">
 
-    <link rel="alternate" type="application/rss+xml" href="https://r-universe.dev/feed.xml">
+  <link rel="alternate" type="application/rss+xml" href="https://r-universe.dev/feed.xml">
 
-    <title>R-universe: personal package repositories for R!</title>
+  <title>R-universe: personal package repositories for R!</title>
 </head>
 <body>
-
-<!-- Bootstrap row -->
-<div class="row" id="body-row">
+  <div class="row" id="body-row">
     <!-- Sidebar -->
     <div id="sidebar-container" class="fixed-top sidebar-expanded d-none d-md-block">
-        <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
-        <!-- Bootstrap List Group -->
-        <ul class="list-group">
-            <!-- placeholder logo, until we have r-universe logo -->
-            <div class="text-muted disabled bg-dark list-group-item list-group-item-action">
-              <div class="ropensci-logo d-flex w-100 justify-content-start align-items-center">
-                <img src="https://r-universe.dev/runiverse.svg" class="img img-fluid p-1">
-              </div>
-            </div>
+      <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
+      <!-- Bootstrap List Group -->
+      <ul class="list-group">
+        <!-- placeholder logo, until we have r-universe logo -->
+        <div class="text-muted disabled bg-dark list-group-item list-group-item-action">
+          <div class="ropensci-logo d-flex w-100 justify-content-start align-items-center">
+            <img src="https://r-universe.dev/runiverse.svg" class="img img-fluid p-1">
+          </div>
+        </div>
 
-            <!-- Separator with title -->
-            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                <small>GLOBAL</small>
-            </li>
+        <!-- Separator with title -->
+        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+          <small>GLOBAL</small>
+        </li>
 
-            <a href="../builds" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-rocket fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Builds</span>
-                </div>
-            </a>
+        <a href="../builds" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-rocket fa-fw mr-3"></span>
+            <span class="menu-collapsed">Builds</span>
+          </div>
+        </a>
 
-            <a href="../articles" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-passport fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Articles</span>
-                </div>
-            </a>
+        <a href="../articles" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-passport fa-fw mr-3"></span>
+            <span class="menu-collapsed">Articles</span>
+          </div>
+        </a>
 
-            <a href="../organizations" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-globe-americas fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Universes</span>
-                </div>
-            </a>
+        <a href="../organizations" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-globe-americas fa-fw mr-3"></span>
+            <span class="menu-collapsed">Universes</span>
+          </div>
+        </a>
 
-            <a href="../maintainers" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-user-astronaut fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Maintainers</span>
-                </div>
-            </a>
+        <a href="../maintainers" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-user-astronaut fa-fw mr-3"></span>
+            <span class="menu-collapsed">Maintainers</span>
+          </div>
+        </a>
 
-            <!-- Separator without title -->
-            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                <small>PARTICIPATE</small>
-            </li>
-            <!-- /END Separator -->
+        <!-- Separator without title -->
+        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+          <small>PARTICIPATE</small>
+        </li>
+        <!-- /END Separator -->
 
-            <a href="https://github.com/apps/r-universe/installations/new" target="_blank" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-satellite-dish fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Setup</span>
-                </div>
-            </a>
+        <a href="https://github.com/apps/r-universe/installations/new" target="_blank" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-satellite-dish fa-fw mr-3"></span>
+            <span class="menu-collapsed">Setup</span>
+          </div>
+        </a>
 
-            <!-- Separator without title -->
-            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                <small>INFORMATION</small>
-            </li>
+        <!-- Separator without title -->
+        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+          <small>INFORMATION</small>
+        </li>
 
 
-            <a href="https://ropensci.org/r-universe" target="_blank" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fab fa-r-project fa-fw mr-3"></span>
-                    <span class="menu-collapsed">About</span>
-                </div>
-            </a>
+        <a href="https://ropensci.org/r-universe" target="_blank" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fab fa-r-project fa-fw mr-3"></span>
+            <span class="menu-collapsed">About</span>
+          </div>
+        </a>
 
-            <a href="../help" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-question fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Help</span>
-                </div>
-            </a>
+        <a href="../help" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-question fa-fw mr-3"></span>
+            <span class="menu-collapsed">Help</span>
+          </div>
+        </a>
 
-            <a href="https://github.com/r-universe-org" class="bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-wrench fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Source</span>
-                </div>
-            </a>
+        <a href="https://github.com/r-universe-org" class="bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-wrench fa-fw mr-3"></span>
+            <span class="menu-collapsed">Source</span>
+          </div>
+        </a>
 
-            <!-- Separator with title -->
-            <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                <small>METRICS</small>
-            </li>
-            <!-- /END Separator -->
-            <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-project-diagram fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Dependencies</span>
-                </div>
-            </a>
-            <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-cog fa-fw mr-3"></span>
-                    <span class="menu-collapsed">System Libraries</span>
-                </div>
-            </a>
-            <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span class="fa fa-calendar fa-fw mr-3"></span>
-                    <span class="menu-collapsed">Citations</span>
-                </div>
-            </a>
+        <!-- Separator with title -->
+        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+          <small>METRICS</small>
+        </li>
+        <!-- /END Separator -->
+        <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-project-diagram fa-fw mr-3"></span>
+            <span class="menu-collapsed">Dependencies</span>
+          </div>
+        </a>
+        <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-cog fa-fw mr-3"></span>
+            <span class="menu-collapsed">System Libraries</span>
+          </div>
+        </a>
+        <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-calendar fa-fw mr-3"></span>
+            <span class="menu-collapsed">Citations</span>
+          </div>
+        </a>
 
-            <li class="list-group-item sidebar-separator menu-collapsed"></li>
+        <li class="list-group-item sidebar-separator menu-collapsed"></li>
 
-            <a href="#top" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
-                <div class="d-flex w-100 justify-content-start align-items-center">
-                    <span id="collapse-icon" class="fa fa-2x mr-3"></span>
-                    <span id="collapse-text" class="menu-collapsed">Collapse</span>
-                </div>
-            </a>
-        </ul><!-- List Group END-->
+        <a href="#top" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span id="collapse-icon" class="fa fa-2x mr-3"></span>
+            <span id="collapse-text" class="menu-collapsed">Collapse</span>
+          </div>
+        </a>
+      </ul><!-- List Group END-->
     </div><!-- sidebar-container END -->
 
     <!-- MAIN -->
     <div id="content-container" class="content-expanded col">
-        <table class="table table-sm compact">
-            <thead><tr>
-                <th scope="col">Commit</th>
-                <th scope="col">Universe</th>
-                <th scope="col">Package</th>
-                <th scope="col">Version</th>
-                <th scope="col">Maintainer</th>
-                <th scope="col">Src</th>
-                <th class="text-nowrap" scope="col">R-4.1</th>
-                <th class="text-nowrap" scope="col">R-4.0</th>
-                <th scope="col">System Dependencies</th>
-            </tr>
-            <tr><td colspan="9" id="placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading build data...</td></tr>
-            </thead>
-            <tbody id="packages-table-body"></tbody>
-        </table>
+      <table class="table table-sm compact">
+        <thead>
+          <tr>
+            <th scope="col">Commit</th>
+            <th scope="col">Universe</th>
+            <th scope="col">Package</th>
+            <th scope="col">Version</th>
+            <th scope="col">Maintainer</th>
+            <th scope="col">Src</th>
+            <th class="text-nowrap" scope="col">R-4.1</th>
+            <th class="text-nowrap" scope="col">R-4.0</th>
+            <th scope="col">System Dependencies</th>
+          </tr>
+          <tr><td colspan="9" id="placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading build data...</td></tr>
+        </thead>
+        <tbody id="packages-table-body"></tbody>
+      </table>
     </div><!-- Main Col END -->
-</div><!-- body-row END -->
+  </div><!-- body-row END -->
 
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://r-universe.dev/matomo.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-fixedheader/3.1.8/dataTables.fixedHeader.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-plugins/1.10.24/filtering/type-based/accent-neutralise.min.js"></script>
-<script src="../dashboard.js?nocache=4"></script>
-<script src="../table.js?nocache=7"></script>
-<script>
-$(function(){
-    init_packages_table()
-});
-</script>
+  <script src="https://r-universe.dev/matomo.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-fixedheader/3.1.8/dataTables.fixedHeader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-plugins/1.10.24/filtering/type-based/accent-neutralise.min.js"></script>
+  <script src="../dashboard.js?nocache=4"></script>
+  <script src="../table.js?nocache=7"></script>
+  <script>
+    $(function(){
+      init_packages_table()
+    });
+  </script>
 
 </body>
 </html>

@@ -38,17 +38,17 @@ $(function(){
     return item;
   }
 
-	get_ndjson('https://r-universe.dev/stats/vignettes?limit=500').then(function(res){
+  get_ndjson('https://r-universe.dev/stats/vignettes?limit=500').then(function(res){
     var articles = res.filter(function(x){
       return (x.universe !== 'test') && x.vignette.created;
     });
     articles.sort(order_by_created).slice(0, 250).forEach(function(pkg){
       pkg_to_el(pkg).appendTo('#articles-list-created');
     });
-		articles.sort(order_by_modified).slice(0, 250).forEach(function(pkg){
+    articles.sort(order_by_modified).slice(0, 250).forEach(function(pkg){
       pkg_to_el(pkg).appendTo('#articles-list-updated');
-		});
+    });
     $("#placeholder").hide();
-		lazyload();
-	});
+    lazyload();
+  });
 });
