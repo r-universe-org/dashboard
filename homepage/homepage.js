@@ -204,40 +204,40 @@ function init_packages_table(server, user){
       }
       var name = pkg.package;
       var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
-        var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
-        var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
-        var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
-        var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
-        var builddate = new Date(src.date || NaN).yyyymmdd();
-        var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-        var sysdeps = make_sysdeps(pkg, src.distro);
-        var upstream = pkg.upstream.toLowerCase().split("/");
-        var owner = upstream[upstream.length - 2];
-        var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
-        var pkglink = $("<a>").text(longname).attr("href", pkg.upstream).attr("target", "_blank");
-        if(!pkg.registered){
-          pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
-        }
-        if(pkg.os_restriction){
-          pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
-        }
-        if(src.type){
-          var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-          var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
-          maintainerlink.text(pkg.maintainer).addClass('text-secondary');
-          var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src, src), builddate,
-            [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
-          if(src.type === 'failure'){
-            pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-          } else {
-            attach_cran_badge(org, name, pkg.upstream, pkglink);
-          }
-          rows[name] ? rows[name].after(row) : tbody.append(row);
-          rows[name] = row;
+      var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
+      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
+      var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
+      var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
+      var builddate = new Date(src.date || NaN).yyyymmdd();
+      var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
+      var sysdeps = make_sysdeps(pkg, src.distro);
+      var upstream = pkg.upstream.toLowerCase().split("/");
+      var owner = upstream[upstream.length - 2];
+      var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
+      var pkglink = $("<a>").text(longname).attr("href", pkg.upstream).attr("target", "_blank");
+      if(!pkg.registered){
+        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
+      }
+      if(pkg.os_restriction){
+        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
+      }
+      if(src.type){
+        var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
+        var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
+        maintainerlink.text(pkg.maintainer).addClass('text-secondary');
+        var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src, src), builddate,
+          [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
+        if(src.type === 'failure'){
+          pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
         } else {
-          console.log("Not listing old win/mac binaries: " + name + " " + pkg.version )
+          attach_cran_badge(org, name, pkg.upstream, pkglink);
         }
-      });
+        rows[name] ? rows[name].after(row) : tbody.append(row);
+        rows[name] = row;
+      } else {
+        console.log("Not listing old win/mac binaries: " + name + " " + pkg.version )
+      }
+    });
   }).then(function(){
     if(universes.length){
       $("#package-builds-placeholder").hide();
