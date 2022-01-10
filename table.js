@@ -27,54 +27,54 @@ function run_icon(run, src){
   if(run && run.status){
     var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
     var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
-     // can be "success" or "Succeeded"
-     if(run.status.match(/succ/i)){
-       i.css('color', '#22863a');
-     } else if(run.type == 'src'){
-       i.css('color', '#cb2431');
-     } else {
-       i.css('color', 'slategrey');
-     }
-     return $('<span></span>').append(a);
-   } else {
-     var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-     var a = $("<a>").attr('href', src.url).append(i);
-   }
-   return $('<span></span>').append(a);
- }
+    // can be "success" or "Succeeded"
+    if(run.status.match(/succ/i)){
+      i.css('color', '#22863a');
+    } else if(run.type == 'src'){
+      i.css('color', '#cb2431');
+    } else {
+      i.css('color', 'slategrey');
+    }
+    return $('<span></span>').append(a);
+  } else {
+    var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+    var a = $("<a>").attr('href', src.url).append(i);
+  }
+  return $('<span></span>').append(a);
+}
 
- function docs_icon(job){
-   if(job && job.url){
-     var i = $("<i>", {class : 'fa fa-book'});
-     var a = $("<a>").attr('href', job.url).append(i);
-     if(job.color == 'red'){
-       a.css('color', '#e05d44');
-     }
-     return $('<span></span>').append(a);
-   }
- }
+function docs_icon(job){
+  if(job && job.url){
+    var i = $("<i>", {class : 'fa fa-book'});
+    var a = $("<a>").attr('href', job.url).append(i);
+    if(job.color == 'red'){
+      a.css('color', '#e05d44');
+    }
+    return $('<span></span>').append(a);
+  }
+}
 
- function make_sysdeps(builder, distro){
-   if(builder && builder.sysdeps){
-     var div = $("<div>").css("max-width", "33vw");
-     if(Array.isArray(builder.sysdeps)){
-       builder.sysdeps.forEach(function(x){
-         var name = x.package;
-         var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
-         $("<a>").text(name).attr("href", url).appendTo(div);
-         var version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
-         div.append(" (" + version + ")\t");
-       });
-     } else {
-       div.append(builder.sysdeps);
-     }
-     return div;
-   }
- }
+function make_sysdeps(builder, distro){
+  if(builder && builder.sysdeps){
+    var div = $("<div>").css("max-width", "33vw");
+    if(Array.isArray(builder.sysdeps)){
+      builder.sysdeps.forEach(function(x){
+        var name = x.package;
+        var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
+        $("<a>").text(name).attr("href", url).appendTo(div);
+        var version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
+        div.append(" (" + version + ")\t");
+      });
+    } else {
+      div.append(builder.sysdeps);
+    }
+    return div;
+  }
+}
 
- Date.prototype.yyyymmdd = function() {
-   if(!isNaN(this.getTime())){
-     var yyyy = this.getFullYear();
+Date.prototype.yyyymmdd = function() {
+  if(!isNaN(this.getTime())){
+    var yyyy = this.getFullYear();
     var mm = this.getMonth() + 1; // getMonth() is zero-based
     var dd = this.getDate();
     return [yyyy, (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd].join('-');
