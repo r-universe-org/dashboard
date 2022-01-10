@@ -97,14 +97,15 @@ function init_packages_table(org = ":any", maintainer = ""){
 			var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
 			var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
 			var sysdeps = make_sysdeps(pkg, src.distro);
-			var userlink =  $("<a>").text(pkg.user).
-				attr("href", "https://" + pkg.user + ".r-universe.dev");
+			var userlink = $("<a>").text(pkg.user).attr("href", "https://" + pkg.user + ".r-universe.dev");
+			var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :	$("<span>")
+			maintainerlink.text(pkg.maintainer).addClass('text-secondary');
 			var pkgname = pkg.package;
 			if(pkg.os_restriction){
 				pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
 			}
 			if(src.type == 'src'){
-			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, pkg.maintainer, run_icon(src),
+			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, maintainerlink, run_icon(src),
 				[run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
 			} else {
 				console.log("Not listing old version: " + name + " " + pkg.version )

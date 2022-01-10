@@ -224,7 +224,9 @@ function init_packages_table(server, user){
             }
             if(src.type == 'src'){
                 var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-                var row = tr([commitdate, pkglink, pkg.version, pkg.maintainer, docslink, run_icon(src), builddate,
+                var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
+                maintainerlink.text(pkg.maintainer).addClass('text-secondary');
+                var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
                   pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
