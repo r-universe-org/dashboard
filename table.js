@@ -90,7 +90,7 @@ function init_packages_table(org = ":any", maintainer = ""){
     batch.forEach(function(pkg){
       //console.log(pkg)
       var name = pkg.package;
-      var src = pkg.runs && pkg.runs.find(x => x.type == 'src') || {};
+      var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
       var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
       var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
       var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
@@ -101,12 +101,17 @@ function init_packages_table(org = ":any", maintainer = ""){
       var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
       maintainerlink.text(pkg.maintainer).addClass('text-secondary');
       var pkgname = pkg.package;
+      var pkglink = $("<span>").text(pkgname);
       if(pkg.os_restriction){
-        pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
+        pkglink = pkglink.append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
       }
-      if(src.type == 'src'){
-        tbody.append(tr([commitdate, userlink, pkgname, pkg.version, maintainerlink, run_icon(src, src),
-          [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
+      if(src.type){
+        var row = tr([commitdate, userlink, pkglink, pkg.version, maintainerlink, run_icon(src, src),
+          [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
+        if(src.type === 'failure'){
+          pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+        }
+        tbody.append(row);
       } else {
         console.log("Not listing old version: " + name + " " + pkg.version )
       }
