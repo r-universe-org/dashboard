@@ -99,26 +99,26 @@ function run_icon(run, src){
     return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', 'slategrey');
   if(run.type == 'pending')
     return $('<span></span>')
-    var iconmap = {
-        src : "linux",
-        win : "windows",
-        mac : "apple"
-    };
-    if(run && run.status){
-        var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
-        var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
-         // can be "success" or "Succeeded"
-        if(run.status.match(/succ/i)){
-            i.css('color', '#22863a');
-        } else if(run.type == 'src'){
-            i.css('color', '#cb2431');
-        } else {
-            i.css('color', 'slategrey');
-        }
-        return $('<span></span>').append(a);
-    } else {
-      var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-      var a = $("<a>").attr('href', src.url).append(i);
+  var iconmap = {
+      src : "linux",
+      win : "windows",
+      mac : "apple"
+  };
+  if(run && run.status){
+      var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
+      var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
+       // can be "success" or "Succeeded"
+      if(run.status.match(/succ/i)){
+          i.css('color', '#22863a');
+      } else if(run.type == 'src'){
+          i.css('color', '#cb2431');
+      } else {
+          i.css('color', 'slategrey');
+      }
+      return $('<span></span>').append(a);
+  } else {
+    var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+    var a = $("<a>").attr('href', src.url).append(i);
   }
   return $('<span></span>').append(a);
 }
@@ -222,14 +222,14 @@ function init_packages_table(server, user){
             if(pkg.os_restriction){
               pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
             }
-            if(src.type == 'src'){
+            if(src.type){
                 var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
                 var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
                 maintainerlink.text(pkg.maintainer).addClass('text-secondary');
-                var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src), builddate,
+                var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src, src), builddate,
                   [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
                 if(src.type === 'failure'){
-                  pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.builder.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+                  pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
                 } else {
                   attach_cran_badge(org, name, pkg.upstream, pkglink);
                 }

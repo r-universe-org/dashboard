@@ -105,7 +105,7 @@ function init_packages_table(org = ":any", maintainer = ""){
 				pkgname = pkgname + " <b>(" + pkg.os_restriction + " only)</b>";
 			}
 			if(src.type == 'src'){
-			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, maintainerlink, run_icon(src),
+			tbody.append(tr([commitdate, userlink, pkgname, pkg.version, maintainerlink, run_icon(src, src),
 				[run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]));
 			} else {
 				console.log("Not listing old version: " + name + " " + pkg.version )
