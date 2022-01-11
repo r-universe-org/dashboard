@@ -303,59 +303,39 @@ function init_github_info(ghuser, server){
   }).catch(alert);
 }
 
-/* Combine maintainers with multiple emails, based on Github login (if known) */ 
-function combine_maintainers(list, user){
-  var out = {};
-  list.forEach(function(x){
-    var org = x._user;
-    var key = x.login || x.email;
-    if(!out[key]){
-      out[key] = {name: x.name, login: x.login, count: 0}
-    }
-    if(x.orcids && x.orcids.length){
-      out[key].orcid_id = x.orcids[0];
-    }
-    if(x.email){
-      out[key].emails = out[key].emails || [];
-      out[key].emails.push(x.email);
-    }
-    out[key].count = out[key].count + x.packages.length;
-    x.packages.forEach(function(pkg){
-      var org = pkg.user;
-      if(!out[org]){
-        out[org] = {name: org, login: org, count: 0}
-      }
-      out[org].count = out[org].count + 1;
-    });
-  });
-  return Object.keys(out).map(key => out[key]);
+function add_maintainer_icon(maintainer){
+  var item = $("#templatezone .maintainer-item").clone();
+  item.find('.maintainer-name').text(maintainer.name)
+  if(maintainer.login){
+    item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
+    item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
+  } else {
+    item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
+  }
+  item.appendTo('#maintainer-list');  
 }
 
 function init_maintainer_list(user, server){
-  get_ndjson(server + '/stats/maintainers?all=true').then(function(x){
+  get_ndjson(server + '/stats/maintainers2?all=true').then(function(x){
     function order( a, b ) {
       if(a.count < b.count) return 1;
       if(a.count > b.count) return -1;
       return 0;
     }
-    combine_maintainers(x).sort(order).forEach(function(maintainer){
-      if(maintainer.login == user && maintainer.orcid_id){
-        $("#github-user-orcid").toggleClass("d-none").attr('href', 'https://orcid.org/' + maintainer.orcid_id);
+    x.sort(order).forEach(function(maintainer){
+      if(maintainer.login == user && maintainer.orcid){
+        $("#github-user-orcid").toggleClass("d-none").attr('href', 'https://orcid.org/' + maintainer.orcid);
       }
       if(maintainer.login == user && maintainer.emails && maintainer.emails.length){
         $("#github-user-emails").toggleClass("d-none").find(".content").append(maintainer.emails.join("<br/>"));
         $("#github-user-emails").tooltip({title: `Maintainer email address from package descriptions`});
       }
-      if(maintainer.login == user || maintainer.login == 'test') return;
-      var item = $("#templatezone .maintainer-item").clone();
-      item.find('.maintainer-name').text(maintainer.name)
-      if(maintainer.login){
-        item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
-        item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
-      } else {
-        item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
+      if(maintainer.login == user && maintainer.orgs){
+        maintainer.orgs.filter(org => org != user).forEach(org => add_maintainer_icon({login: org, name: org}));
       }
-      item.appendTo('#maintainer-list');
+      if(maintainer.login != user && maintainer.login != 'test'){
+        add_maintainer_icon(maintainer);
+      };
     });
   });
 }
