@@ -1,5 +1,5 @@
 $(function(){
-  get_ndjson('https://r-universe.dev/stats/maintainers2?all=1').then(function(x){
+  get_ndjson('https://r-universe.dev/stats/maintainers?all=1').then(function(x){
     x.forEach(function(maintainer){
       var orgs = maintainer.orgs.filter(org => org != maintainer.login);
       var login = maintainer.login || "";

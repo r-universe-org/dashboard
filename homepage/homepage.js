@@ -316,7 +316,7 @@ function add_maintainer_icon(maintainer){
 }
 
 function init_maintainer_list(user, server){
-  get_ndjson(server + '/stats/maintainers2?all=true').then(function(x){
+  get_ndjson(server + '/stats/maintainers?all=true').then(function(x){
     function order( a, b ) {
       if(a.count < b.count) return 1;
       if(a.count > b.count) return -1;
