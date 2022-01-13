@@ -203,70 +203,72 @@
                 <iframe style="border:none; width:100%;height:2000px" src="/man"></iframe>
               </div>
               <div class="tab-pane" id="badges" role="tabpanel">
-                <p class="pt-2"> Badges can be customized with <tt>color</tt>, <tt>scale</tt>, and <tt>style</tt>, parameters from <a href="https://www.npmjs.com/package/badgen">badgen</a>. For example: <a target="_blank" href="https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat"><tt>https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat</tt></a>
-                  <table id="badges-table" class="table table-sm compact">
-                    <thead>
-                      <tr>
-                        <th scope="col">URL</th>
-                        <th scope="col">Preview</th>
-                        <th scope="col">Markdown</th>
-                      </tr>
-                    </thead>
-                    <tbody id="badges-table-body1"></tbody>
-                    <tbody id="badges-table-body2" class="border-top-0"></tbody>
-                  </table>
+                <p class="pt-2"> Badges can be customized with <tt>color</tt>, <tt>scale</tt>, and <tt>style</tt>, parameters from <a href="https://www.npmjs.com/package/badgen">badgen</a>. For example: <a target="_blank" href="https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat"><tt>https://ropensci.r-universe.dev/badges/:total?scale=2&color=pink&style=flat</tt></a></p>
+                <table id="badges-table" class="table table-sm compact">
+                  <thead>
+                    <tr>
+                      <th scope="col">URL</th>
+                      <th scope="col">Preview</th>
+                      <th scope="col">Markdown</th>
+                    </tr>
+                  </thead>
+                  <tbody id="badges-table-body1"></tbody>
+                  <tbody id="badges-table-body2" class="border-top-0"></tbody>
+                </table>
+              </div>
+              <div class="tab-pane" id="view" role="tabpanel">
+                <div class="pl-3 pt-1">
+                  <small>
+                    Authored by: <a id="article-info-author">...</a> in <b id="article-info-package">...</b>.
+                    Source: <a href="#" target="_blank" id="article-info-source">...</a>,
+                    Vignette: <a href="#" target="_blank" id="article-info-html">...</a>.
+                    Last updated: <code id="article-info-date">2021-03-14</code>.
+                  </small>
+                  <div id="article-placeholder" class="float-right"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading article...</div>
                 </div>
-                <div class="tab-pane" id="view" role="tabpanel">
-
-                  <div class="pl-3 pt-1">
-                    <small>
-                      Authored by: <a id="article-info-author">...</a> in <b id="article-info-package">...</b>.
-                      Source: <a href="#" target="_blank" id="article-info-source">...</a>,
-                      Vignette: <a href="#" target="_blank" id="article-info-html">...</a>.
-                      Last updated: <code id="article-info-date">2021-03-14</code>.
-                    </small>
-                    <div id="article-placeholder" class="float-right"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading article...</div>
-                  </div>
-                  <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
-                </div>
+                <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
               </div>
             </div>
-            <div class="col-md-auto col-12">
-              <div style="width:280px;">
-                <div class="card">
-                  <img id="github-user-avatar" src="https://r-universe.dev/static/nobody.jpg" class="card-img-top p-2" style="min-height: 262px;">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      <span id="github-user-name"></span>
-                      <a class="float-right d-none grow-on-over" target="_blank" id="github-user-keys"><span class="fa fa-key fa-fw mr-1 text-secondary"></span></a>
-                      <a class="float-right d-none grow-on-over" target="_blank" id="github-user-twitter"><span class="fab fa-twitter fa-fw mr-1"></span></a>
-                      <a class="float-right d-none grow-on-over" target="_blank" id="github-user-orcid"><span class="fab fa-orcid fa-fw mr-1 text-success"></span></a>
-                    </h5>
-                    <p id="github-user-bio" class="card-text"></p>
-                  </div>
-                  <ul class="list-group list-group-flush pb-2">
-                    <li class="list-group-item border-light text-nowrap" id="github-user-universe-row">
-                      <span class="fa fa-satellite-dish fa-fw mr-3"></span><span id="github-user-universe"></span>
-                      <span id="registry-status-spinner" class="spinner-border spinner-border-sm" role="status"></span>
-                      <a id="registry-status-link" target="_blank"><i class="fa" id="registry-status-icon"></i></a>
-                    </li>
-                    <li id="github-user-company" class="d-none list-group-item border-light text-truncate">
-                      <span class="fa fa-building fa-fw mr-3"></span><span class="content"></span>
-                    </li>
-                    <li id="github-user-location" class="d-none list-group-item border-light text-truncate">
-                      <span class="fa fa-map-marker-alt fa-fw mr-3"></span><span class="content"></span>
-                    </li>
-                    <li id="github-user-blog" class="d-none list-group-item border-light text-truncate">
-                      <span class="fa fa-home fa-fw mr-3"></span><span class="content"></span>
-                    </li>
-                    <li id="github-user-emails" class="d-none list-group-item border-light">
-                      <span class="fa fa-envelope fa-fw mr-3 d-inline-flex"></span><span class="content d-inline-flex"></span>
-                    </li>
-                  </ul>
+          </div>
+          <div class="col-md-auto col-12">
+            <div style="width:280px;">
+              <div class="card">
+                <img id="github-user-avatar" src="https://r-universe.dev/static/nobody.jpg" class="card-img-top p-2" style="min-height: 262px;">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <span id="github-user-name"></span>
+                    <a class="float-right d-none grow-on-over" target="_blank" id="github-user-keys"><span class="fa fa-key fa-fw mr-1 text-secondary"></span></a>
+                    <a class="float-right d-none grow-on-over" target="_blank" id="github-user-twitter"><span class="fab fa-twitter fa-fw mr-1"></span></a>
+                    <a class="float-right d-none grow-on-over" target="_blank" id="github-user-orcid"><span class="fab fa-orcid fa-fw mr-1 text-success"></span></a>
+                  </h5>
+                  <p id="github-user-bio" class="card-text"></p>
                 </div>
-                <div class="card mt-3">
-                  <div class="card-header d-flex w-100 justify-content-between"><div><span class="fa fa-user-astronaut fa-fw mr-3"></span>
-                  Links</div><a class="text-muted" data-toggle="collapse" href="#maintainer-list" role="button"><span class="fa collapse-icon"></span></a>
+                <ul class="list-group list-group-flush pb-2">
+                  <li class="list-group-item border-light text-nowrap" id="github-user-universe-row">
+                    <span class="fa fa-satellite-dish fa-fw mr-3"></span><span id="github-user-universe"></span>
+                    <span id="registry-status-spinner" class="spinner-border spinner-border-sm" role="status"></span>
+                    <a id="registry-status-link" target="_blank"><i class="fa" id="registry-status-icon"></i></a>
+                  </li>
+                  <li id="github-user-company" class="d-none list-group-item border-light text-truncate">
+                    <span class="fa fa-building fa-fw mr-3"></span><span class="content"></span>
+                  </li>
+                  <li id="github-user-location" class="d-none list-group-item border-light text-truncate">
+                    <span class="fa fa-map-marker-alt fa-fw mr-3"></span><span class="content"></span>
+                  </li>
+                  <li id="github-user-blog" class="d-none list-group-item border-light text-truncate">
+                    <span class="fa fa-home fa-fw mr-3"></span><span class="content"></span>
+                  </li>
+                  <li id="github-user-emails" class="d-none list-group-item border-light">
+                    <span class="fa fa-envelope fa-fw mr-3 d-inline-flex"></span><span class="content d-inline-flex"></span>
+                  </li>
+                </ul>
+              </div>
+              <div class="card mt-3">
+                <div class="card-header d-flex w-100 justify-content-between">
+                  <div>
+                    <span class="fa fa-user-astronaut fa-fw mr-3"></span>Links
+                  </div>
+                  <a class="text-muted" data-toggle="collapse" href="#maintainer-list" role="button"><span class="fa collapse-icon"></span></a>
                 </div>
                 <ul id="maintainer-list" class="collapse show list-group list-group-flush"></ul>
               </div>
