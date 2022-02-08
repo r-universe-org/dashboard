@@ -210,7 +210,7 @@ function init_packages_table(server, user){
       var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
       var builddate = new Date(src.date || NaN).yyyymmdd();
       var commiturl = `${pkg.upstream}/commit/${pkg.commit}`;
-      var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank");
+      var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
       var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
