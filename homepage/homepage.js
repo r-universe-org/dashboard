@@ -209,6 +209,8 @@ function init_packages_table(server, user){
       var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
       var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
       var builddate = new Date(src.date || NaN).yyyymmdd();
+      var commiturl = `${pkg.upstream}/commit/${pkg.commit}`;
+      var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
       var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
@@ -225,7 +227,7 @@ function init_packages_table(server, user){
         var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
         var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
         maintainerlink.text(pkg.maintainer).addClass('text-secondary');
-        var row = tr([commitdate, pkglink, pkg.version, maintainerlink, docslink, run_icon(src, src), builddate,
+        var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src), builddate,
           [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
@@ -312,7 +314,7 @@ function add_maintainer_icon(maintainer){
   } else {
     item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
   }
-  item.appendTo('#maintainer-list');  
+  item.appendTo('#maintainer-list');
 }
 
 function init_maintainer_list(user, server){
@@ -556,7 +558,7 @@ function update_syntax_block(universes, package, user){
 
       /* On each tab click */
       $(element).on('show.bs.tab', function () {
-        var stateObject = { 
+        var stateObject = {
           tab: tab,
           view: tab == '#view' ? window.iframestate : null,
         };
