@@ -105,7 +105,3 @@ body {
 .tooltip-inner {
   max-width: 1000px !important;
 }
-
-td {
-  white-space: nowrap;
-}
