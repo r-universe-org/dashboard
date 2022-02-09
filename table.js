@@ -95,6 +95,8 @@ function init_packages_table(org = ":any", maintainer = ""){
       var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
       var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'unix'};
       var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.0') || {skip: pkg.os_restriction === 'windows'};
+      var commiturl = `${pkg.upstream}/commit/${pkg.commit}`;
+      var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
       var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
       var sysdeps = make_sysdeps(pkg, src.distro);
       var userlink = $("<a>").text(pkg.user).attr("href", "https://" + pkg.user + ".r-universe.dev");
@@ -106,7 +108,7 @@ function init_packages_table(org = ":any", maintainer = ""){
         pkglink = pkglink.append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
       }
       if(src.type){
-        var row = tr([commitdate, userlink, pkglink, pkg.version, maintainerlink, run_icon(src, src),
+        var row = tr([commitdate, userlink, pkglink, versionlink, maintainerlink, run_icon(src, src),
           [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
