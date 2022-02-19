@@ -59,6 +59,7 @@ function makechart(universe, max, imsize){
         }]
       },
       options: {
+        events: [], //disable all hover events, much faster (but no tooltips)
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
@@ -109,4 +110,4 @@ function makechart(universe, max, imsize){
   });
 }
 
-makechart('r-lib', 20)
+makechart('ropensci', 20)
