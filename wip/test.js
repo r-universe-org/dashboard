@@ -12,8 +12,8 @@ function get_ndjson(path){
   return get_path(path).then(txt => txt.split('\n').filter(x => x.length).map(JSON.parse));
 }
 
-function sort_packages(obj){
-  return Object.keys(obj).map(function(key){return {package:key, v:obj[key]}}).sort((a, b) => (a.v > b.v) ? -1 : 1).map(x => x.package);
+function sort_packages(array){
+  return array.sort((a, b) => (a.count > b.count) ? -1 : 1).map(x => x.upstream.split(/[\\/]/).pop());
 }
 
 function file_to_data(url, cb){
@@ -27,11 +27,11 @@ function file_to_data(url, cb){
 }
 
 function makechart(universe, max, imsize){
-  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}&all=true`).then(function(contributors){
+  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}`).then(function(contributors){
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
-    const counts = contributors.map(x => sort_packages(x.contributions));
+    const counts = contributors.map(x => sort_packages(x.repos));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
 
     //substitute avatar urls with their base64 data, hopefully this makes re-rendering a bit faster
@@ -52,19 +52,21 @@ function makechart(universe, max, imsize){
       }
     };
 
+    function render_avatars(chart){
+      var xAxis = chart.scales.x;
+      var yAxis = chart.scales.y;
+      yAxis.ticks.forEach((value, index) => {
+        var y = yAxis.getPixelForTick(index);
+        var image = new Image();
+        image.src = avatars[index];
+        chart.ctx.drawImage(image, xAxis.left - size - 105, y - size/2, size, size);
+      });
+    }
+
     const myChart = new Chart(ctx, {
       type: 'bar',
       plugins: [{
-        afterDraw: chart => {
-          var xAxis = chart.scales.x;
-          var yAxis = chart.scales.y;
-          yAxis.ticks.forEach((value, index) => { 
-            var y = yAxis.getPixelForTick(index);      
-            var image = new Image();
-            image.src = avatars[index];
-            chart.ctx.drawImage(image, xAxis.left - size - 105, y - size/2, size, size);
-          });
-        }
+        afterDraw: render_avatars
       }],
       data: {
         labels: logins,
@@ -129,4 +131,4 @@ function makechart(universe, max, imsize){
   });
 }
 
-makechart('', 100)
+makechart('ropensci', 100)
