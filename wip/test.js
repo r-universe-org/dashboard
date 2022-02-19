@@ -16,12 +16,31 @@ function sort_packages(obj){
   return Object.keys(obj).map(function(key){return {package:key, v:obj[key]}}).sort((a, b) => (a.v > b.v) ? -1 : 1).map(x => x.package);
 }
 
+function file_to_data(url, cb){
+  fetch(url).then(r => r.blob()).then(blob => {
+    var reader = new FileReader();
+    reader.onload = function() {
+      cb(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
 function makechart(universe, max, imsize){
-  get_ndjson(`https://${universe}.r-universe.dev/stats/contributors?limit=${max || 100}&all=true`).then(function(contributors){
+  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}&all=true`).then(function(contributors){
+    const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
     const counts = contributors.map(x => sort_packages(x.contributions));
-    const size = imsize || 50;
+    const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
+
+    //substitute avatar urls with their base64 data, hopefully this makes re-rendering a bit faster
+    avatars.forEach(function (url, index) {
+      file_to_data(url, function(blob){
+        avatars[index] = blob;
+      });
+    });
+
     const ctx = document.getElementById('myChart');
     $(ctx).height(logins.length * (size + 10));
     ctx.onclick = function(e){
@@ -42,7 +61,7 @@ function makechart(universe, max, imsize){
           yAxis.ticks.forEach((value, index) => { 
             var y = yAxis.getPixelForTick(index);      
             var image = new Image();
-            image.src = `https://r-universe.dev/avatars/${logins[index].replace('[bot]', '')}.png?size=${size}`;
+            image.src = avatars[index];
             chart.ctx.drawImage(image, xAxis.left - size - 105, y - size/2, size, size);
           });
         }
@@ -59,7 +78,7 @@ function makechart(universe, max, imsize){
         }]
       },
       options: {
-        events: [], //disable all hover events, much faster (but no tooltips)
+        //events: ['resize'], //disable all hover events, much faster (but no tooltips)
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
@@ -67,7 +86,7 @@ function makechart(universe, max, imsize){
           legend: false,
           title: {
             display: true,
-            text: `Top contributors to ${universe}`
+            text: `Top contributors ${universe && "to " + universe}`
           },
           tooltip: {
             callbacks: {
@@ -110,4 +129,4 @@ function makechart(universe, max, imsize){
   });
 }
 
-makechart('ropensci', 20)
+makechart('', 100)
