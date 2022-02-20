@@ -600,7 +600,7 @@ function update_syntax_block(universes, package, user){
 
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'thothorn'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
