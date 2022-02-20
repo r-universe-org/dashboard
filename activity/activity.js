@@ -50,7 +50,7 @@ function makechart(universe, max, imsize){
       });
     }
 
-    const ctx = document.getElementById('content-container');
+    const ctx = document.getElementById('contributors-canvas');
     $(ctx).height(logins.length * (size + 10));
     ctx.onclick = function(e){
       const pts = myChart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true);

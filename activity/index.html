@@ -143,8 +143,11 @@
       </ul><!-- List Group END-->
     </div><!-- sidebar-container END -->
 
-    <!-- MAIN -->
-    <canvas id="content-container" class="contributors-canvas content-expanded" height="700"></canvas>
+    <!-- NOTE -->
+    <div id="content-container" class="content-expanded container-fluid px-0">
+      <!-- Careful: padding may result unsharp/pixelated bitmap rendering -->
+      <canvas id="contributors-canvas" class="col p-0" height="700"></canvas>
+    </div>
   </div><!-- body-row END -->
 
   <script src="https://r-universe.dev/matomo.js"></script>
@@ -152,6 +155,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
   <script src="../dashboard.js?nocache=4"></script>
-  <script src="activity.js"></script>
+  <script src="activity.js?nocache=1"></script>
 </body>
 </html>
