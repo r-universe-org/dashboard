@@ -598,9 +598,114 @@ function update_syntax_block(universes, package, user){
   };
 })(jQuery);
 
+function sort_packages(array){
+  return array.sort((a, b) => (a.count > b.count) ? -1 : 1).map(x => x.upstream.split(/[\\/]/).pop());
+}
+
+function makechart(universe, max, size){
+  max = max || 100;
+  size = size || 50;
+  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max}`).then(function(contributors){
+    const logins = contributors.map(x => x.login);
+    const totals = contributors.map(x => x.total);
+    const counts = contributors.map(x => sort_packages(x.repos));
+    const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
+    const images = avatars.map(function(url){
+      var image = new Image();
+      image.src = url;
+      return image;
+    });
+
+    function render_avatars(chart){
+      var xAxis = chart.scales.x;
+      var yAxis = chart.scales.y;
+      yAxis.ticks.forEach((value, index) => {
+        var y = yAxis.getPixelForTick(index);
+        chart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
+      });
+    }
+
+    const ctx = document.getElementById('contributors-canvas');
+    $(ctx).attr('height', logins.length * (size + 10));
+    ctx.onclick = function(e){
+      const pts = myChart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true);
+      if(pts.length){
+        const x = pts[0];
+        const user = logins[x.index];
+        window.open(`https://${user}.r-universe.dev`, "_blank");
+      }
+    };
+
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      plugins: [{
+        afterDraw: render_avatars
+      }],
+      data: {
+        labels: logins,
+        datasets: [{
+          label: 'contributions',
+          data: totals,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 2,
+          minBarLength: 10
+        }]
+      },
+      options: {
+        //events: [], //disable all hover events, much faster (but no tooltips)
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: true,
+        plugins : {
+          legend: false,
+          title: {
+            display: true,
+            text: `Top contributors ${universe  ? "to " + universe : "(overall)"}`
+          },
+          tooltip: {
+            callbacks: {
+              label: function(item) {
+                let packages = counts[item.dataIndex];
+                let len = packages.length;
+                if(len > 5){
+                  return ` Contributed to ${packages.slice(0,4).join(', ')} and ${packages.length-4} other projects`;
+                } else if(len > 1) {
+                  return ` Contributed to ${packages.slice(0,len-1).join(', ')} and ${packages[len-1]}`;
+                } else {
+                  return ` Contributed to ${packages[0]}`;
+                }
+              }
+            }
+          }
+        },
+        layout: {
+          padding: {
+            left: 70
+          }
+        },
+        scales: {
+          y: {
+            ticks: {
+              beginAtZero: true,
+            }
+          },
+          x: {
+            ticks: {
+              //maxRotation: 90,
+              //minRotation: 90,
+              display: true,
+            }
+          },
+        }
+      }
+    });
+  });
+}
 
 //INIT
-var devtest = 'thothorn'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
@@ -608,5 +713,7 @@ init_github_info(user, server).then(function(){init_maintainer_list(user, server
 init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server, user);
-
+$('#activity-tab-link').one('shown.bs.tab', function (e) {
+  makechart(user, 30);
+});
 $('a[data-toggle="tab"]').historyTabs();

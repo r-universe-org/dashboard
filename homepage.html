@@ -149,6 +149,9 @@
             <ul class="nav nav-tabs justify-content-end flex-column flex-sm-row" id="myTab" role="tablist">
               <li class="mr-auto d-none d-md-block"><h3 class="mb-0 font-italic text-secondary">The '<span class="title-universe-name">...</span>' universe</h3></li>
               <li class="nav-item">
+                <a class="nav-link" id="activity-tab-link" data-toggle="tab" href="#activity" role="tab">Activity</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link active" id="builds-tab-link" data-toggle="tab" href="#builds" role="tab">Builds</a>
               </li>
               <li class="nav-item">
@@ -171,6 +174,9 @@
               </li>
             </ul>
             <div class="tab-content">
+              <div class="tab-pane" id="activity" role="tabpanel">
+                <canvas id="contributors-canvas" class="col p-0" height="700"></canvas>
+              </div>
               <div class="tab-pane show active" id="builds" role="tabpanel">
                 <div class="py-2 d-none d-sm-block">
                   <pre id="example-install-code" class="border rounded"></pre>
@@ -348,6 +354,7 @@
   <script src="https://r-universe.dev/matomo.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/components/prism-core.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.1/iframeResizer.min.js"></script>
