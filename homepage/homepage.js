@@ -605,7 +605,7 @@ function sort_packages(array){
 function makechart(universe, max, size){
   max = max || 100;
   size = size || 50;
-  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max}`).then(function(contributors){
+  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?all=true&limit=${max}`).then(function(contributors){
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
     const counts = contributors.map(x => sort_packages(x.repos));
@@ -626,7 +626,7 @@ function makechart(universe, max, size){
     }
 
     const ctx = document.getElementById('contributors-canvas');
-    $(ctx).attr('height', logins.length * (size + 10));
+    $(ctx).attr('height', logins.length * (size + 10) + 50);
     ctx.onclick = function(e){
       const pts = myChart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true);
       if(pts.length){
