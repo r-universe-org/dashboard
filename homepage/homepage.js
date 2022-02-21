@@ -670,11 +670,15 @@ function make_contributor_chart(universe, max, imsize){
     const totals = contributors.map(x => x.total);
     const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
-    const images = avatars.map(function(url){
-      var image = new Image();
-      image.onerror = function() {image.src = 'https://r-universe.dev/static/nobody.jpg'};
-      image.src = url;
-      return image;
+    const images = avatars.map(x => undefined);
+    avatars.map(function(url, index){
+      var img = new Image();
+      img.src = url;
+      img.decode().then(function(x){
+        images[index] = img;
+      }).catch(function(e){
+        console.log("Failed to load image: " + url);
+      })
     });
 
     function render_avatars(){
@@ -682,7 +686,9 @@ function make_contributor_chart(universe, max, imsize){
       var yAxis = myChart.scales.y;
       yAxis.ticks.forEach((value, index) => {
         var y = yAxis.getPixelForTick(index);
-        myChart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
+        var img = images[index];
+        if(!img) return;
+        myChart.ctx.drawImage(img, xAxis.left - size - 105, y - size/2, size, size);
       });
     }
 
