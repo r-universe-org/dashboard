@@ -672,6 +672,7 @@ function make_contributor_chart(universe, max, imsize){
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(function(url){
       var image = new Image();
+      image.onerror = function() {image.src = 'https://r-universe.dev/static/nobody.jpg'};
       image.src = url;
       return image;
     });
