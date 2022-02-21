@@ -42,7 +42,7 @@ function make_activity_chart(universe){
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: true,
+        animation: false,
         plugins : {
           legend: false,
           title: {
@@ -180,4 +180,4 @@ function make_contributor_chart(universe, max, imsize){
 }
 
 make_activity_chart('');
-make_contributor_chart('', 100);
+make_contributor_chart('', 50);
