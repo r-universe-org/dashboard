@@ -607,7 +607,7 @@ function objectToArray(obj){
 }
 
 function make_activity_chart(universe){
-  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/updates`).then(function(updates){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/updates?all=true`).then(function(updates){
     updates.shift();
     const weeks = updates.map(x => parseInt(x.week.split('-')[1]));
     const years = updates.map(x => x.week.split('-')[0]);
