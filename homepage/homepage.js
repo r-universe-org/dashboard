@@ -664,7 +664,7 @@ function make_activity_chart(universe){
 }
 
 function make_contributor_chart(universe, max, imsize){
-  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}`).then(function(contributors){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?all=true&limit=${max || 100}`).then(function(contributors){
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
