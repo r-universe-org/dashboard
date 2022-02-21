@@ -131,7 +131,6 @@ function make_contributor_chart(universe, max, imsize){
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        animation: true,
         plugins : {
           legend: false,
           title: {
@@ -139,6 +138,7 @@ function make_contributor_chart(universe, max, imsize){
             text: `Top contributors ${universe  ? "to " + universe : "(overall)"}`
           },
           tooltip: {
+            animation: false,
             callbacks: {
               label: function(item) {
                 let packages = counts[item.dataIndex];
