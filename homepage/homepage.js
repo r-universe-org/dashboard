@@ -633,7 +633,7 @@ function make_activity_chart(universe){
           legend: false,
           title: {
             display: true,
-            text: "Weekly package updates"
+            text: "Weekly package updates in " + universe
           },
           tooltip: {
             callbacks: {
