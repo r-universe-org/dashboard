@@ -599,16 +599,76 @@ function update_syntax_block(universes, package, user){
 })(jQuery);
 
 function sort_packages(array){
-  return array.sort((a, b) => (a.count > b.count) ? -1 : 1).map(x => x.upstream.split(/[\\/]/).pop());
+  return array.sort((a, b) => (a.count > b.count) ? -1 : 1);
 }
 
-function makechart(universe, max, size){
-  max = max || 100;
-  size = size || 50;
-  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?all=true&limit=${max}`).then(function(contributors){
+function objectToArray(obj){
+  return Object.keys(obj).map(function(key){return {package:key, count: obj[key]}});
+}
+
+function make_activity_chart(universe){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/updates`).then(function(updates){
+    updates.shift();
+    const weeks = updates.map(x => parseInt(x.week.split('-')[1]));
+    const years = updates.map(x => x.week.split('-')[0]);
+    const counts = updates.map(x => sort_packages(objectToArray(x.packages)).map(x => x.package));
+    const ctx = document.getElementById('activity-canvas');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: weeks,
+        datasets: [{
+          label: 'updates',
+          data: updates.map(x => x.total),
+          backgroundColor: 'rgb(54, 162, 235, 0.2)',
+          borderColor: 'rgb(54, 162, 235, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins : {
+          legend: false,
+          title: {
+            display: true,
+            text: "Weekly package updates"
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items){
+                const item = items[0];
+                return years[item.dataIndex] + ' week ' + item.label;
+              },
+              label: function(item) {
+                let packages = counts[item.dataIndex];
+                let len = packages.length;
+                if(len > 5){
+                  return ` Updates in ${packages.slice(0,4).join(', ')} and ${packages.length-4} other packages`;
+                } else if(len > 1) {
+                  return ` Updates in ${packages.slice(0,len-1).join(', ')} and ${packages[len-1]}`;
+                } else {
+                  return ` Updates in ${packages[0]}`;
+                }
+              }
+            }
+          }
+        },
+        layout: {
+          padding: 20
+        },
+      }
+    });
+  });
+}
+
+function make_contributor_chart(universe, max, imsize){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}`).then(function(contributors){
+    const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
-    const counts = contributors.map(x => sort_packages(x.repos));
+    const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(function(url){
       var image = new Image();
@@ -616,17 +676,17 @@ function makechart(universe, max, size){
       return image;
     });
 
-    function render_avatars(chart){
-      var xAxis = chart.scales.x;
-      var yAxis = chart.scales.y;
+    function render_avatars(){
+      var xAxis = myChart.scales.x;
+      var yAxis = myChart.scales.y;
       yAxis.ticks.forEach((value, index) => {
         var y = yAxis.getPixelForTick(index);
-        chart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
+        myChart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
       });
     }
 
     const ctx = document.getElementById('contributors-canvas');
-    $(ctx).attr('height', logins.length * (size + 10) + 50);
+    $(ctx).height(logins.length * (size + 10));
     ctx.onclick = function(e){
       const pts = myChart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true);
       if(pts.length){
@@ -639,7 +699,7 @@ function makechart(universe, max, size){
     const myChart = new Chart(ctx, {
       type: 'bar',
       plugins: [{
-        afterDraw: render_avatars
+//        afterDraw: render_avatars
       }],
       data: {
         labels: logins,
@@ -654,10 +714,13 @@ function makechart(universe, max, size){
       },
       options: {
         //events: [], //disable all hover events, much faster (but no tooltips)
+        animation : {
+          onComplete: render_avatars,
+          onProgress: render_avatars
+        },
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        animation: true,
         plugins : {
           legend: false,
           title: {
@@ -665,6 +728,7 @@ function makechart(universe, max, size){
             text: `Top contributors ${universe  ? "to " + universe : "(overall)"}`
           },
           tooltip: {
+            animation: false,
             callbacks: {
               label: function(item) {
                 let packages = counts[item.dataIndex];
@@ -688,6 +752,7 @@ function makechart(universe, max, size){
         scales: {
           y: {
             ticks: {
+              //padding: 60,
               beginAtZero: true,
             }
           },
@@ -704,6 +769,9 @@ function makechart(universe, max, size){
   });
 }
 
+
+
+
 //INIT
 var devtest = 'ropensci'
 var host = location.hostname;
@@ -714,6 +782,7 @@ init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server, user);
 $('#activity-tab-link').one('shown.bs.tab', function (e) {
-  makechart(user, 30);
+  make_activity_chart(user);
+  make_contributor_chart(user, 30);
 });
 $('a[data-toggle="tab"]').historyTabs();
