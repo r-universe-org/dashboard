@@ -107,7 +107,7 @@ function make_contributor_chart(universe, max, imsize){
     }
 
     const ctx = document.getElementById('contributors-canvas');
-    $(ctx).height(logins.length * (size + 10));
+    $(ctx).height(logins.length * (size + 10) + 50);
     ctx.onclick = function(e){
       const pts = myChart.getElementsAtEventForMode(e, 'nearest', {intersect: true}, true);
       if(pts.length){
