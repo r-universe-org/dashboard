@@ -90,12 +90,12 @@ function make_contributor_chart(universe, max, imsize){
       return image;
     });
 
-    function render_avatars(chart){
-      var xAxis = chart.scales.x;
-      var yAxis = chart.scales.y;
+    function render_avatars(){
+      var xAxis = myChart.scales.x;
+      var yAxis = myChart.scales.y;
       yAxis.ticks.forEach((value, index) => {
         var y = yAxis.getPixelForTick(index);
-        chart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
+        myChart.ctx.drawImage(images[index], xAxis.left - size - 105, y - size/2, size, size);
       });
     }
 
@@ -113,7 +113,7 @@ function make_contributor_chart(universe, max, imsize){
     const myChart = new Chart(ctx, {
       type: 'bar',
       plugins: [{
-        afterDraw: render_avatars
+//        afterDraw: render_avatars
       }],
       data: {
         labels: logins,
@@ -128,6 +128,10 @@ function make_contributor_chart(universe, max, imsize){
       },
       options: {
         //events: [], //disable all hover events, much faster (but no tooltips)
+        animation : {
+          onComplete: render_avatars,
+          onProgress: render_avatars
+        },
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
