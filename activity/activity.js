@@ -28,8 +28,44 @@ function file_to_data(url){
   });
 }
 
-function makechart(universe, max, imsize){
-  get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}`).then(function(contributors){
+function make_activity_chart(universe){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/updates`).then(function(updates){
+    updates.shift();
+    updates.pop();
+    const ctx = document.getElementById('activity-canvas');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: updates.map(x => x.week.split('-')[1]),
+        datasets: [{
+          label: 'updates',
+          data: updates.map(x => x.total),
+          backgroundColor: 'rgb(54, 162, 235, 0.2)',
+          borderColor: 'rgb(54, 162, 235, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: true,
+        plugins : {
+          legend: false,
+          title: {
+            display: true,
+            text: "Weekly package updates"
+          },
+        },
+        layout: {
+          padding: 10
+        },
+      }
+    });
+  });
+}
+
+function make_contributor_chart(universe, max, imsize){
+  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?limit=${max || 100}`).then(function(contributors){
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
@@ -127,12 +163,8 @@ function makechart(universe, max, imsize){
         }
       }
     });
-
-    // more hacks to force rendering pictures because of bugs in chrome/chartjs
-    //const render_delayed = debounce(() => render_avatars(myChart))
-    //$(window).resize(render_delayed);
-    //render_delayed();
   });
 }
 
-makechart('', 100)
+make_activity_chart('');
+make_contributor_chart('', 100);
