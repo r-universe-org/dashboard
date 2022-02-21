@@ -13,30 +13,24 @@ function get_ndjson(path){
 }
 
 function sort_packages(array){
-  return array.sort((a, b) => (a.count > b.count) ? -1 : 1).map(x => x.upstream.split(/[\\/]/).pop());
+  return array.sort((a, b) => (a.count > b.count) ? -1 : 1);
 }
 
-function file_to_data(url){
-  return new Promise((resolve, reject) => {
-    fetch(url).then(r => r.blob()).then(blob => {
-      var reader = new FileReader();
-      reader.onload = function() {
-        resolve(reader.result);
-      };
-      reader.readAsDataURL(blob);
-    });
-  });
+function objectToArray(obj){
+  return Object.keys(obj).map(function(key){return {package:key, count: obj[key]}});
 }
 
 function make_activity_chart(universe){
   return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/updates`).then(function(updates){
     updates.shift();
-    updates.pop();
+    const weeks = updates.map(x => parseInt(x.week.split('-')[1]));
+    const years = updates.map(x => x.week.split('-')[0]);
+    const counts = updates.map(x => sort_packages(objectToArray(x.packages)).map(x => x.package));
     const ctx = document.getElementById('activity-canvas');
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: updates.map(x => x.week.split('-')[1]),
+        labels: weeks,
         datasets: [{
           label: 'updates',
           data: updates.map(x => x.total),
@@ -55,9 +49,28 @@ function make_activity_chart(universe){
             display: true,
             text: "Weekly package updates"
           },
+          tooltip: {
+            callbacks: {
+              title: function(items){
+                const item = items[0];
+                return years[item.dataIndex] + ' week ' + item.label; 
+              },
+              label: function(item) {
+                let packages = counts[item.dataIndex];
+                let len = packages.length;
+                if(len > 5){
+                  return ` Updates in ${packages.slice(0,4).join(', ')} and ${packages.length-4} other packages`;
+                } else if(len > 1) {
+                  return ` Updates in ${packages.slice(0,len-1).join(', ')} and ${packages[len-1]}`;
+                } else {
+                  return ` Updates in ${packages[0]}`;
+                }
+              }
+            }
+          }
         },
         layout: {
-          padding: 10
+          padding: 20
         },
       }
     });
@@ -69,7 +82,7 @@ function make_contributor_chart(universe, max, imsize){
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
-    const counts = contributors.map(x => sort_packages(x.repos));
+    const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(function(url){
       var image = new Image();
