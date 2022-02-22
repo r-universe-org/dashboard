@@ -710,15 +710,17 @@ function make_contributor_chart(universe, max, imsize){
     const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(x => undefined);
-    avatars.map(function(url, index){
+    const promises = avatars.map(download_avatar);
+
+    function download_avatar(url, index){
       var img = new Image();
       img.src = url;
-      img.decode().then(function(x){
+      return img.decode().then(function(x){
         images[index] = img;
       }).catch(function(e){
         console.log("Failed to load image: " + url);
-      })
-    });
+      });
+    }
 
     function render_avatars(){
       var xAxis = myChart.scales.x;
@@ -741,6 +743,9 @@ function make_contributor_chart(universe, max, imsize){
         window.open(`https://${user}.r-universe.dev`, "_blank");
       }
     };
+
+    /* NB: to disable animation alltogether (for performance) we need to set
+       options.animation: false, and uncomment the afterDraw handler */
 
     const myChart = new Chart(ctx, {
       type: 'bar',
@@ -815,6 +820,8 @@ function make_contributor_chart(universe, max, imsize){
         }
       }
     });
+    // in case images were still downloading when chart was rendered
+    Promise.all(promises).then(() => render_avatars());
   });
 }
 
