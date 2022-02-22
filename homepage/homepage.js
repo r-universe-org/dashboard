@@ -800,6 +800,9 @@ function make_contributor_chart(universe, max, imsize){
             ticks: {
               //padding: 60,
               beginAtZero: true,
+              callback: function(value, index, ticks){
+                return logins[value].padStart(20);
+              }
             }
           },
           x: {
