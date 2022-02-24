@@ -557,7 +557,7 @@ function update_syntax_block(universes, package, user){
 
   # Install some packages
   install.packages('${package}')`;
-  var code = $("<code>").addClass("language-r").text(text.replaceAll("\n  ", "\n"));
+  var code = $("<code>").addClass("language-r").text(text.replace(/\n  /g, "\n"));
   $('#example-install-code').empty().append(code);
   Prism.highlightAll();
 }
