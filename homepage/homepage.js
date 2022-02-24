@@ -702,8 +702,17 @@ function make_activity_chart(universe){
   });
 }
 
+function get_user_data(user, max){
+  const p1 = get_ndjson(`https://${user}.r-universe.dev/stats/contributors?all=true&limit=${max}`);
+  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions`);
+  return Promise.all([p1, p1]).then(function(results){
+    return results[1];
+  });
+}
+
 function make_contributor_chart(universe, max, imsize){
-  return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?all=true&limit=${max || 100}`).then(function(contributors){
+  max = max || 100;
+  return get_user_data(universe, max).then(function(contributors){
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
