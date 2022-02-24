@@ -154,7 +154,8 @@ function make_sysdeps(builder, distro){
         var name = x.package;
         var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
         $("<a>").text(name).attr("href", url).appendTo(div);
-        var version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
+        var version = x.version || "??";
+        version = version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
         div.append(" (" + version + ")\t");
       });
     } else {
