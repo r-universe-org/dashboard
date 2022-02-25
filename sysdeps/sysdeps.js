@@ -2,7 +2,7 @@ $(function(){
   get_ndjson('https://r-universe.dev/stats/sysdeps').then(function(sysdeps){
     sysdeps.filter(x => x.library).forEach(function(x){
       var used = $("<div>");
-      x.usedby.map(link_package).forEach(function(el, i){
+      x.usedby.sort(sortpkg).map(link_package).forEach(function(el, i){
         if(i > 0) used.append(" ");
         used.append(el.addClass("text-dark"));
       })
@@ -13,6 +13,10 @@ $(function(){
     });
   });
 });
+
+function sortpkg(x, y){
+  return x.package.toLowerCase() > y.package.toLowerCase() ? 1 : -1;
+}
 
 function td(el){
   return $('<td>').append(el);
