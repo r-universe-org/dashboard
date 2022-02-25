@@ -57,18 +57,36 @@ function docs_icon(job){
 function make_sysdeps(builder, distro){
   if(builder && builder.sysdeps){
     var div = $("<div>").css("max-width", "33vw");
-    if(Array.isArray(builder.sysdeps)){
-      builder.sysdeps.forEach(function(x){
-        var name = x.package;
-        var url = 'https://packages.ubuntu.com/' + distro + '/' + name;
-        $("<a>").text(name).attr("href", url).appendTo(div);
-        var version = x.version || "??";
-        version = version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '');
-        div.append(" (" + version + ")\t");
-      });
-    } else {
-      div.append(builder.sysdeps);
-    }
+    var unique = {};
+    builder.sysdeps.forEach(function(x){
+      switch(x.package) {
+        case 'libstdc++6':
+          var key = 'c++'
+          break;
+        case 'libgomp1':
+          var key = 'openmp'
+          break;
+        case 'openjdk-11-jre-headless':
+          var key = 'Java'
+          break;
+        case 'libpng1.6':
+          var key = 'libpng'
+          break;
+        case 'libtiff5':
+          var key = 'libtiff'
+          break;
+        default:
+          var key = x.source;
+      }
+      unique[key] = x;
+    });
+    Object.keys(unique).sort().forEach(function(key){
+      var x = unique[key];
+      var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
+      $("<a>").text(key).attr("href", url).appendTo(div);
+      version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '').replace(/\.[a-z]+$/, '');
+      div.append(" (" + version + ")\t");
+    });
     return div;
   }
 }
