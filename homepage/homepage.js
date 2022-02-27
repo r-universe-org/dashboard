@@ -355,6 +355,7 @@ function add_maintainer_icon(maintainer){
     item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
     item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
   } else {
+    item.find('.maintainer-link').attr('target', '_blank').attr('href', 'https://github.com/r-universe-org/help#how-to-link-a-maintainer-email-addresses-to-a-username-on-r-universe');
     item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
   }
   item.appendTo('#maintainer-list');
