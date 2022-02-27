@@ -6,7 +6,7 @@ $(function(){
         if(i > 0) used.append(" ");
         used.append(el.addClass("text-dark"));
       })
-      var runtime = x.packages.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"))
+      var runtime = x.packages.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap text-secondary').append("<br>"))
       var headers = x.headers.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"))
       var version = trim_version(x.version);
       var row = tr([lib(x.library), version, runtime, headers, used])
@@ -19,18 +19,22 @@ function sortpkg(x, y){
   return x.package.toLowerCase() > y.package.toLowerCase() ? 1 : -1;
 }
 
+function th(el){
+  return $('<th>').append(el);
+}
+
 function td(el){
   return $('<td>').append(el);
 }
 
 function tr(list){
   var tr = $('<tr>');
-  list.forEach(x => tr.append(td(x)))
+  list.forEach((x,i) => tr.append(i ? td(x) : th(x)))
   return tr;
 }
 
 function lib(str){
-  return $("<b>").addClass('text-nowrap').text(normalize_library(str))
+  return $("<span>").addClass('text-nowrap').text(normalize_library(str))
 }
 
 function normalize_library(str){
