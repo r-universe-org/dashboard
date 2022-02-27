@@ -6,9 +6,10 @@ $(function(){
         if(i > 0) used.append(" ");
         used.append(el.addClass("text-dark"));
       })
+      var runtime = x.packages.map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"))
       var headers = x.headers.map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"))
       var version = trim_version(x.version);
-      var row = tr([lib(x.library), version, headers, used])
+      var row = tr([lib(x.library), version, runtime, headers, used])
       $("tbody").append(row);
     });
   });
