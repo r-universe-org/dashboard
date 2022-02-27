@@ -44,7 +44,7 @@ function normalize_library(str){
     case 'libgomp1':
       return 'openmp';
     case 'libgfortran5':
-      return 'libfortran'
+      return 'fortran'
     case 'openjdk-lts':
       return 'openjdk (java)';
     default:
