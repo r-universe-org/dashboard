@@ -907,11 +907,18 @@ var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_github_info(user, server).then(function(){init_maintainer_list(user, server)});
+init_github_info(user, server).then(function(){
+  init_maintainer_list(user, server);
+  if(!window.location.hash){
+    $('#builds-tab-link').click();
+  }
+});
 init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server, user);
-make_activity_chart(user);
+$('#builds-tab-link').one('shown.bs.tab', function (e) {
+  make_activity_chart(user);
+});
 $('#activity-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
