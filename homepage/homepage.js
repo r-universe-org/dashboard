@@ -725,7 +725,7 @@ function make_activity_chart(universe){
 function get_user_data(user, max){
   const p1 = get_ndjson(`https://${user}.r-universe.dev/stats/contributors?all=true&limit=${max}`);
   const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=${max}`);
-  return Promise.allSettled([p1, p2]).then(function(results){
+  return Promise.all([p1, p2]).then(function(results){
     return results;
   });
 }
