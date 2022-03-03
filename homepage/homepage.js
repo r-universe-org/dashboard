@@ -724,7 +724,7 @@ function make_activity_chart(universe){
 
 function get_user_data(user, max){
   const p1 = get_ndjson(`https://${user}.r-universe.dev/stats/contributors?all=true&limit=${max}`);
-  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=100`);
+  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=100&skipself=1&cutoff=1`);
   return Promise.all([p1, p2]).then(function(results){
     return results;
   });
@@ -751,7 +751,7 @@ function combine_results(results){
       rec.packages = rec.packages.concat(x.packages);
     });
   });
-  return data.sort(function(x,y){return (x.total + x.contributions > y.total + y.contributions) ? -1 : 1}).slice(0,20);
+  return data.sort(function(x,y){return (x.total + x.contributions > y.total + y.contributions) ? -1 : 1}).slice(0,30);
 }
 
 function make_contributor_chart(universe, max, imsize){
@@ -903,7 +903,7 @@ function make_contributor_chart(universe, max, imsize){
 
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
