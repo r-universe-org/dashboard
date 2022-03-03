@@ -724,15 +724,17 @@ function make_activity_chart(universe){
 
 function get_user_data(user, max){
   const p1 = get_ndjson(`https://${user}.r-universe.dev/stats/contributors?all=true&limit=${max}`);
-  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions`);
-  return Promise.all([p1, p1]).then(function(results){
-    return results[1];
+  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=${max}`);
+  return Promise.allSettled([p1, p2]).then(function(results){
+    return results;
   });
 }
 
 function make_contributor_chart(universe, max, imsize){
   max = max || 100;
-  return get_user_data(universe, max).then(function(contributors){
+  return get_user_data(universe, max).then(function(results){
+    //console.log(results)
+    const contributors = results[0].filter(x => x.login != universe);
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
@@ -805,7 +807,7 @@ function make_contributor_chart(universe, max, imsize){
           legend: false,
           title: {
             display: true,
-            text: `Top contributors ${universe  ? "to " + universe : "(overall)"}`
+            text: `Contributors ${universe  ? "to " + universe + " packages" : "(overall)"}`
           },
           tooltip: {
             animation: false,
