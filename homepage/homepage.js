@@ -796,7 +796,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.open(`https://${user}.r-universe.dev/ui#activity`, "_blank");
+        window.open(`https://${user}.r-universe.dev/ui#contributors`, "_blank");
       }
     };
 
@@ -842,7 +842,7 @@ function make_contributor_chart(universe, max, imsize){
         plugins : {
           legend: false,
           title: {
-            display: true,
+            display: false,
             text: `Contributions by/to ${universe}`
           },
           tooltip: {
@@ -919,7 +919,7 @@ init_article_list(server, user);
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
   make_activity_chart(user);
 });
-$('#activity-tab-link').one('shown.bs.tab', function (e) {
+$('#contributors-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
 $('a[data-toggle="tab"]').historyTabs();
