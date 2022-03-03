@@ -796,7 +796,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.open(`https://${user}.r-universe.dev`, "_blank");
+        window.open(`https://${user}.r-universe.dev/ui#activity`, "_blank");
       }
     };
 
@@ -843,7 +843,7 @@ function make_contributor_chart(universe, max, imsize){
           legend: false,
           title: {
             display: true,
-            text: `Contributors ${universe  ? "to " + universe + " packages" : "(overall)"}`
+            text: `Contributions by/to ${universe}`
           },
           tooltip: {
             animation: false,
