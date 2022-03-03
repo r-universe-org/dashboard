@@ -724,21 +724,46 @@ function make_activity_chart(universe){
 
 function get_user_data(user, max){
   const p1 = get_ndjson(`https://${user}.r-universe.dev/stats/contributors?all=true&limit=${max}`);
-  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=${max}`);
+  const p2 = get_ndjson(`https://${user}.r-universe.dev/stats/contributions?limit=100`);
   return Promise.all([p1, p2]).then(function(results){
     return results;
   });
 }
 
+function combine_results(results){
+  const contributions = results[1];
+  if(contributions.length == 0){
+    return results[0];
+  }
+  var data = results[0].map(function(x){
+    x.contributions = 0;
+    x.packages = [];
+    return x;
+  });
+  contributions.forEach(function(x, i){
+    x.maintainers.forEach(function(maintainer){
+      var rec = data.find(y => y.login == maintainer);
+      if(!rec){
+        rec = {login: maintainer, total: 0, contributions: 0, repos: [], packages: []};
+        data.push(rec);
+      }
+      rec.contributions = rec.contributions + x.contributions;
+      rec.packages = rec.packages.concat(x.packages);
+    });
+  });
+  return data.sort(function(x,y){return (x.total + x.contributions > y.total + y.contributions) ? -1 : 1}).slice(0,20);
+}
+
 function make_contributor_chart(universe, max, imsize){
   max = max || 100;
   return get_user_data(universe, max).then(function(results){
-    //console.log(results)
-    const contributors = results[0].filter(x => x.login != universe);
+    const contributors = combine_results(results).filter(x => x.login != universe);
     const size = imsize || 50;
     const logins = contributors.map(x => x.login);
     const totals = contributors.map(x => x.total);
-    const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
+    const contribs = contributors.map(x => -1* x.contributions);
+    const contribpkgs = contributors.map(x => x.packages);
+    const mypkgs = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(x => undefined);
     const promises = avatars.map(download_avatar);
@@ -786,12 +811,23 @@ function make_contributor_chart(universe, max, imsize){
       data: {
         labels: logins,
         datasets: [{
-          label: 'contributions',
+          label: 'incoming',
           data: totals,
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 2,
-          minBarLength: 10
+          borderSkipped: false,
+          borderRadius: 5,
+          //minBarLength: 10
+        },{
+          label: 'outgoing',
+          data: contribs,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 2,
+          borderSkipped: false,
+          borderRadius: 5,
+          //minBarLength: 10
         }]
       },
       options: {
@@ -812,8 +848,12 @@ function make_contributor_chart(universe, max, imsize){
           tooltip: {
             animation: false,
             callbacks: {
+              title:function(item){
+                const label = item[0].label;
+                return item[0].datasetIndex ? `${universe} to ${label}` : `${label} to ${universe}`;
+              },
               label: function(item) {
-                let packages = counts[item.dataIndex];
+                let packages = item.datasetIndex ? contribpkgs[item.dataIndex] : mypkgs[item.dataIndex];
                 let len = packages.length;
                 if(len > 5){
                   return ` Contributed to ${packages.slice(0,4).join(', ')} and ${packages.length-4} other projects`;
@@ -833,6 +873,7 @@ function make_contributor_chart(universe, max, imsize){
         },
         scales: {
           y: {
+            stacked: true,
             ticks: {
               //padding: 60,
               beginAtZero: true,
@@ -842,10 +883,12 @@ function make_contributor_chart(universe, max, imsize){
             }
           },
           x: {
+            stacked: true,
             ticks: {
               //maxRotation: 90,
               //minRotation: 90,
               display: true,
+              callback: Math.abs
             }
           },
         }
