@@ -686,14 +686,14 @@ function make_activity_chart(universe){
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false,
         plugins : {
           legend: false,
           title: {
-            display: true,
+            display: false,
             text: "Weekly package updates in " + universe
           },
           tooltip: {
+            animation: false,
             callbacks: {
               title: function(items){
                 const item = items[0];
@@ -911,8 +911,8 @@ init_github_info(user, server).then(function(){init_maintainer_list(user, server
 init_packages_table(server, user);
 init_package_descriptions(server, user);
 init_article_list(server, user);
+make_activity_chart(user);
 $('#activity-tab-link').one('shown.bs.tab', function (e) {
-  make_activity_chart(user);
   make_contributor_chart(user, 30);
 });
 $('a[data-toggle="tab"]').historyTabs();

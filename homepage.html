@@ -176,15 +176,15 @@
             <div class="tab-content">
               <div class="tab-pane" id="activity" role="tabpanel">
                 <div class="col p-0">
-                  <canvas id="activity-canvas" class="col p-0" height="300"></canvas>
-                </div>
-                <div class="col p-0">
                   <canvas id="contributors-canvas" class="col p-0" height="700"></canvas>
                 </div>
               </div>
               <div class="tab-pane show active" id="builds" role="tabpanel">
                 <div class="py-2 d-none d-sm-block">
                   <pre id="example-install-code" class="border rounded"></pre>
+                </div>
+                <div class="col p-0">
+                  <canvas id="activity-canvas" class="col p-0" height="300"></canvas>
                 </div>
                 <p id="package-builds-placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading build data...</p>
                 <div class="table-responsive">
@@ -366,6 +366,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=3"></script>
+  <script src="ui/homepage.js?nocache=4"></script>
 </body>
 </html>
