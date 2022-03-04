@@ -796,7 +796,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.open(`https://${user}.r-universe.dev/ui#contributors`, "_blank");
+        window.location.href = `https://${user}.r-universe.dev/ui#contributors`;
       }
     };
 
