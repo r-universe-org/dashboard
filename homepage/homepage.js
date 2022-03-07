@@ -475,7 +475,8 @@ function init_package_descriptions(server, user){
         var topicdiv = item.find('.description-topics').removeClass('d-none');
         if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
         topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
-          $("<a>").addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
+          var topicurl = `https://r-universe.dev/search#${topic}`;
+          $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
         });
       }
     });

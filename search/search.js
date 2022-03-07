@@ -59,7 +59,8 @@ $(function(){
       var topicdiv = item.find('.description-topics').removeClass('d-none');
       if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
       topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
-        $("<a>").addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
+        var topicurl = `https://r-universe.dev/search#${topic}`;
+        $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
       });
     }
   }
@@ -73,8 +74,12 @@ $(function(){
     update_hash();
   });
 
+  function get_hash(){
+    return window.location.hash.replace(/^#/, '');
+  }
+
   function update_results(){
-    var q = window.location.hash.replace(/^#/, '');
+    var q = get_hash();
     if(q.length < 2) return;
     $('#search-results').empty();
     get_ndjson('https://r-universe.dev/stats/search?limit=50&all=true&q=' + q).then(function(x){
@@ -91,7 +96,11 @@ $(function(){
   $('#search-input').on("keydown paste input", debounce(update_hash));
 
   //init page
-  update_results();
+  var hash = get_hash();
+  if(hash.length > 1){
+    $('#search-input').val(hash);
+    update_results();
+  }
 });
 
 function debounce(func, timeout = 300){
