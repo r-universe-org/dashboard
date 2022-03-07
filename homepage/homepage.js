@@ -473,6 +473,7 @@ function init_package_descriptions(server, user){
       var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
       if(topics && topics.length){
         var topicdiv = item.find('.description-topics').removeClass('d-none');
+        if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
         topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
           $("<a>").addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
         });
