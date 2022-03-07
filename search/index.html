@@ -8,7 +8,6 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-  <link rel="stylesheet" href="../maintainers/maintainers.css">
   <link rel="stylesheet" href="../dashboard.css">
   <title>R-universe: personal package repositories for R!</title>
 </head>
@@ -153,49 +152,58 @@
     <!-- MAIN -->
     <div class="col p-4">
       <div class="container-flex">
-        <div id="package-description-row" class="row">
-          <ul id="articles-list-created" class = "col-xl-6 col-12 list-group">
-            <li class="list-group-item border-light text-center font-italic"><h5>Newest articles</h5></li>
-          </ul>
-          <ul id="articles-list-updated" class = "col-xl-6 col-12 list-group">
-            <li class="list-group-item border-light text-center font-italic"><h5>Recently updated</h5></li>
-
-          </ul>
-          <p id="placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading articles...</p>
+        <div id="searchbox" class="row justify-content-center">
+          <div class="col-12 col-lg-10 col-xl-8">
+            <div class="input-group input-group-lg">
+              <input type="text" id="search-input" class="form-control" placeholder="Search for a package, author, topic, keyword, ...">
+              <div class="input-group-append">
+                <button id="search-button" class="btn btn-outline-secondary" type="button">Search</button>
+              </div>
+            </div>
+          </div>
         </div>
+        <div id="search-results" class="row"></div>
       </div>
     </div><!-- Main Col END -->
   </div><!-- body-row END -->
 
   <div id="templatezone" class="d-none">
-    <li class="article-item list-group-item list-group-item-action border-light pb-0">
-      <div class="row no-gutters">
-        <div class="col-2 col-xl-1">
-          <img src="https://r-universe.dev/static/nobody.jpg" class="rounded-circle maintainer-avatar card-img pr-2" style="max-width: 80px">
-        </div>
-        <div class="col-10 col-xl-11">
-          <div class="d-flex w-100 justify-content-between">
-            <a class="article-link text-dark"><h5 class="mb-1 article-title text-capitalize"></h5></a>
-            <small class="article-package-version"></small>
+    <div class="package-description-item col-12 col-xl-6">
+      <div class="card mt-4">
+        <div class="row no-gutters">
+          <div class="col-md-9">
+            <div class="card-body">
+              <h5 class="card-title"><span class="cranbadge"></span><span class="package-name"></span>: <small class="text-secondary package-title"></small></h5>
+              <p class="card-text package-description font-italic"></p>
+
+              <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>
+              <p class="card-text description-topics d-none"></p>
+            </div>
           </div>
-          <div class="d-flex w-100 justify-content-between">
-            <p class="mb-1"><span class="article-author-name"></span> <a class="article-universe" href="#"></a></p>
-            <p class="text-right">
-              <small class="text-muted article-modified text-nowrap"></small> <br/>
-              <small class="text-muted article-created text-nowrap"></small>
-            </p>
+          <div class="col-md-3">
+            <ul class="list-group list-group-flush pb-2">
+              <li class="list-group-item">
+                <img src="https://r-universe.dev/static/nobody.jpg" class="img-fluid img-thumbnail package-image">
+              </li>
+              <li class="list-group-item border-light">
+                <span class="fa fa-user-astronaut fa-fw mt-0 mr-1"></span><a class="package-maintainer text-secondary"></a>
+                <span class="package-org d-none"><br><span class="fa fa-satellite-dish fa-fw mt-2 mr-1"></span></span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
-    </li>
+    </div>
   </div>
 
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://r-universe.dev/matomo.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="../dashboard.js"></script>
-  <script src="articles.js?nocache=9"></script>
+  <script src="search.js?nocache=0"></script>
 
 </body>
 </html>
