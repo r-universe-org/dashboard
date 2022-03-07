@@ -474,7 +474,7 @@ function init_package_descriptions(server, user){
       if(topics && topics.length){
         var topicdiv = item.find('.description-topics').removeClass('d-none');
         topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
-          $("<a>").addClass('badge badge-light mr-1').text(topic).appendTo(topicdiv);
+          $("<a>").addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
         });
       }
     });
