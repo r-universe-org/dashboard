@@ -469,6 +469,14 @@ function init_package_descriptions(server, user){
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
+      var topics = pkg['_builder'].gitstats.topics;
+      var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
+      if(topics && topics.length){
+        var topicdiv = item.find('.description-topics').removeClass('d-none');
+        topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
+          $("<a>").addClass('badge badge-light mr-1').text(topic).appendTo(topicdiv);
+        });
+      }
     });
     if(x.length){
       $("#package-description-placeholder").hide();
