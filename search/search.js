@@ -98,7 +98,7 @@ $(function(){
   //init page
   var hash = get_hash();
   if(hash.length > 1){
-    $('#search-input').val(hash);
+    $('#search-input').val(decodeURI(hash));
     update_results();
   }
 });
