@@ -91,17 +91,18 @@ $(function(){
     });
   };
 
-  const update_hash = function(){
-    window.location.hash = $("#search-input").val();
-  };
-  $('#search-input').on("keydown paste input", debounce(update_hash));
-
-  //init page
+  //init page first
   var hash = get_hash();
   if(hash.length > 1){
     $('#search-input').val(decodeURI(hash));
     update_results();
   }
+
+  //install listeners
+  const update_hash = function(){
+    window.location.hash = $("#search-input").val();
+  };
+  $('#search-input').on("keydown paste input", debounce(update_hash));
 });
 
 function debounce(func, timeout = 300){
