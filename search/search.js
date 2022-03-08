@@ -74,6 +74,7 @@ $(function(){
     var q = get_hash();
     if(q.length < 2) return;
     $('.search-results').empty();
+    $(window).scrollTop(0);
     get_ndjson('https://r-universe.dev/stats/search?limit=50&all=true&q=' + q).then(function(x){
       if(x.length == 0){
         $('#package-description-col-one').append($("<p>").text(`No results for "${q}"`));
