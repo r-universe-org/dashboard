@@ -33,7 +33,7 @@ $(function(){
     }
   }
 
-  function show_pkg_card(pkg){
+  function show_pkg_card(pkg, i){
     var org = pkg['_user'];
     var item = $("#templatezone .package-description-item").clone();
     var login = pkg['_builder'].maintainer.login;
@@ -50,7 +50,7 @@ $(function(){
       item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
     }
     item.find('.package-image').attr('src', get_package_image(buildinfo));
-    item.appendTo('#search-results');
+    item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     //attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var topics = pkg['_builder'].gitstats && pkg['_builder'].gitstats.topics;
@@ -73,10 +73,10 @@ $(function(){
   function update_results(){
     var q = get_hash();
     if(q.length < 2) return;
-    $('#search-results').empty();
+    $('.search-results').empty();
     get_ndjson('https://r-universe.dev/stats/search?limit=50&all=true&q=' + q).then(function(x){
       if(x.length == 0){
-        $('#search-results').append($("<p>").text(`No results for "${q}"`));
+        $('#package-description-col-one').append($("<p>").text(`No results for "${q}"`));
       }
       x.forEach(show_pkg_card);
     });
