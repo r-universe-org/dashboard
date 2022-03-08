@@ -66,15 +66,6 @@ $(function(){
     }
   }
 
-  $(window).on('hashchange', function(e) {
-    update_results();
-  });
-  $('#search-button').click(function(){
-    $(this).blur();
-    window.location.hash="";
-    update_hash();
-  });
-
   function get_hash(){
     return window.location.hash.replace(/^#/, '');
   }
@@ -90,6 +81,17 @@ $(function(){
       x.forEach(show_pkg_card);
     });
   };
+
+  $(window).on('hashchange', function(e) {
+    $('#search-input').val(decodeURI(get_hash()));
+    update_results();
+  });
+
+  $('#search-button').click(function(){
+    $(this).blur();
+    window.location.hash="";
+    update_hash();
+  });
 
   //init page first
   var hash = get_hash();
