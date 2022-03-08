@@ -53,7 +53,7 @@ $(function(){
     item.appendTo('#search-results');
     //attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
-    var topics = pkg['_builder'].gitstats.topics;
+    var topics = pkg['_builder'].gitstats && pkg['_builder'].gitstats.topics;
     var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
     if(topics && topics.length){
       var topicdiv = item.find('.description-topics').removeClass('d-none');
