@@ -60,7 +60,7 @@ $(function(){
       if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
       topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
         var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
-        var topicurl = `https://r-universe.dev/search#${quotedtopic}`;
+        var topicurl = `#${quotedtopic}`;
         $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
       });
     }
