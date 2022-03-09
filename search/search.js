@@ -1,3 +1,5 @@
+const skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
+
 $(function(){
 
   function a(link, txt){
@@ -54,7 +56,6 @@ $(function(){
     //attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var topics = pkg['_builder'].gitstats && pkg['_builder'].gitstats.topics;
-    var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
     if(topics && topics.length){
       var topicdiv = item.find('.description-topics').removeClass('d-none');
       if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
@@ -71,9 +72,14 @@ $(function(){
   }
 
   function update_results(){
+    if(!window.location.href.includes('#')){
+      $('.search-results').empty();
+      $('#results-placeholder').show();
+    }
     var q = get_hash();
     if(q.length < 2) return;
     $('.search-results').empty();
+    $('#results-placeholder').hide();
     $(window).scrollTop(0);
     get_ndjson('https://r-universe.dev/stats/search?limit=50&all=true&q=' + q).then(function(x){
       if(x.length == 0){
@@ -106,7 +112,20 @@ $(function(){
     window.location.hash = $("#search-input").val();
   };
   $('#search-input').on("keydown paste input", debounce(update_hash));
+  load_topics();
 });
+
+function load_topics(){
+  get_ndjson('https://r-universe.dev/stats/topics?min=4&limit=1000').then(function(topicdata){
+    $('#results-placeholder').text("Not sure what to search for? Try some popular topics: ")
+    topicdata.forEach(function(x, i){
+      if(skiptopics.includes(x.topic)) return;
+      $("<a>").attr("href", '#' + x.topic).text(x.topic).appendTo('#results-placeholder');
+      if(i+1 < topicdata.length)
+      $('#results-placeholder').append(", ");
+    });
+  });
+}
 
 function debounce(func, timeout = 300){
   let timer;
