@@ -2,6 +2,9 @@ $(function(){
   get_ndjson('https://r-universe.dev/stats/universes').then(function(x){
     x.forEach(function(org){
       var organization = org.universe;
+      // uncomment when database is updated
+      // This will not show orgs that do not have self-owned packages
+      //if(!org.owners.find(x => x.owner == organization && x.organization)) return;
       if(organization == 'test') return;
       var profile = $("#templatezone .organization-profile").clone();
       if(organization.includes('gitlab.com')){
