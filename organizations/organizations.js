@@ -1,7 +1,7 @@
 $(function(){
-  get_ndjson('https://r-universe.dev/stats/organizations').then(function(x){
+  get_ndjson('https://r-universe.dev/stats/universes').then(function(x){
     x.forEach(function(org){
-      var organization = org.organization;
+      var organization = org.universe;
       if(organization == 'test') return;
       var profile = $("#templatezone .organization-profile").clone();
       if(organization.includes('gitlab.com')){
