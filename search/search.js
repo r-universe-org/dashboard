@@ -121,7 +121,7 @@ $(function(){
 
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
-  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
+  $("<a>").addClass("text-info font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
   $('#results-placeholder').append(", ");
 }
 
