@@ -1,7 +1,7 @@
 const skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
-const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'history', 'hydrology', 'genes',
-  'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'imputation', 'prediction',
-  'birds', 'dinosaurs']
+const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'genes', 'gam',
+  'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'prediction',
+  'birds']
 
 $(function(){
 
