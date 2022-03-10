@@ -1,4 +1,6 @@
 const skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
+const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'history', 'hydrology', 'genes',
+  'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'imputation', 'prediction']
 
 $(function(){
 
@@ -112,19 +114,23 @@ $(function(){
     window.location.hash = $("#search-input").val();
   };
   $('#search-input').on("keydown paste input", debounce(update_hash));
-  load_topics();
+  exampletopics.forEach(append_topic);
+  const more = $('<a>').attr('href', '#').text("show more popular topics!").click(load_all_topics);
+  $('#results-placeholder').append("... ").append(more);
 });
 
-function load_topics(){
-  get_ndjson('https://r-universe.dev/stats/topics?min=4&limit=1000').then(function(topicdata){
-    $('#results-placeholder').text("Not sure what to search for? Try some popular topics: ")
-    topicdata.forEach(function(x, i){
-      if(skiptopics.includes(x.topic)) return;
-      $("<a>").attr("href", '#' + x.topic).text(x.topic).appendTo('#results-placeholder');
-      if(i+1 < topicdata.length)
-      $('#results-placeholder').append(", ");
-    });
+function append_topic(topic, i){
+  if(skiptopics.includes(topic)) return;
+  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
+  $('#results-placeholder').append(", ");
+}
+
+function load_all_topics(){
+  $('#results-placeholder').empty().text("Popular topics: ");
+  get_ndjson('https://r-universe.dev/stats/topics?min=3&limit=1000').then(function(topicdata){
+    topicdata.map(x => x.topic).forEach(append_topic);
   });
+  return false;
 }
 
 function debounce(func, timeout = 300){
