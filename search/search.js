@@ -1,6 +1,7 @@
 const skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
 const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'history', 'hydrology', 'genes',
-  'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'imputation', 'prediction']
+  'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'imputation', 'prediction',
+  'birds', 'dinosaurs']
 
 $(function(){
 
@@ -115,13 +116,13 @@ $(function(){
   };
   $('#search-input').on("keydown paste input", debounce(update_hash));
   exampletopics.forEach(append_topic);
-  const more = $('<a>').attr('href', '#').text("show more popular topics!").click(load_all_topics);
-  $('#results-placeholder').append("... ").append(more);
+  const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
+  $('#results-placeholder').append(more);
 });
 
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
-  $("<a>").addClass("text-info font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
+  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
   $('#results-placeholder').append(", ");
 }
 
