@@ -78,6 +78,7 @@ $(function(){
     if(!window.location.href.includes('#')){
       $('.search-results').empty();
       $('#results-placeholder').show();
+      $('svg').show('fast');
     }
     var q = get_hash();
     if(q.length < 2) return;
