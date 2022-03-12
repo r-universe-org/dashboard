@@ -309,7 +309,7 @@ function update_registry_status(ghuser, server){
       throw "Failed to get workflow data";
     }
   }).catch(function(err){
-    $("#github-user-universe").append("No personal package repository");
+    $("#github-user-universe").append("No personal registry");
     $("#github-user-universe-row").addClass("text-secondary");
     //$("#registry-status-icon").addClass('fa-times').addClass('text-danger');
     console.log(err);
