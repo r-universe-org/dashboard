@@ -1,5 +1,5 @@
 $(function(){
-  get_ndjson('https://r-universe.dev/stats/universes').then(function(x){
+  get_ndjson('https://r-universe.dev/stats/universes?organization=1').then(function(x){
     x.forEach(function(org){
       var organization = org.universe;
       // uncomment when database is updated
