@@ -76,3 +76,10 @@ svg {
     transform: scale(1);
   }
 }
+
+.carousel-control{
+  color: #000 !important;
+  width: auto !important;
+  margin-left: -35px;
+  margin-right: -35px;
+}

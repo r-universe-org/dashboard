@@ -168,6 +168,9 @@ function load_maintainers(){
       if(i == 0) slide.addClass('active');
       slide.appendTo('.carousel-inner') 
     }
+    $(".carousel-control").click(function(){
+      $(this).blur();
+    })
   });
 }
 
