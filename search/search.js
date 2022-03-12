@@ -78,7 +78,7 @@ $(function(){
     if(!window.location.href.includes('#')){
       $('.search-results').empty();
       $('#results-placeholder').show();
-      $('svg').show('fast');
+      $('svg').show('fast', () => $('#search-input').focus());
     }
     var q = get_hash();
     if(q.length < 2) return;
