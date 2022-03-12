@@ -110,6 +110,8 @@ $(function(){
   if(hash.length > 1){
     $('#search-input').val(decodeURI(hash));
     update_results();
+  } else {
+    $('#search-input').focus();
   }
 
   //install listeners
@@ -121,7 +123,7 @@ $(function(){
   const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
   $('#topics-list').append(more);
   load_maintainers();
-  $('#search-input').focus();
+  
 });
 
 function append_topic(topic, i){
