@@ -122,8 +122,8 @@ $(function(){
   exampletopics.forEach(append_topic);
   const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
   $('#topics-list').append(more);
+  load_summary_stats();
   load_maintainers();
-  
 });
 
 function append_topic(topic, i){
@@ -174,6 +174,13 @@ function load_maintainers(){
     $(".carousel-control").click(function(){
       $(this).blur();
     })
+  });
+}
+
+function load_summary_stats(){
+  get_ndjson('https://r-universe.dev/stats/summary').then(function(data){
+    const stats = data[0];
+    Object.keys(stats).forEach(key => $(`#summary-n-${key}`).text(stats[key]));
   });
 }
 
