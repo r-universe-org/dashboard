@@ -145,16 +145,25 @@ function maintainer_card(x){
   return item;
 }
 
+function organization_card(x){
+  var item = $("#templatezone .maintainer-item").clone();
+  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.universe}.png`);
+  item.find('.card-text').text(x.universe);
+  item.find('.card').attr('href', `https://${x.universe}.r-universe.dev`);
+  return item;
+}
+
 function load_maintainers(){
-  var pages = 5;
+  var pages = 6;
   var pagesize = 12;
-  get_ndjson('https://r-universe.dev/stats/maintainers?limit=80').then(function(maintainers){
-    maintainers = maintainers.filter(x => x.login);
+  //for maintainers use: 'https://r-universe.dev/stats/maintainers?limit=100'
+  get_ndjson('https://r-universe.dev/stats/universes?organization=1').then(function(data){
+    data = data.filter(x => x.packages.length > 3);
     for(let i = 0; i < pages; i++) {
       var slide = $("#templatezone .carousel-item").clone();
       var row = slide.find('.maintainer-row');
       for(let j = 0; j < pagesize; j++){
-        row.append(maintainer_card(maintainers[i * pagesize + j]));
+        row.append(organization_card(data[i * pagesize + j]));
       }
       if(i == 0) slide.addClass('active');
       slide.appendTo('.carousel-inner') 
