@@ -119,21 +119,47 @@ $(function(){
   $('#search-input').on("keydown paste input", debounce(update_hash));
   exampletopics.forEach(append_topic);
   const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
-  $('#results-placeholder').append(more);
+  $('#topics-list').append(more);
+  load_maintainers();
 });
 
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
-  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#results-placeholder');
-  $('#results-placeholder').append(", ");
+  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#topics-list');
+  $('#topics-list').append(", ");
 }
 
 function load_all_topics(){
-  $('#results-placeholder').empty().text("Popular topics: ");
+  $('#topics-list').empty().text("Popular topics: ");
   get_ndjson('https://r-universe.dev/stats/topics?min=3&limit=1000').then(function(topicdata){
     topicdata.map(x => x.topic).forEach(append_topic);
   });
   return false;
+}
+
+function maintainer_card(x){
+  var item = $("#templatezone .maintainer-item").clone();
+  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.login}.png`);
+  item.find('.card-text').text(x.name);
+  item.find('.card').attr('href', `https://${x.login}.r-universe.dev`);
+  return item;
+}
+
+function load_maintainers(){
+  var pages = 5;
+  var pagesize = 12;
+  get_ndjson('https://r-universe.dev/stats/maintainers?limit=80').then(function(maintainers){
+    maintainers = maintainers.filter(x => x.login);
+    for(let i = 0; i < pages; i++) {
+      var slide = $("#templatezone .carousel-item").clone();
+      var row = slide.find('.maintainer-row');
+      for(let j = 0; j < pagesize; j++){
+        row.append(maintainer_card(maintainers[i * pagesize + j]));
+      }
+      if(i == 0) slide.addClass('active');
+      slide.appendTo('.carousel-inner') 
+    }
+  });
 }
 
 function debounce(func, timeout = 300){

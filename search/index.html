@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="../dashboard.css">
-  <link rel="stylesheet" href="search.css">
+  <link rel="stylesheet" href="search.css?nocache=1">
   <title>R-universe: personal package repositories for R!</title>
 </head>
 <body>
@@ -172,7 +172,15 @@
             </div>
           </div>
         </div>
-        <div id="results-placeholder" class="col-12 p-4">Not sure what to search for? Why not try: </div>
+        <div id="results-placeholder" class="col-12 py-4">
+          <span id="topics-list">Not sure what to search for? Why not try: </span>
+                    
+          <div class="d-none d-xl-block"><br><br><br></div>
+          <hr class="my-4 "/>
+          <div id="maintainers-carousel" class="carousel slide" data-ride="carousel" style="max-width: 860px; margin: auto;">
+            <div class="carousel-inner"></div>
+          </div>
+        </div>
       </div>
       <div class="container-flex">
         <div class="row">
@@ -210,6 +218,19 @@
         </div>
       </div>
     </div>
+
+    <div class="maintainer-item col-xl-2 col-md-3 col-4 mb-2">
+      <a class="card maintainer-card border-0 text-decoration-none">
+        <img class="card-img-top rounded-circle">
+        <div class="card-body px-0 py-1">
+          <p class="card-text text-center text-muted"></p>
+        </div>
+      </a>
+    </div>
+
+    <div class="carousel-item" data-interval="7000">
+      <div class="row justify-content-center maintainer-row"></div>
+    </div>
   </div>
 
 
@@ -219,7 +240,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="../dashboard.js"></script>
-  <script src="search.js?nocache=18"></script>
+  <script src="search.js?nocache=19"></script>
 
 </body>
 </html>

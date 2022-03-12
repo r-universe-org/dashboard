@@ -1,3 +1,11 @@
+.maintainer-card{
+  transition: 0.3s;
+}
+
+.maintainer-card:hover {
+  background-color: #eee;
+}
+
 svg {
   height: 150px;
 }
