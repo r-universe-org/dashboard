@@ -105,3 +105,8 @@ body {
 .tooltip-inner {
   max-width: 1000px !important;
 }
+
+.logo-item{
+  min-height: 50px;
+  height: auto !important;
+}

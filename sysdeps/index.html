@@ -8,7 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="../dashboard.css?nocache=5">
   <title>R-universe: personal package repositories for R!</title>
 </head>
 <body>
@@ -20,12 +20,13 @@
       <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
       <!-- Bootstrap List Group -->
       <ul class="sticky-top sticky-offset list-group">
-        <!-- placeholder logo, until we have r-universe logo -->
-        <div class="text-muted disabled bg-dark list-group-item list-group-item-action">
+
+        <a href="../search" class="bg-dark list-group-item logo-item">
           <div class="ropensci-logo d-flex w-100 justify-content-start align-items-center">
-            <img src="https://r-universe.dev/runiverse.svg" class="img img-fluid p-1">
+            <img src="https://r-universe.dev/runiverse.svg" class="menu-collapsed img img-fluid p-1">
+            <span class="fa fa-home fa-fw mr-3 menu-collapsed d-none"></span>
           </div>
-        </div>
+        </a>
 
         <!-- Separator with title -->
         <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
@@ -57,13 +58,6 @@
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-user-astronaut fa-fw mr-3"></span>
             <span class="menu-collapsed">Maintainers</span>
-          </div>
-        </a>
-
-        <a href="../search" class="bg-dark list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-start align-items-center">
-            <span class="fa fa-search fa-fw mr-3"></span>
-            <span class="menu-collapsed">Search</span>
           </div>
         </a>
 
