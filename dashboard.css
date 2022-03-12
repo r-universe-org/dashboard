@@ -110,3 +110,7 @@ body {
   min-height: 50px;
   height: auto !important;
 }
+
+.logo-item img {
+  width: 100%;
+}
