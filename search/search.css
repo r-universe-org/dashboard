@@ -80,6 +80,12 @@ svg {
 .carousel-control{
   color: #000 !important;
   width: auto !important;
-  margin-left: -35px;
-  margin-right: -35px;
+}
+
+.carousel-control-prev {
+  left: -35px;
+}
+
+.carousel-control-next {
+  right: -35px;
 }
