@@ -1,11 +1,12 @@
 $(function(){
   var maintainerdata = [];
-  function process_batch(){
+  function process_batch(n){
+    n = n || 24;
     if(maintainerdata.length == 0){
       $(window).unbind('scroll');
       return;
     }
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < n; i++) {
       var maintainer = maintainerdata.shift();
       if(!maintainer) break;
       add_card(maintainer)
@@ -24,7 +25,7 @@ $(function(){
   }
   get_ndjson('https://r-universe.dev/stats/maintainers?all=1').then(function(x){
     maintainerdata = x;
-    process_batch();
+    process_batch(48);
     $(window).on("scroll", infinite_scroll);
   });
 });
