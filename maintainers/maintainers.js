@@ -25,7 +25,7 @@ $(function(){
   }
   get_ndjson('https://r-universe.dev/stats/maintainers?all=1').then(function(x){
     maintainerdata = x;
-    process_batch(48);
+    process_batch(60);
     $(window).on("scroll", infinite_scroll);
   });
 });
