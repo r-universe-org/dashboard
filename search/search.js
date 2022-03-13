@@ -1,5 +1,5 @@
 const skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
-const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'genes', 'gam',
+const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'genome', 'gam',
   'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'prediction',
   'birds', 'fish', 'sports']
 
