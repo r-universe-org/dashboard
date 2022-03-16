@@ -290,6 +290,7 @@ function init_packages_table(server, user){
             alert(xhr.responseText);
           });
         });
+        rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
         if(all_ok([src,win,mac,oldwin,oldmac])){
           rebuildlink = "";
         }
