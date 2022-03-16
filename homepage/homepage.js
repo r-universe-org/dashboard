@@ -146,6 +146,14 @@ function run_icon(run, src){
   return $('<span></span>').append(a);
 }
 
+function is_success(run){
+  return run && run.status && run.status.match(/succ/i);
+}
+
+function all_ok(runs){
+  return runs.every(is_success);
+}
+
 function make_sysdeps(builder, distro){
   if(builder && builder.sysdeps){
     var div = $("<div>").css("max-width", "33vw");
@@ -268,9 +276,26 @@ function init_packages_table(server, user){
       }
       if(src.type){
         var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
+        var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt').click(function(e){
+          e.preventDefault();
+          rebuildlink.attr("disabled", true).off('click');
+          var type = src.type === 'failure' ? 'failure' : 'src';
+          var req = $.ajax({
+            type: 'PATCH',
+            url: `https://${org}.r-universe.dev/packages/${name}/${pkg.version}/${type}`
+          }).done(function( data ) {
+            alert(`Success! Going to retry failed builds for ${name} ${pkg.version}`)
+            window.location = src.url;
+          }).fail(function(xhr) {
+            alert(xhr.responseText);
+          });
+        });
+        if(all_ok([src,win,mac,oldwin,oldmac])){
+          rebuildlink = "";
+        }
         var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
         maintainerlink.text(pkg.maintainer).addClass('text-secondary');
-        var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src), builddate,
+        var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src), builddate, rebuildlink,
           [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
@@ -914,7 +939,7 @@ function make_contributor_chart(universe, max, imsize){
 
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
