@@ -114,3 +114,11 @@ body {
 .logo-item img {
   width: 100%;
 }
+
+.fa-sync-alt{
+  color: slategrey;
+}
+
+.fa-sync-alt:hover{
+  color: #007bff !important;
+}
