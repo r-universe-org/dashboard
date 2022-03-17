@@ -283,12 +283,12 @@ function init_packages_table(server, user){
           var req = $.ajax({
             type: 'PATCH',
             url: `https://${org}.r-universe.dev/packages/${name}/${pkg.version}/${type}`
-          }).done(function( data ) {
-            alert(`Success! Going to retry failed builds for ${name} ${pkg.version}`)
+          }).done(function() {
+            alert(`Success! Retrying failed builds for ${name} ${pkg.version}`)
             window.location = src.url;
-          }).fail(function(xhr) {
-            alert(xhr.responseText);
-          });
+          })
+          .fail(xhr => alert(xhr.responseText))
+          .always(xhr => rebuildlink.tooltip('dispose'));
         });
         rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
         if(all_ok([src,win,mac,oldwin,oldmac])){
@@ -940,7 +940,7 @@ function make_contributor_chart(universe, max, imsize){
 
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'r-forge'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
