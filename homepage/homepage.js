@@ -288,7 +288,10 @@ function init_packages_table(server, user){
               alert(`Success! Retrying failed builds for ${name} ${pkg.version}`)
               window.location = src.url;
             })
-            .fail(xhr => alert(xhr.responseText))
+            .fail((jqXHR, textStatus) => {
+              alert(jqXHR.responseText)
+              if(jqXHR.status == 429) window.location = src.url;
+            })
             .always(xhr => rebuildlink.tooltip('dispose'));
           });
           rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
