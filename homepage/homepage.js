@@ -276,23 +276,22 @@ function init_packages_table(server, user){
       }
       if(src.type){
         var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-        var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt').click(function(e){
-          e.preventDefault();
-          rebuildlink.attr("disabled", true).off('click');
-          var type = src.type === 'failure' ? 'failure' : 'src';
-          var req = $.ajax({
-            type: 'PATCH',
-            url: `https://${org}.r-universe.dev/packages/${name}/${pkg.version}/${type}`
-          }).done(function() {
-            alert(`Success! Retrying failed builds for ${name} ${pkg.version}`)
-            window.location = src.url;
-          })
-          .fail(xhr => alert(xhr.responseText))
-          .always(xhr => rebuildlink.tooltip('dispose'));
-        });
-        rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
-        if(all_ok([src,win,mac,oldwin,oldmac])){
-          rebuildlink = "";
+        if(!all_ok([src,win,mac,oldwin,oldmac])){
+          var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt').click(function(e){
+            e.preventDefault();
+            rebuildlink.attr("disabled", true).off('click');
+            var type = src.type === 'failure' ? 'failure' : 'src';
+            var req = $.ajax({
+              type: 'PATCH',
+              url: `https://${org}.r-universe.dev/packages/${name}/${pkg.version}/${type}`
+            }).done(function() {
+              alert(`Success! Retrying failed builds for ${name} ${pkg.version}`)
+              window.location = src.url;
+            })
+            .fail(xhr => alert(xhr.responseText))
+            .always(xhr => rebuildlink.tooltip('dispose'));
+          });
+          rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
         }
         var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
         maintainerlink.text(pkg.maintainer).addClass('text-secondary');
