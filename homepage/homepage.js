@@ -497,7 +497,15 @@ function init_package_descriptions(server, user){
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
-      var topics = pkg['_builder'].gitstats && pkg['_builder'].gitstats.topics;
+      var builder = pkg['_builder'];
+      var topics = builder.gitstats && builder.gitstats.topics || [];
+      if(builder.sysdeps){
+        builder.sysdeps.forEach(function(x){
+          if(x.name && !topics.includes(x.name)){
+            topics.push(x.name)
+          }
+        });
+      }
       var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
       if(topics && topics.length){
         var topicdiv = item.find('.description-topics').removeClass('d-none');
@@ -942,7 +950,7 @@ function make_contributor_chart(universe, max, imsize){
 
 
 //INIT
-var devtest = 'r-forge'
+var devtest = 's-u'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
