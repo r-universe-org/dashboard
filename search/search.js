@@ -58,7 +58,15 @@ $(function(){
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     //attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
-    var topics = pkg['_builder'].gitstats && pkg['_builder'].gitstats.topics;
+    var builder = pkg['_builder'];
+    var topics = builder.gitstats && builder.gitstats.topics || [];
+    if(builder.sysdeps){
+      builder.sysdeps.forEach(function(x){
+        if(x.name && !topics.includes(x.name)){
+          topics.push(x.name)
+        }
+      });
+    }
     if(topics && topics.length){
       var topicdiv = item.find('.description-topics').removeClass('d-none');
       if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
