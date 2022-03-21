@@ -161,7 +161,8 @@ function make_sysdeps(builder, distro){
     builder.sysdeps.forEach(x => unique[x.name] = x);
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
-      var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
+      //var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
+      var url = `https://r-universe.dev/search/#${key}`
       $("<a>").text(key).attr("href", url).appendTo(div);
       version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '').replace(/\.[a-z]+$/, '');
       div.append(" (" + version + ")\t");
