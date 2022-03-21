@@ -34,22 +34,7 @@ function tr(list){
 }
 
 function lib(str){
-  return $("<span>").addClass('text-nowrap').text(normalize_library(str))
-}
-
-function normalize_library(str){
-  switch(str) {
-    case 'libstdc++6':
-      return 'c++';
-    case 'libgomp1':
-      return 'openmp';
-    case 'libgfortran5':
-      return 'fortran'
-    case 'openjdk-lts':
-      return 'openjdk (java)';
-    default:
-      return str;
-  }
+  return $("<span>").addClass('text-nowrap').text(str);
 }
 
 function trim_version(str){

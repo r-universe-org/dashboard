@@ -58,28 +58,7 @@ function make_sysdeps(builder, distro){
   if(builder && builder.sysdeps){
     var div = $("<div>").css("max-width", "33vw");
     var unique = {};
-    builder.sysdeps.forEach(function(x){
-      switch(x.package) {
-        case 'libstdc++6':
-          var key = 'c++'
-          break;
-        case 'libgomp1':
-          var key = 'openmp'
-          break;
-        case 'openjdk-11-jre-headless':
-          var key = 'Java'
-          break;
-        case 'libpng1.6':
-          var key = 'libpng'
-          break;
-        case 'libtiff5':
-          var key = 'libtiff'
-          break;
-        default:
-          var key = x.source;
-      }
-      unique[key] = x;
-    });
+    builder.sysdeps.forEach(x => unique[x.name] = x);
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
       var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
