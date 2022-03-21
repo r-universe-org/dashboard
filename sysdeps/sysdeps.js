@@ -1,6 +1,7 @@
 $(function(){
   get_ndjson('https://r-universe.dev/stats/sysdeps').then(function(sysdeps){
     sysdeps.filter(x => x.library).forEach(function(x){
+      if(x.library === 'c++') return;
       var used = $("<div>");
       x.usedby.sort(sortpkg).map(link_package).forEach(function(el, i){
         if(i > 0) used.append(" ");
