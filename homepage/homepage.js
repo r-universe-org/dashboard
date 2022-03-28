@@ -99,6 +99,10 @@ function a(link, txt){
   return $('<a>').text(txt || link).attr('href', link);
 }
 
+function docs_ok(pkg){
+  return pkg.pkgdocs && pkg.pkgdocs.match(/succ/i);
+}
+
 function docs_icon(pkg, url){
   if(pkg.pkgdocs){
     var i = $("<i>", {class : 'fa fa-book'});
@@ -107,7 +111,7 @@ function docs_icon(pkg, url){
       /* This is a 'remote' package */
       return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
     }
-    if(pkg.pkgdocs.match(/succ/i)){
+    if(docs_ok(pkg)){
       i.css('color', color_ok);
       a.attr('href', 'https://docs.ropensci.org/' + pkg.package).attr("target", "_blank");
     } else {
@@ -256,7 +260,7 @@ function init_packages_table(server, user){
       }
       if(src.type){
         var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-        if(!all_ok([src,win,mac,oldwin,oldmac])){
+        if(!all_ok([src,win,mac,oldwin,oldmac]) || (user == 'ropensci' && !docs_ok(pkg))){
           var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt').click(function(e){
             e.preventDefault();
             rebuildlink.attr("disabled", true).off('click');
