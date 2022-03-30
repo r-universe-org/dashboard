@@ -173,6 +173,9 @@
               <li class="nav-item d-none">
                 <a class="nav-link" id="view-tab-link" data-toggle="tab" href="#view" role="tab">Viewer</a>
               </li>
+              <li class="nav-item d-none">
+                <a class="nav-link" id="details-tab-link" data-toggle="tab" href="#details" role="tab">Details</a>
+              </li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane" id="contributors" role="tabpanel">
@@ -249,6 +252,15 @@
                 </div>
                 <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
               </div>
+              <div class="tab-pane" id="details" role="tabpanel">
+                <div class="pl-3 pt-1">
+                  <div id="package-details-row" class="row">
+                    <div class="col-12 p-0">
+                      <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-xl-auto col-12">
@@ -313,7 +325,7 @@
         <div class="row no-gutters">
           <div class="col-md-9">
             <div class="card-body">
-              <h5 class="card-title"><span class="cranbadge"></span><span class="package-name"></span>: <small class="text-secondary package-title"></small></h5>
+              <h5 class="card-title"><span class="cranbadge"></span><a class="package-name text-dark"></a>: <small class="text-secondary package-title"></small></h5>
               <p class="card-text package-description font-italic"></p>
 
               <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>

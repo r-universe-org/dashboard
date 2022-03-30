@@ -465,7 +465,11 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package);
+      item.find('.package-name').text(pkg.Package).attr("href", `#packages/${pkg.Package}`).click(function(e){
+        e.preventDefault();
+        $("#details-tab-link").tab('show');
+        show_package_details(org, pkg.Package);
+      })
       item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
       item.find('.package-title').text(pkg.Title);
       item.find('.package-description').text(pkg.Description.replace('\n', ' '));
@@ -692,7 +696,7 @@ function activity_data(updates){
     var rec = updates.find(x => x.week == weekval);
     if(rec){
       out.total = rec.total;
-      out.packages = sort_packages(objectToArray(rec.packages)).map(x => x.package);
+      out.packages = sort_packages(objectToArray(rec.packages || [])).map(x => x.package);
     }
     return out;
   });
@@ -931,10 +935,63 @@ function make_contributor_chart(universe, max, imsize){
 }
 
 
+function detail_update_chart(package, updates){
+  const ctx = $('#package-updates-canvas').empty().attr('height', '300').height(300);
+  const data = activity_data(updates.map(x => ({total:x.n, week:x.week})));
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(x => x.week),
+      datasets: [{
+        label: 'updates',
+        data: data.map(x => x.total),
+        backgroundColor: 'rgb(54, 162, 235, 0.2)',
+        borderColor: 'rgb(54, 162, 235, 1)',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins : {
+        legend: false,
+        title: {
+          display: false,
+          text: "Weekly package updates for " + package
+        },
+        tooltip: {
+          animation: false,
+          callbacks: {
+            title: function(items){
+              const item = items[0];
+              const weekdata = data[item.dataIndex];
+              return weekdata.year + ' week ' + weekdata.week;
+            }
+          }
+        }
+      },
+      layout: {
+        padding: 20
+      }
+    }
+  });
+}
 
+function show_package_details(user, package){
+  const old = Chart.getChart('package-updates-canvas');
+  if(old) old.destroy();
+  get_path(`https://${user}.r-universe.dev/packages/${package}/any`).then(function(x){
+    var src = x.find(x => x._type == 'src');
+    if(!src) alert("Failed to find package " + package)
+    var builder = src['_builder'];
+    if(builder.gitstats && builder.gitstats.updates){
+      detail_update_chart(package, builder.gitstats.updates);
+    }
+  });
+}
 
 //INIT
-var devtest = 's-u'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
