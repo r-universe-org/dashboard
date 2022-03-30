@@ -969,8 +969,7 @@ function detail_update_chart(package, updates){
       plugins : {
         legend: false,
         title: {
-          display: true,
-          text: "Weekly package updates over the past year"
+          display: false,
         },
         tooltip: {
           animation: false,
@@ -985,10 +984,19 @@ function detail_update_chart(package, updates){
       },
       layout: {
         padding: 20
+      },
+      scales: {
+        y : {
+          title: {
+            display: true,
+            text: 'Weekly updates'
+          }
+        }
       }
     }
   });
 }
+
 
 function show_package_details(package){
   window.detailpkg = package;
