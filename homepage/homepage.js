@@ -465,11 +465,16 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package).attr("href", `#packages/${pkg.Package}`).click(function(e){
+      item.find('.package-name').text(pkg.Package).attr("href", `#details:${pkg.Package}`).click(function(e){
         e.preventDefault();
-        $("#details-tab-link").tab('show');
-        show_package_details(org, pkg.Package);
-      })
+        if(org == user){
+          show_package_details(pkg.Package);
+          $("#details-tab-link").tab('show');
+          window.scrollTo(0,0);
+        } else {
+          window.location.href = `https://${org}.r-universe.dev/ui#details:${pkg.Package}`;
+        }
+      });
       item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
       item.find('.package-title').text(pkg.Title);
       item.find('.package-description').text(pkg.Description.replace('\n', ' '));
@@ -640,12 +645,16 @@ function update_syntax_block(universes, package, user){
         var stateObject = {
           tab: tab,
           view: tab == '#view' ? window.iframestate : null,
+          detailpkg: tab == '#view' ? window.detailpkg : null
         };
         var url = tab;
         if (tab == '#view') {
           url = tab + ":" + window.iframestate;
         } else {
           navigate_iframe(null);
+        }
+        if (tab == '#details') {
+          url = tab + ":" + window.detailpkg;
         }
 
         if (window.location.hash && url !== window.location.hash) {
@@ -667,13 +676,16 @@ function update_syntax_block(universes, package, user){
       if (tab === '#view' && window.location.hash.startsWith("#view:")){
         navigate_iframe(window.location.hash.substring(6));
         $(element).tab('show');
+      } else if (tab === '#details' && window.location.hash.startsWith("#details:")){
+        show_package_details(window.location.hash.substring(9));
+        $(element).tab('show');
       } else if (!window.location.hash && $(element).is('.active')) {
-      // Shows the first element if there are no query parameters.
-      $(element).tab('show').trigger('show.bs.tab');
-    } else if (tab === window.location.hash) {
-      $(element).tab('show');
-    }
-  });
+        // Shows the first element if there are no query parameters.
+        $(element).tab('show').trigger('show.bs.tab');
+      } else if (tab === window.location.hash) {
+        $(element).tab('show');
+      }
+    });
   };
 })(jQuery);
 
@@ -956,8 +968,8 @@ function detail_update_chart(package, updates){
       plugins : {
         legend: false,
         title: {
-          display: false,
-          text: "Weekly package updates for " + package
+          display: true,
+          text: "Weekly package updates over the past year"
         },
         tooltip: {
           animation: false,
@@ -977,10 +989,13 @@ function detail_update_chart(package, updates){
   });
 }
 
-function show_package_details(user, package){
+var detailpkg;
+function show_package_details(package){
+  detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
-  get_path(`https://${user}.r-universe.dev/packages/${package}/any`).then(function(x){
+  window.scrollTo(0,0);
+  get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src');
     if(!src) alert("Failed to find package " + package)
     var builder = src['_builder'];
@@ -991,7 +1006,7 @@ function show_package_details(user, package){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'tidyverse'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
