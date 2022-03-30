@@ -250,8 +250,13 @@ function init_packages_table(server, user){
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
-      var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
-      var pkglink = $("<a>").text(longname).attr("href", pkg.upstream).attr("target", "_blank");
+      var longname = owner == user ? name : `${owner}/${name}`;
+      var pkglink = $("<a>").text(longname).attr("href", `https://${org}.r-universe.dev/ui#details:${name}`).click(function(e){
+        if(org == user){
+          e.preventDefault();
+          tab_to_package(name);
+        }
+      });
       if(!pkg.registered){
         pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
       }
