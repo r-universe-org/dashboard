@@ -465,14 +465,10 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package).attr("href", `#details:${pkg.Package}`).click(function(e){
-        e.preventDefault();
+      item.find('.package-name').text(pkg.Package).attr("href", `https://${org}.r-universe.dev/ui#details:${pkg.Package}`).click(function(e){
         if(org == user){
-          show_package_details(pkg.Package);
-          $("#details-tab-link").tab('show');
-          window.scrollTo(0,0);
-        } else {
-          window.location.href = `https://${org}.r-universe.dev/ui#details:${pkg.Package}`;
+          e.preventDefault();
+          tab_to_package(pkg.Package);
         }
       });
       item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
@@ -989,9 +985,8 @@ function detail_update_chart(package, updates){
   });
 }
 
-var detailpkg;
 function show_package_details(package){
-  detailpkg = package;
+  window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
   window.scrollTo(0,0);
@@ -1005,8 +1000,14 @@ function show_package_details(package){
   });
 }
 
+function tab_to_package(package){
+  show_package_details(package);
+  $("#details-tab-link").tab('show');
+  window.scrollTo(0,0);
+}
+
 //INIT
-var devtest = 'tidyverse'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
