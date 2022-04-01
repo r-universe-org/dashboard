@@ -1007,10 +1007,11 @@ function show_package_details(package){
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
   window.scrollTo(0,0);
-  $(".package-details-name").text(package);
   get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'];
+    $('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
+    $('.package-details-name').text(`${src.Package}`)
     $('.package-details-title').text(src.Title);
     $('.package-details-description').text(src.Description);
     $('.package-details-topics').empty().append(make_topic_labels(builder));
