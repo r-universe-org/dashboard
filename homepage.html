@@ -254,10 +254,23 @@
               </div>
               <div class="tab-pane" id="details" role="tabpanel">
                 <div class="pl-3 pt-1">
-                  <div id="package-details-row" class="row">
-                    <h5 class="card-title ml-auto mr-auto">Activity</h5>
-                    <div class="col-12 p-0 text-center">
-                      <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
+                  <div class="row card details-card">
+                    <h5 class="card-header package-details-name text-center"></h5>
+                    <div class="card-body col-12">
+                      <img src="https://r-universe.dev/static/nobody.jpg" class="package-details-logo img-fluid img-thumbnail mr-4 float-left" style="max-height: 180px">
+
+                      <h5 class="card-title"><span class="cranbadge"></span><a class="package-details-name text-dark"></a>: <small class="text-secondary package-details-title"></small></h5>
+                      <p class="card-text package-details-description font-italic"></p>
+
+                      <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
+                      <p class="card-text package-details-topics clearfix"></p>
+
+                      <h5 class="card-title">Activity</h5>
+                      <div class="col-12 p-0">
+                        <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
+                      </div>
+                      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                   </div>
                 </div>
@@ -330,7 +343,7 @@
               <p class="card-text package-description font-italic"></p>
 
               <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>
-              <p class="card-text description-topics d-none"></p>
+              <p class="card-text description-topics"></p>
             </div>
           </div>
           <div class="col-md-3">
