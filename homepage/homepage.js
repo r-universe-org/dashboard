@@ -1021,7 +1021,7 @@ function show_package_details(package){
       detail_update_chart(package, builder.gitstats.updates);
     }
     if(builder.pkglogo){
-      $('.package-details-logo').attr('src', builder.pkglogo);
+      $('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
     }
   });
 }
