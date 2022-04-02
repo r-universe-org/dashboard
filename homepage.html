@@ -259,20 +259,20 @@
                     <div class="card-body col-12">
                       <img src="https://r-universe.dev/static/nobody.jpg" class="d-none package-details-logo img-fluid img-thumbnail mr-4 float-left" style="max-height: 180px">
 
-                      <h5 class="card-title"><span class="cranbadge"></span><a class="package-details-name text-dark"></a>: <small class="text-secondary package-details-title"></small></h5>
+                      <h5 class="card-title"><span class="cranbadge"></span><span class="package-details-name text-dark"></span>: <small class="text-secondary package-details-title"></small></h5>
                       <p class="card-text package-details-description font-italic"></p>
-
+                      <p><a class="card-text text-dark package-details-maintainer"></a></p>
                       <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
                       <p class="card-text package-details-topics clearfix"></p>
-
-                      <h5 class="card-title">Articles</h5>
-
-                      <h5 class="card-title">Contributors</h5>
-
-                      <h5 class="card-title">Activity</h5>
+                    </div>
+                    <div class="package-details-article-list list-group list-group-flush"></div>
+                    <div class="card-body col-12">
                       <div class="col-12 p-0">
                         <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
                       </div>
+
+                      <h5 class="card-title">Contributors</h5>
+
 
                       <h5 class="card-title">Used by</h5>
 
@@ -340,6 +340,20 @@
         <div class="col-md-9"><div class="card-body"><p class="card-text maintainer-name"></p></div></div>
       </div>
     </li>
+
+    <a class="package-details-article list-group-item list-group-item-action border-0">
+      <div class="d-flex w-100 justify-content-between">
+        <div>
+          <h5 class="mb-1">List group item heading</h5>
+          <p class="mb-1 package-details-article-author"></p>
+          <small>And some small print.</small>
+        </div>
+        <p class="text-right">
+          <small class="text-muted article-modified text-nowrap"></small> <br/>
+          <small class="text-muted article-created text-nowrap"></small>
+        </p>
+      </div>
+    </a>
 
     <div class="package-description-item">
       <div class="card mt-4">

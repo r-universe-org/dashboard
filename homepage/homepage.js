@@ -1014,6 +1014,10 @@ function show_package_details(package){
     $('.package-details-name').text(`${src.Package}`)
     $('.package-details-title').text(src.Title);
     $('.package-details-description').text(src.Description);
+    $('.package-details-maintainer').text(src.Maintainer);
+    if(builder.maintainer.login){
+      $('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
+    }
     $('.package-details-topics').empty().append(make_topic_labels(builder));
     if(builder.commit.time){
       $('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
@@ -1023,6 +1027,28 @@ function show_package_details(package){
     }
     if(builder.pkglogo){
       $('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
+    }
+    $('.package-details-article-list').empty();
+    if(builder.vignettes){
+      builder.vignettes.forEach(function(x){
+        var minilink = `${src.Package}/${x.filename}`;
+        var item = $("#templatezone .package-details-article").clone();
+        if(!minilink.endsWith('html')){
+          item.attr("target", "_blank");
+        } else {
+          item.attr('href', `articles/${minilink}`).click(function(e){
+            e.preventDefault();
+            navigate_iframe(minilink);
+            $("#view-tab-link").tab('show');
+            window.scrollTo(0,0);
+          });
+        }
+        item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
+        item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
+        item.find('.package-details-article-author').text(x.author);
+        item.find('h5').text(x.title);
+        item.appendTo('.package-details-article-list');
+      });
     }
   });
 }
@@ -1034,7 +1060,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'r-spatial'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
