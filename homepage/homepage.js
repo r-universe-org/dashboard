@@ -1043,6 +1043,8 @@ function show_package_details(package){
             window.scrollTo(0,0);
           });
         }
+        item.find('.detail-article-source').text(x.source);
+        item.find('.detail-article-engine').text(x.engine);
         item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
         item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
         item.find('.package-details-article-author').text(x.author);
