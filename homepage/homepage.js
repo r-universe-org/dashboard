@@ -1033,10 +1033,11 @@ function show_package_details(package){
       builder.vignettes.forEach(function(x){
         var minilink = `${src.Package}/${x.filename}`;
         var item = $("#templatezone .package-details-article").clone();
+        item.attr('href', `/articles/${minilink}`);
         if(!minilink.endsWith('html')){
           item.attr("target", "_blank");
         } else {
-          item.attr('href', `articles/${minilink}`).click(function(e){
+          item.click(function(e){
             e.preventDefault();
             navigate_iframe(minilink);
             $("#view-tab-link").tab('show');
@@ -1062,7 +1063,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'r-spatial'
+var devtest = 'r-forge'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
