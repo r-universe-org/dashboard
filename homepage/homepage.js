@@ -1033,10 +1033,8 @@ function show_package_details(package){
       builder.vignettes.forEach(function(x){
         var minilink = `${src.Package}/${x.filename}`;
         var item = $("#templatezone .package-details-article").clone();
-        item.attr('href', `/articles/${minilink}`);
-        if(!minilink.endsWith('html')){
-          item.attr("target", "_blank");
-        } else {
+        item.attr('href', `https://${src._user}.r-universe.dev/articles/${minilink}`);
+        if(minilink.endsWith('html')){
           item.click(function(e){
             e.preventDefault();
             navigate_iframe(minilink);
@@ -1046,6 +1044,7 @@ function show_package_details(package){
         }
         item.find('.detail-article-source').text(x.source);
         item.find('.detail-article-engine').text(x.engine);
+        item.find('.detail-article-build').text(src._published.substring(0, 19).replace("T", " "));
         item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
         item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
         item.find('.package-details-article-author').text(x.author);
