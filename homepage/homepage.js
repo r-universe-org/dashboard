@@ -1068,6 +1068,18 @@ function show_package_details(package){
         item.appendTo('.package-details-article-list');
       });
     }
+    $('.package-details-contributors').empty();
+    if(builder.gitstats && builder.gitstats.contributions){
+      var names = Object.keys(builder.gitstats.contributions);
+      names.forEach(function(login){
+        var count = builder.gitstats.contributions[login];
+        var item = $("#templatezone .package-details-contributor").clone();
+        item.attr('href', `https://${login}.r-universe.dev`);
+        item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`);
+        item.tooltip({title: `${login} made ${count} contributions to ${package}`});
+        item.appendTo('.package-details-contributors');
+      });
+    }
   });
 }
 
@@ -1078,7 +1090,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'r-spatial'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';

@@ -261,18 +261,20 @@
 
                       <h5 class="card-title"><span class="cranbadge"></span><span class="package-details-name text-dark"></span>: <small class="text-secondary package-details-title"></small></h5>
                       <p class="card-text package-details-description font-italic"></p>
-                      <p><span class="card-text text-dark package-details-author"></span></p>
+                      <p>Authors: <span class="card-text text-dark package-details-author"></span></p>
                       <p>Issue tracker: <a target="_blank" class="card-text text-dark package-details-issues"></a></p>
                       <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
                       <p class="card-text package-details-topics clearfix"></p>
                     </div>
                     <div class="package-details-article-list list-group"></div>
+
+                    <h5 class="card-title card-header text-center">Activity and Contributors</h5>
                     <div class="card-body col-12">
-                      <div class="col-12 p-0">
+                      <div class="package-details-contributors"></div>
+
+                      <div class="p-0">
                         <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
                       </div>
-
-                      <h5 class="card-title">Contributors</h5>
 
 
                       <h5 class="card-title">Used by</h5>
@@ -335,6 +337,11 @@
   </div><!-- body-row END -->
 
   <div id="templatezone" class="d-none">
+
+    <a class="package-details-contributor text-decoration-none">
+      <img class="package-contributor-img img-fluid p-1" style="width: 80px; border-radius: 50%;">
+    </a>
+
     <li class="maintainer-item list-group-item border-light text-truncate p-0">
       <div class="row no-gutters">
         <a class="col-md-3 maintainer-link"><img src="https://r-universe.dev/static/nobody.jpg" class="rounded maintainer-avatar card-img"></a>
