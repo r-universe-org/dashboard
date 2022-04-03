@@ -1074,7 +1074,7 @@ function show_package_details(package){
       names.forEach(function(login){
         var count = builder.gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
-        item.attr('href', `https://${login}.r-universe.dev`);
+        item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
         item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`)
             .tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
