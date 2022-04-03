@@ -1001,6 +1001,10 @@ function detail_update_chart(package, updates){
   });
 }
 
+function normalize_authors(str){
+  return str.replace(/\(.*\)/g,"");
+}
+
 function guess_tracker_url(src){
   if(src.BugReports){
     return src.BugReports;
@@ -1024,7 +1028,7 @@ function show_package_details(package){
     $('.package-details-name').text(`${src.Package}`)
     $('.package-details-title').text(src.Title);
     $('.package-details-description').text(src.Description);
-    $('.package-details-maintainer').text(src.Maintainer);
+    $('.package-details-author').text(normalize_authors(src.Author));
     if(builder.maintainer.login){
       $('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
     }
@@ -1074,7 +1078,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'r-forge'
+var devtest = 'r-spatial'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
