@@ -1002,7 +1002,7 @@ function detail_update_chart(package, updates){
 }
 
 function normalize_authors(str){
-  return str.replace(/\(.*\)/g,"");
+  return str.replace(/\(\)/g, '').replace(/\([\s\S]+?\)/g,"");
 }
 
 function guess_tracker_url(src){
@@ -1075,8 +1075,8 @@ function show_package_details(package){
         var count = builder.gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
         item.attr('href', `https://${login}.r-universe.dev`);
-        item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`);
-        item.tooltip({title: `${login} made ${count} contributions to ${package}`});
+        item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`)
+            .tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
       });
     }
