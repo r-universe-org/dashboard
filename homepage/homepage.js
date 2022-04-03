@@ -1001,6 +1001,16 @@ function detail_update_chart(package, updates){
   });
 }
 
+function guess_tracker_url(src){
+  if(src.BugReports){
+    return src.BugReports;
+  }
+  var upstream = src._builder.upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
+  if(upstream.match("github.com")){
+    return upstream + '/issues';
+  }
+  return upstream;
+}
 
 function show_package_details(package){
   window.detailpkg = package;
@@ -1018,6 +1028,8 @@ function show_package_details(package){
     if(builder.maintainer.login){
       $('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
     }
+    var issuetracker = guess_tracker_url(src);
+    $(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     $('.package-details-topics').empty().append(make_topic_labels(builder));
     if(builder.commit.time){
       $('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
