@@ -45,7 +45,8 @@ $(function(){
     if(login) {
       item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
     }
-    item.find('.package-name').text(pkg.Package).attr('href', `https://${org}.r-universe.dev/ui#package:${pkg.Package}`);
+    item.find('.package-link').attr('href', `https://${org}.r-universe.dev/ui#package:${pkg.Package}`);
+    item.find('.package-name').text(pkg.Package);
     item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
     item.find('.package-title').text(pkg.Title);
     item.find('.package-description').text(pkg.Description.replace('\n', ' '));

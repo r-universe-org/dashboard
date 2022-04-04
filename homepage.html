@@ -364,21 +364,22 @@
     </a>
 
     <div class="package-description-item">
-      <div class="card mt-4">
+      <div class="card mt-4 shadow">
         <div class="row no-gutters">
           <div class="col-md-9">
             <div class="card-body">
-              <h5 class="card-title"><span class="cranbadge"></span><a class="package-name text-dark"></a>: <small class="text-secondary package-title"></small></h5>
-              <p class="card-text package-description font-italic"></p>
-
-              <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>
+              <a class="package-link text-decoration-none text-reset">
+                <h5 class="card-title"><span class="cranbadge"></span><span class="package-name text-dark"></span>: <small class="text-secondary package-title"></small></h5>
+                <p class="card-text package-description font-italic"></p>
+              </a>
+              <p class="card-text pt-2"><small class="text-muted description-last-updated">Last updated ??</small></p>
               <p class="card-text description-topics"></p>
             </div>
           </div>
           <div class="col-md-3">
             <ul class="list-group list-group-flush pb-2">
               <li class="list-group-item">
-                <img src="https://r-universe.dev/static/nobody.jpg" class="img-fluid img-thumbnail package-image">
+                <img src="https://r-universe.dev/static/nobody.jpg" class="img-fluid package-image" style="max-height:140px">
               </li>
               <li class="list-group-item border-light">
                 <span class="fa fa-user-astronaut fa-fw mt-0 mr-1"></span><a class="package-maintainer text-secondary"></a>
@@ -425,6 +426,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=25"></script>
+  <script src="ui/homepage.js?nocache=26"></script>
 </body>
 </html>

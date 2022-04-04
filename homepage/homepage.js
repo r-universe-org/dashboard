@@ -492,7 +492,8 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package).attr("href", `https://${org}.r-universe.dev/ui#package:${pkg.Package}`).click(function(e){
+      item.find('.package-name').text(pkg.Package)
+      item.find('.package-link').attr("href", `https://${org}.r-universe.dev/ui#package:${pkg.Package}`).click(function(e){
         if(org == user){
           e.preventDefault();
           tab_to_package(pkg.Package);
