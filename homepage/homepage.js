@@ -1020,32 +1020,31 @@ function show_package_details(package){
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
+  $('.package-details-container .details-card').remove();
   window.scrollTo(0,0);
   get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'];
-    $('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
-    $('.package-details-name').text(`${src.Package}`)
-    $('.package-details-title').text(src.Title);
-    $('.package-details-description').text(src.Description);
-    $('.package-details-author').text(normalize_authors(src.Author));
+    var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
+    details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
+    details.find('.package-details-name').text(`${src.Package}`)
+    details.find('.package-details-title').text(src.Title);
+    details.find('.package-details-description').text(src.Description);
+    details.find('.package-details-author').text(normalize_authors(src.Author));
     if(builder.maintainer.login){
-      $('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
+      details.find('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
     }
     var issuetracker = guess_tracker_url(src);
-    $(".package-details-issues").text(issuetracker).attr('href', issuetracker);
-    $('.package-details-topics').empty().append(make_topic_labels(builder));
+    details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
+    details.find('.package-details-topics').empty().append(make_topic_labels(builder));
     if(builder.commit.time){
-      $('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
-    }
-    if(builder.gitstats && builder.gitstats.updates){
-      detail_update_chart(package, builder.gitstats.updates);
+      details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
     }
     if(builder.pkglogo){
-      $('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
+      details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
     }
-    $('.package-details-article-list').empty();
     if(builder.vignettes){
+      var articles = details.find('.package-details-article-list');
       builder.vignettes.forEach(function(x){
         var minilink = `${src.Package}/${x.filename}`;
         var item = $("#templatezone .package-details-article").clone();
@@ -1065,9 +1064,14 @@ function show_package_details(package){
         item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
         item.find('.package-details-article-author').text(x.author);
         item.find('h5').text(x.title);
-        item.appendTo('.package-details-article-list');
+        item.appendTo(articles);
       });
     }
+
+    if(builder.gitstats && builder.gitstats.updates){
+      detail_update_chart(package, builder.gitstats.updates);
+    }
+
     $('.package-details-contributors').empty();
     if(builder.gitstats && builder.gitstats.contributions){
       var names = Object.keys(builder.gitstats.contributions);
