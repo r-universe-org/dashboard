@@ -1022,11 +1022,10 @@ function show_package_details(package){
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
   $('.package-details-container .details-card').remove();
-  //window.scrollTo(0,0);
+  var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
   get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'];
-    var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
     details.find('.package-details-name').text(`${src.Package}`)
     details.find('.package-details-title').text(src.Title);
