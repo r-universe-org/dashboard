@@ -45,7 +45,7 @@ $(function(){
     if(login) {
       item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
     }
-    item.find('.package-name').text(pkg.Package);
+    item.find('.package-name').text(pkg.Package).attr('href', `https://${org}.r-universe.dev/ui#package:${pkg.Package}`);
     item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
     item.find('.package-title').text(pkg.Title);
     item.find('.package-description').text(pkg.Description.replace('\n', ' '));
@@ -56,7 +56,6 @@ $(function(){
     }
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-    //attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var builder = pkg['_builder'];
     var topics = builder.gitstats && builder.gitstats.topics || [];

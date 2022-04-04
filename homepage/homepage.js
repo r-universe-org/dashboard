@@ -250,8 +250,13 @@ function init_packages_table(server, user){
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
-      var longname = owner == user ? pkg.package : `${owner}/${pkg.package}`;
-      var pkglink = $("<a>").text(longname).attr("href", pkg.upstream).attr("target", "_blank");
+      var longname = owner == user ? name : `${owner}/${name}`;
+      var pkglink = $("<a>").text(longname).attr("href", `https://${org}.r-universe.dev/ui#package:${name}`).click(function(e){
+        if(org == user){
+          e.preventDefault();
+          tab_to_package(name);
+        }
+      });
       if(!pkg.registered){
         pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
       }
@@ -431,6 +436,28 @@ function get_package_image(buildinfo){
   return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
+function make_topic_labels(builder){
+  var topics = builder.gitstats && builder.gitstats.topics || [];
+  if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
+  if(builder.sysdeps){
+    builder.sysdeps.forEach(function(x){
+      if(x.name && !topics.includes(x.name)){
+        topics.push(x.name)
+      }
+    });
+  }
+  var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
+  var topicdiv = $("<span>");
+  if(topics && topics.length){
+    topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
+      var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
+      var topicurl = `https://r-universe.dev/search#${quotedtopic}`;
+      $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
+    });
+  }
+  return topicdiv;
+}
+
 function init_package_descriptions(server, user){
   function add_badge_row(name, org){
     var tr = $("<tr>").appendTo(name.startsWith(":") ? $("#badges-table-body1") : $("#badges-table-body2"));
@@ -465,7 +492,12 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package);
+      item.find('.package-name').text(pkg.Package).attr("href", `https://${org}.r-universe.dev/ui#package:${pkg.Package}`).click(function(e){
+        if(org == user){
+          e.preventDefault();
+          tab_to_package(pkg.Package);
+        }
+      });
       item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
       item.find('.package-title').text(pkg.Title);
       item.find('.package-description').text(pkg.Description.replace('\n', ' '));
@@ -481,25 +513,7 @@ function init_package_descriptions(server, user){
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
-      var builder = pkg['_builder'];
-      var topics = builder.gitstats && builder.gitstats.topics || [];
-      if(builder.sysdeps){
-        builder.sysdeps.forEach(function(x){
-          if(x.name && !topics.includes(x.name)){
-            topics.push(x.name)
-          }
-        });
-      }
-      var skiptopics = ['r', 'rstats', 'package', 'cran', 'r-stats', 'r-package'];
-      if(topics && topics.length){
-        var topicdiv = item.find('.description-topics').removeClass('d-none');
-        if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
-        topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
-          var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
-          var topicurl = `https://r-universe.dev/search#${quotedtopic}`;
-          $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
-        });
-      }
+      item.find('.description-topics').append(make_topic_labels(pkg['_builder']));
     });
     if(x.length){
       $("#package-description-placeholder").hide();
@@ -636,12 +650,16 @@ function update_syntax_block(universes, package, user){
         var stateObject = {
           tab: tab,
           view: tab == '#view' ? window.iframestate : null,
+          detailpkg: tab == '#view' ? window.detailpkg : null
         };
         var url = tab;
         if (tab == '#view') {
           url = tab + ":" + window.iframestate;
         } else {
           navigate_iframe(null);
+        }
+        if (tab == '#package') {
+          url = tab + ":" + window.detailpkg;
         }
 
         if (window.location.hash && url !== window.location.hash) {
@@ -663,13 +681,16 @@ function update_syntax_block(universes, package, user){
       if (tab === '#view' && window.location.hash.startsWith("#view:")){
         navigate_iframe(window.location.hash.substring(6));
         $(element).tab('show');
+      } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
+        show_package_details(window.location.hash.substring(9));
+        $(element).tab('show');
       } else if (!window.location.hash && $(element).is('.active')) {
-      // Shows the first element if there are no query parameters.
-      $(element).tab('show').trigger('show.bs.tab');
-    } else if (tab === window.location.hash) {
-      $(element).tab('show');
-    }
-  });
+        // Shows the first element if there are no query parameters.
+        $(element).tab('show').trigger('show.bs.tab');
+      } else if (tab === window.location.hash) {
+        $(element).tab('show');
+      }
+    });
   };
 })(jQuery);
 
@@ -692,7 +713,7 @@ function activity_data(updates){
     var rec = updates.find(x => x.week == weekval);
     if(rec){
       out.total = rec.total;
-      out.packages = sort_packages(objectToArray(rec.packages)).map(x => x.package);
+      out.packages = sort_packages(objectToArray(rec.packages || [])).map(x => x.package);
     }
     return out;
   });
@@ -931,10 +952,149 @@ function make_contributor_chart(universe, max, imsize){
 }
 
 
+function detail_update_chart(package, updates){
+  const ctx = $('#package-updates-canvas').empty().attr('height', '300').height(300);
+  const data = activity_data(updates.map(x => ({total:x.n, week:x.week})));
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(x => x.week),
+      datasets: [{
+        label: 'updates',
+        data: data.map(x => x.total),
+        backgroundColor: 'rgb(54, 162, 235, 0.2)',
+        borderColor: 'rgb(54, 162, 235, 1)',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins : {
+        legend: false,
+        title: {
+          display: false,
+        },
+        tooltip: {
+          animation: false,
+          callbacks: {
+            title: function(items){
+              const item = items[0];
+              const weekdata = data[item.dataIndex];
+              return weekdata.year + ' week ' + weekdata.week;
+            }
+          }
+        }
+      },
+      layout: {
+        padding: 20
+      },
+      scales: {
+        y : {
+          title: {
+            display: true,
+            text: 'Weekly updates'
+          }
+        }
+      }
+    }
+  });
+}
 
+function normalize_authors(str){
+  return str.replace(/\(\)/g, '').replace(/\([\s\S]+?\)/g,"");
+}
+
+function guess_tracker_url(src){
+  if(src.BugReports){
+    return src.BugReports;
+  }
+  var upstream = src._builder.upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
+  if(upstream.match("github.com")){
+    return upstream + '/issues';
+  }
+  return upstream;
+}
+
+function show_package_details(package){
+  window.detailpkg = package;
+  const old = Chart.getChart('package-updates-canvas');
+  if(old) old.destroy();
+  $('.package-details-container .details-card').remove();
+  //window.scrollTo(0,0);
+  get_path(`${server}/packages/${package}/any`).then(function(x){
+    var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
+    var builder = src['_builder'];
+    var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
+    details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
+    details.find('.package-details-name').text(`${src.Package}`)
+    details.find('.package-details-title').text(src.Title);
+    details.find('.package-details-description').text(src.Description);
+    details.find('.package-details-author').text(normalize_authors(src.Author));
+    if(builder.maintainer.login){
+      details.find('.package-details-maintainer').attr('href', `https://${builder.maintainer.login}.r-universe.dev`);
+    }
+    var issuetracker = guess_tracker_url(src);
+    details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
+    details.find('.package-details-topics').empty().append(make_topic_labels(builder));
+    if(builder.commit.time){
+      details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
+    }
+    if(builder.pkglogo){
+      details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
+    }
+    if(builder.vignettes){
+      var articles = details.find('.package-details-article-list');
+      builder.vignettes.forEach(function(x){
+        var minilink = `${src.Package}/${x.filename}`;
+        var item = $("#templatezone .package-details-article").clone();
+        item.attr('href', `https://${src._user}.r-universe.dev/articles/${minilink}`);
+        if(minilink.endsWith('html')){
+          item.click(function(e){
+            e.preventDefault();
+            navigate_iframe(minilink);
+            $("#view-tab-link").tab('show');
+            window.scrollTo(0,0);
+          });
+        }
+        item.find('.detail-article-source').text(x.source);
+        item.find('.detail-article-engine').text(x.engine);
+        item.find('.detail-article-build').text(src._published.substring(0, 19).replace("T", " "));
+        item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
+        item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
+        item.find('.package-details-article-author').text(x.author);
+        item.find('h5').text(x.title);
+        item.appendTo(articles);
+      });
+    }
+
+    if(builder.gitstats && builder.gitstats.updates){
+      detail_update_chart(package, builder.gitstats.updates);
+    }
+
+    $('.package-details-contributors').empty();
+    if(builder.gitstats && builder.gitstats.contributions){
+      var names = Object.keys(builder.gitstats.contributions);
+      names.forEach(function(login){
+        var count = builder.gitstats.contributions[login];
+        var item = $("#templatezone .package-details-contributor").clone();
+        item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
+        item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`)
+            .tooltip({title: `${login} made ${count} contributions to ${package}`});
+        item.appendTo('.package-details-contributors');
+      });
+    }
+  });
+}
+
+function tab_to_package(package){
+  show_package_details(package);
+  $("#package-tab-link").tab('show');
+  window.scrollTo(0,0);
+}
 
 //INIT
-var devtest = 's-u'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';

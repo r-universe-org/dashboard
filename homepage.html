@@ -173,6 +173,9 @@
               <li class="nav-item d-none">
                 <a class="nav-link" id="view-tab-link" data-toggle="tab" href="#view" role="tab">Viewer</a>
               </li>
+              <li class="nav-item d-none">
+                <a class="nav-link" id="package-tab-link" data-toggle="tab" href="#package" role="tab">Details</a>
+              </li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane" id="contributors" role="tabpanel">
@@ -249,6 +252,24 @@
                 </div>
                 <iframe scrolling="no" name="viewerframe" id="viewerframe"></iframe>
               </div>
+              <div class="tab-pane" id="package" role="tabpanel">
+                <div class="p-2 package-details-container">
+
+                  <div class="row card  mt-4">
+
+                    <h5 class="card-title card-header text-center">Development activity</h5>
+                    <div class="card-body col-12">
+
+                      <div class="p-0">
+                        <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
+                      </div>
+
+                      <div class="package-details-contributors text-center"></div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-xl-auto col-12">
@@ -301,6 +322,26 @@
   </div><!-- body-row END -->
 
   <div id="templatezone" class="d-none">
+
+    <div class="row card details-card">
+      <h5 class="card-header package-details-header text-center"></h5>
+      <div class="card-body col-12">
+        <img src="https://r-universe.dev/static/nobody.jpg" class="d-none package-details-logo img-fluid mr-4 float-left" style="max-height: 180px">
+
+        <h5 class="card-title"><span class="cranbadge"></span><span class="package-details-name text-dark"></span>: <small class="text-secondary package-details-title"></small></h5>
+        <p class="card-text package-details-description font-italic"></p>
+        <p>Authors: <span class="card-text text-dark package-details-author"></span></p>
+        <p>Issue tracker: <a target="_blank" class="card-text text-dark package-details-issues"></a></p>
+        <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
+        <p class="card-text package-details-topics clearfix"></p>
+      </div>
+      <div class="package-details-article-list list-group"></div>
+    </div>
+
+    <a class="package-details-contributor text-decoration-none">
+      <img class="package-contributor-img img-fluid p-1" style="width: 80px; border-radius: 50%;">
+    </a>
+
     <li class="maintainer-item list-group-item border-light text-truncate p-0">
       <div class="row no-gutters">
         <a class="col-md-3 maintainer-link"><img src="https://r-universe.dev/static/nobody.jpg" class="rounded maintainer-avatar card-img"></a>
@@ -308,16 +349,30 @@
       </div>
     </li>
 
+    <a class="package-details-article list-group-item list-group-item-action border-0">
+      <div class="d-flex w-100 justify-content-between">
+        <div>
+          <h5 class="mb-1">List group item heading</h5>
+          <p class="mb-1 package-details-article-author"></p>
+          <small>Rendered from <code class="detail-article-source"></code> using <code class="detail-article-engine"></code> on <span class="detail-article-build"></span>.</small>
+        </div>
+        <p class="text-right">
+          <small class="text-muted article-modified text-nowrap"></small> <br/>
+          <small class="text-muted article-created text-nowrap"></small>
+        </p>
+      </div>
+    </a>
+
     <div class="package-description-item">
       <div class="card mt-4">
         <div class="row no-gutters">
           <div class="col-md-9">
             <div class="card-body">
-              <h5 class="card-title"><span class="cranbadge"></span><span class="package-name"></span>: <small class="text-secondary package-title"></small></h5>
+              <h5 class="card-title"><span class="cranbadge"></span><a class="package-name text-dark"></a>: <small class="text-secondary package-title"></small></h5>
               <p class="card-text package-description font-italic"></p>
 
               <p class="card-text"><small class="text-muted description-last-updated">Last updated ??</small></p>
-              <p class="card-text description-topics d-none"></p>
+              <p class="card-text description-topics"></p>
             </div>
           </div>
           <div class="col-md-3">
