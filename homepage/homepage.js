@@ -251,7 +251,7 @@ function init_packages_table(server, user){
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
       var longname = owner == user ? name : `${owner}/${name}`;
-      var pkglink = $("<a>").text(longname).attr("href", `https://${org}.r-universe.dev/ui#details:${name}`).click(function(e){
+      var pkglink = $("<a>").text(longname).attr("href", `https://${org}.r-universe.dev/ui#package:${name}`).click(function(e){
         if(org == user){
           e.preventDefault();
           tab_to_package(name);
@@ -492,7 +492,7 @@ function init_package_descriptions(server, user){
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
-      item.find('.package-name').text(pkg.Package).attr("href", `https://${org}.r-universe.dev/ui#details:${pkg.Package}`).click(function(e){
+      item.find('.package-name').text(pkg.Package).attr("href", `https://${org}.r-universe.dev/ui#package:${pkg.Package}`).click(function(e){
         if(org == user){
           e.preventDefault();
           tab_to_package(pkg.Package);
@@ -658,7 +658,7 @@ function update_syntax_block(universes, package, user){
         } else {
           navigate_iframe(null);
         }
-        if (tab == '#details') {
+        if (tab == '#package') {
           url = tab + ":" + window.detailpkg;
         }
 
@@ -681,7 +681,7 @@ function update_syntax_block(universes, package, user){
       if (tab === '#view' && window.location.hash.startsWith("#view:")){
         navigate_iframe(window.location.hash.substring(6));
         $(element).tab('show');
-      } else if (tab === '#details' && window.location.hash.startsWith("#details:")){
+      } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
         show_package_details(window.location.hash.substring(9));
         $(element).tab('show');
       } else if (!window.location.hash && $(element).is('.active')) {
@@ -1021,7 +1021,7 @@ function show_package_details(package){
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
   $('.package-details-container .details-card').remove();
-  window.scrollTo(0,0);
+  //window.scrollTo(0,0);
   get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'];
@@ -1089,7 +1089,7 @@ function show_package_details(package){
 
 function tab_to_package(package){
   show_package_details(package);
-  $("#details-tab-link").tab('show');
+  $("#package-tab-link").tab('show');
   window.scrollTo(0,0);
 }
 
