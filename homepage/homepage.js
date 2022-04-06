@@ -1044,6 +1044,9 @@ function show_package_details(package){
     }
     var maintainer = builder.maintainer || {};
     details.find('.package-details-maintainer .maintainer-name').text(maintainer.name);
+    if(maintainer.login !== user){
+      details.find('.package-details-maintainer').removeClass('d-none');
+    }
     if(maintainer.login){
       details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
