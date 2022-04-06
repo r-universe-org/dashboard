@@ -1026,7 +1026,7 @@ function show_package_details(package){
   var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
   get_path(`${server}/packages/${package}/any`).then(function(x){
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
-    var builder = src['_builder'];
+    var builder = src['_builder'] || {};
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
     details.find('.package-details-name').text(`${src.Package}`)
     details.find('.package-details-title').text(src.Title);
@@ -1041,6 +1041,12 @@ function show_package_details(package){
     }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
+    }
+    var maintainer = builder.maintainer || {};
+    details.find('.package-details-maintainer .maintainer-name').text(maintainer.name);
+    if(maintainer.login){
+      details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
+      details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
     }
     if(builder.vignettes){
       var articles = details.find('.package-details-article-list');
