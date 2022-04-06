@@ -121,3 +121,7 @@ body {
   transform: translate3d(0px, -1px, 0px);
   /*transform: scale(1.01);*/
 }
+
+.package-contributor-img:hover{
+  background-color: #dc3545;
+}
