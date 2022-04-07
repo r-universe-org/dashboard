@@ -251,12 +251,15 @@ function init_packages_table(server, user){
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
       var longname = owner == user ? name : `${owner}/${name}`;
-      var pkglink = $("<a>").text(longname).attr("href", `https://${org}.r-universe.dev/ui#package:${name}`).click(function(e){
-        if(org == user){
-          e.preventDefault();
-          tab_to_package(name);
-        }
-      });
+      var pkglink = $("<a>").text(longname);
+      if(src.type !== 'failure'){
+        pkglink.attr("href", `https://${org}.r-universe.dev/ui#package:${name}`).click(function(e){
+          if(org == user){
+            e.preventDefault();
+            tab_to_package(name);
+          }
+        });
+      }
       if(!pkg.registered){
         pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
       }
