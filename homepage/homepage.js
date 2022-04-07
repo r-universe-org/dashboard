@@ -1007,7 +1007,7 @@ function detail_update_chart(package, updates){
 
 function normalize_authors(str){
   // nested parentheses due to parenthesis inside the comment
-  return str.replace(/\([^()]*\)/g, '').replace(/\([\s\S]+?\)/g,"");
+  return str.replace(/\s*\([^()]*\)/g, '').replace(/\s*\([\s\S]+?\)/g,"");
 }
 
 function guess_tracker_url(src){
