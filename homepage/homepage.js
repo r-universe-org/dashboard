@@ -1021,6 +1021,29 @@ function guess_tracker_url(src){
   return upstream;
 }
 
+function populate_download_links(x, details){
+  var src = x.find(x => x._type == 'src');
+  var wins = x.filter(x => x._type == 'win');
+  var macs = x.filter(x => x._type == 'mac');
+  var srcfile = `${src.Package}_${src.Version}.tar.gz`;
+  details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile).addClass("text-primary");
+  wins.forEach(function(pkg){
+    var build = pkg.Built.R.substring(0,3);
+    var filename = `${pkg.Package}_${pkg.Version}.zip`;
+    var winlinks = details.find('.package-details-windows');
+    $("<a>").text(filename).attr('href', `${server}/bin/windows/contrib/${build}/${filename}`).appendTo(winlinks);
+    winlinks.append(` (r-${build}) `)
+  });
+  macs.forEach(function(pkg){
+    var build = pkg.Built.R.substring(0,3);
+    var filename = `${pkg.Package}_${pkg.Version}.tgz`;
+    var maclinks = details.find('.package-details-macos');
+    $("<a>").text(filename).attr('href', `${server}/bin/macosx/contrib/${build}/${filename}`).appendTo(maclinks);
+    maclinks.append(` (r-${build}) `)
+  });
+  details.find(".package-details-logs").attr('href', src._builder.url);
+}
+
 function show_package_details(package){
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
@@ -1038,6 +1061,7 @@ function show_package_details(package){
     details.find('.citation-link').attr('href', `${server}/citation/${package}/cff`);
     details.find('.package-json-link').attr('href', `${server}/packages/${package}`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
+    populate_download_links(x, details);
     attach_cran_badge(src._user, src.Package, builder.upstream, details.find('.cranbadge'));
     var issuetracker = guess_tracker_url(src);
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);

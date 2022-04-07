@@ -349,7 +349,15 @@
         <h5 class="card-title"><span class="cranbadge"></span><span class="package-details-name text-dark"></span>: <small class="text-secondary package-details-title"></small></h5>
         <p class="card-text package-details-description font-italic"></p>
         <p>Authors: <span class="card-text text-dark package-details-author"></span></p>
-        <p>Issue tracker: <a target="_blank" class="card-text text-dark package-details-issues"></a></p>
+        <p>
+          <a style="width: 20px" class="fab fa-linux package-details-logs text-dark text-decoration-none grow-on-over"></a>
+            <a class="package-details-source"></a><br>
+          <a style="width: 20px" class="fab fa-windows package-details-logs text-dark text-decoration-none grow-on-over"></a>
+            <span class="package-details-windows"></span> <br>
+          <a style="width: 20px" class="fab fa-apple package-details-logs text-dark text-decoration-none grow-on-over"></a>
+            <span class="package-details-macos"></span>
+        </p>
+        <p>Issue tracker: <u><a target="_blank" class="card-text text-dark text-underline package-details-issues"></a></u></p>
         <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
         <p class="card-text package-details-topics clearfix"></p>
       </div>
@@ -429,7 +437,6 @@
         </div>
       </div>
     </a>
-
   </div>
 
   <!-- Optional JavaScript -->
@@ -444,6 +451,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=29"></script>
+  <script src="ui/homepage.js?nocache=30"></script>
 </body>
 </html>
