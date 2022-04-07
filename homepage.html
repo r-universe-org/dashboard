@@ -254,19 +254,17 @@
               </div>
               <div class="tab-pane" id="package" role="tabpanel">
                 <div class="p-2 package-details-container">
-
-                  <div class="row card  mt-4">
-
+                  <div class="row card mt-4">
                     <h5 class="card-title card-header text-center">Development</h5>
                     <div class="card-body col-12">
-
                       <div class="p-0">
                         <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
                       </div>
-
                       <div class="package-details-contributors text-center"></div>
-
                     </div>
+                  </div>
+                  <div class="row card mt-4">
+                    <h5 class="card-title card-header text-center">Usage</h5>
                   </div>
                 </div>
               </div>
@@ -324,7 +322,11 @@
   <div id="templatezone" class="d-none">
 
     <div class="row card details-card">
-      <h5 class="card-header package-details-header text-center"></h5>
+      <h5 class="card-header text-center">
+        <span class="package-details-header"></span>
+        <a class="citation-link float-right"><img class="grow-on-over" src="https://r-universe.dev/avatars/citation-file-format.png?size=80" style="width: 32px; margin-top:-4px;"></a>
+      </h5>
+
       <div class="card-body col-12">
         <img src="https://r-universe.dev/static/nobody.jpg" class="d-none package-details-logo img-fluid mr-4 float-left" style="max-height: 180px">
         <div class="float-right package-details-maintainer text-center ml-4 d-none">
@@ -432,6 +434,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=27"></script>
+  <script src="ui/homepage.js?nocache=28"></script>
 </body>
 </html>

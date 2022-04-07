@@ -1032,6 +1032,7 @@ function show_package_details(package){
     details.find('.package-details-title').text(src.Title);
     details.find('.package-details-description').text(src.Description);
     details.find('.package-details-author').text(normalize_authors(src.Author));
+    details.find('.citation-link').attr('href', `/citation/${package}/cff`);
     attach_cran_badge(src._user, src.Package, builder.upstream, details.find('.cranbadge'));
     var issuetracker = guess_tracker_url(src);
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
