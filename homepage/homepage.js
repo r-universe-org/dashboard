@@ -955,10 +955,34 @@ function make_contributor_chart(universe, max, imsize){
   });
 }
 
+function tag_annotations(tags, activity_data){
+  return tags.map(function(x){
+    var date = new Date(x.date);
+    var week = date.getWeek();
+    var year = date.getWeekYear();
+    var bin = activity_data.findIndex(x => x.week == week && x.year == year);
+    return {
+      type: 'line',
+      xMin: bin,
+      xMax: bin,
+      yOffset: 40,
+      borderWidth: 2,
+      borderDash: [20, 5],
+      label: {
+        backgroundColor: 'rgb(0, 0, 0, 0.8)',
+        enabled: true,
+        content: x.name,
+        position: 'start',
+        yAdjust: -25
+      }
+    }
+  });
+}
 
-function detail_update_chart(package, updates){
+function detail_update_chart(package, gitstats){
   const ctx = $('#package-updates-canvas').empty().attr('height', '300').height(300);
-  const data = activity_data(updates.map(x => ({total:x.n, week:x.week})));
+  const data = activity_data(gitstats.updates.map(x => ({total:x.n, week:x.week})));
+  const tags = tag_annotations(gitstats.tags || [], data);
   const myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -988,6 +1012,9 @@ function detail_update_chart(package, updates){
               return weekdata.year + ' week ' + weekdata.week;
             }
           }
+        },
+        annotation: {
+          annotations: tags
         }
       },
       layout: {
@@ -1107,7 +1134,7 @@ function show_package_details(package){
     }
 
     if(builder.gitstats && builder.gitstats.updates){
-      detail_update_chart(package, builder.gitstats.updates);
+      detail_update_chart(package, builder.gitstats);
     }
 
     $('.package-details-contributors').empty();
@@ -1132,7 +1159,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'r-lib'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
