@@ -988,6 +988,22 @@ function detail_update_chart(package, updates){
               return weekdata.year + ' week ' + weekdata.week;
             }
           }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              xMin: 20,
+              xMax: 20,
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 3,
+              label: {
+                enabled: true,
+                content: 'v3.1.30',
+                position: 'start'
+              }
+            }
+          }
         }
       },
       layout: {
