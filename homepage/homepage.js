@@ -1098,7 +1098,7 @@ function show_package_details(package){
     details.find('.package-details-title').text(src.Title);
     details.find('.package-details-description').text(src.Description);
     details.find('.package-details-author').text(normalize_authors(src.Author));
-    details.find('.citation-link').attr('href', `${server}/citation/${package}/cff`);
+    details.find('.citation-link').attr('href', `${server}/citation/${package}.cff`);
     details.find('.package-json-link').attr('href', `${server}/packages/${package}`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(x, details);
@@ -1107,7 +1107,7 @@ function show_package_details(package){
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_labels(builder));
     if(src._published > "2022-04-11T11:00:00.000Z"){
-      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}/pdf`);
+      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}.pdf`);
     } else {
       details.find('.fa-file-pdf').hide()
       //remove when all pkgs have been built
