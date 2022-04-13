@@ -956,22 +956,26 @@ function make_contributor_chart(universe, max, imsize){
 }
 
 function tag_annotations(tags, activity_data){
-  return tags.map(function(x){
+  return tags.map(function(x, i){
     var date = new Date(x.date);
     var week = date.getWeek();
     var year = date.getWeekYear();
     var bin = activity_data.findIndex(x => x.week == week && x.year == year);
+    var latest = (i == tags.length-1);
+    var color = latest ? '#dc3545' : 'black';
+    var size = latest ? 3 : 2;
     return {
       type: 'line',
       xMin: bin,
       xMax: bin,
       yOffset: 40,
-      borderWidth: 2,
+      borderWidth: size,
+      borderColor: color,
       borderDash: [20, 5],
       label: {
-        backgroundColor: 'rgb(0, 0, 0, 0.8)',
-        enabled: true,
-        content: x.name,
+        backgroundColor: color,
+        enabled: false,
+        content: `${latest ? 'Latest tag' : 'Tag'}: ${x.name} (${x.date})`,
         position: 'start',
         yAdjust: -25
       }
@@ -1014,7 +1018,16 @@ function detail_update_chart(package, gitstats){
           }
         },
         annotation: {
-          annotations: tags
+          annotations: tags,
+          enter({chart, element}, event) {
+            element.options.label.enabled = true;
+            chart.draw();
+          },
+          leave({chart, element}, event) {
+            //if(element.options.label.backgroundColor != 'black') return;
+            element.options.label.enabled = false;
+            chart.draw();
+          }
         }
       },
       layout: {
