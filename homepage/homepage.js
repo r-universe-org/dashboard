@@ -1185,13 +1185,15 @@ var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-univ
 init_github_info(user, server).then(function(){
   init_maintainer_list(user, server);
   if(!window.location.hash){
-    $('#builds-tab-link').click();
+    $('#packages-tab-link').click();
   }
 });
-init_packages_table(server, user);
 init_package_descriptions(server, user);
-init_article_list(server, user);
+$('#articles-tab-link').one('shown.bs.tab', function (e) {
+  init_article_list(server, user);
+});
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
+  init_packages_table(server, user);
   make_activity_chart(user);
 });
 $('#contributors-tab-link').one('shown.bs.tab', function (e) {
