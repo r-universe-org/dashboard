@@ -39,6 +39,7 @@ $(function(){
 
 function ndjson_batch_stream(path, cb){
   var start = 0;
+  var count = 0;
   return new Promise(function(resolve, reject) {
     $.ajax({
       url: path,
@@ -51,11 +52,12 @@ function ndjson_batch_stream(path, cb){
             var batch = res.substring(start, end).split('\n').map(JSON.parse);
             start = end + 1;
             cb(batch);
+            count = count + batch.length;
           }
         }
       }
     }).done(function(){
-      resolve();
+      resolve(count);
     }).fail((jqXHR, textStatus) => reject("GET " + path + "\nHTTP "
       + jqXHR.status + "\n\n" + jqXHR.responseText));
   });
@@ -480,8 +482,8 @@ function init_package_descriptions(server, user){
     });
     $("<td>").append(md_icon).appendTo(tr);
   }
-  //$('#packages-tab-link').one('shown.bs.tab', function (e) {
-  get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
+  //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
+  ndjson_batch_stream(server + '/stats/descriptions?all=true', function(x){
     if(x.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
@@ -519,12 +521,10 @@ function init_package_descriptions(server, user){
       }
       item.find('.description-topics').append(make_topic_labels(pkg['_builder']));
     });
-    if(x.length){
-      $("#package-description-placeholder").hide();
-    } else {
-      $("#package-description-placeholder").text("No packages found in this username.");
-    }
+    $("#package-description-placeholder").hide();
     lazyload();
+  }).then(function(count){
+    $("#package-description-placeholder").text("No packages found in this username.");
   });
   //});
 }
