@@ -1195,11 +1195,12 @@ init_github_info(user, server).then(function(){
 });
 init_package_descriptions(server, user);
 
-init_article_data(server).then(function(data){
-  iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
-  $('#articles-tab-link').one('shown.bs.tab', function (e) {
-    init_article_list(data, user);
-  });
+
+//this also has a side effect setting global 'articledata' state
+var articlesok = init_article_data(server);
+iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
+$('#articles-tab-link').one('shown.bs.tab', function (e) {
+  articlesok.then(data => init_article_list(data, user));
 });
 
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
