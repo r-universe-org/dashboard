@@ -560,59 +560,63 @@ function update_article_info(){
   }
 }
 
-function init_article_list(server, user){
-  iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
-  //$('#articles-tab-link').one('shown.bs.tab', function (e) {
-    get_ndjson(server + '/stats/vignettes?all=true').then(function(x){
-      function order( a, b ) {
-        if(a.vignette.modified < b.vignette.modified) return 1;
-        if(a.vignette.modified > b.vignette.modified) return -1;
-        return 0;
-      }
-      x.sort(order).forEach(function(pkg, i){
-        var item = $("#templatezone .article-item").clone();
-        var minilink = pkg.package + "/" + pkg.vignette.filename;
-        articledata[minilink] = pkg;
-        if(pkg.user == user){
-          item.attr("href", server + "/articles/" + minilink);
-        } else {
-          item.attr("href", "https://" + pkg.user + ".r-universe.dev/articles/" + minilink);
-        }
-        if(!pkg.vignette.filename.endsWith('html')){
-          item.attr("target", "_blank")
-        } else {
-          item.click(function(e){
-            e.preventDefault();
-            if(pkg.user == user){
-              navigate_iframe(minilink);
-              $("#view-tab-link").tab('show');
-              window.scrollTo(0,0);
-            } else {
-              window.location.href = `https://${pkg.user}.r-universe.dev/ui#view:${minilink}`;
-            }
-          });
-        }
-        item.find('.article-title').text(pkg.vignette.title);
-        item.find('.article-package-version').text(pkg.package + " " + pkg.version);
-        item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
-        item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
-        item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
-        if(pkg.user != user){
-          item.find('.article-author-name').append(`<i>(via <a href="https://${pkg.user}.r-universe.dev">${pkg.user}</a>)</i>`);
-        }
-        var img = item.find('.maintainer-avatar').attr('src', get_package_image(pkg));
-        if(pkg.pkglogo)
-          img.removeClass('rounded-circle');
-        item.appendTo('#article-list-group');
-      });
-      if(x.length){
-        $("#article-list-placeholder").hide();
-      } else {
-        $("#article-list-placeholder").text("No rmarkdown vignettes found in this universe.");
-      }
-      update_article_info();
+function init_article_data(server){
+  return get_ndjson(server + '/stats/vignettes?all=true').then(function(x){
+    x.forEach(function(pkg, i){
+      var minilink = pkg.package + "/" + pkg.vignette.filename;
+      articledata[minilink] = pkg;
     });
-  //});
+    return x;
+  });
+}
+
+function init_article_list(x, user){
+  function order( a, b ) {
+    if(a.vignette.modified < b.vignette.modified) return 1;
+    if(a.vignette.modified > b.vignette.modified) return -1;
+    return 0;
+  }
+  x.sort(order).forEach(function(pkg, i){
+    var item = $("#templatezone .article-item").clone();
+    var minilink = pkg.package + "/" + pkg.vignette.filename;
+    if(pkg.user == user){
+      item.attr("href", server + "/articles/" + minilink);
+    } else {
+      item.attr("href", "https://" + pkg.user + ".r-universe.dev/articles/" + minilink);
+    }
+    if(!pkg.vignette.filename.endsWith('html')){
+      item.attr("target", "_blank")
+    } else {
+      item.click(function(e){
+        e.preventDefault();
+        if(pkg.user == user){
+          navigate_iframe(minilink);
+          $("#view-tab-link").tab('show');
+          window.scrollTo(0,0);
+        } else {
+          window.location.href = `https://${pkg.user}.r-universe.dev/ui#view:${minilink}`;
+        }
+      });
+    }
+    item.find('.article-title').text(pkg.vignette.title);
+    item.find('.article-package-version').text(pkg.package + " " + pkg.version);
+    item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
+    item.find('.article-modified').text('Last update: ' + (pkg.vignette.modified || "??").substring(0, 10));
+    item.find('.article-created').text('Started: ' + (pkg.vignette.created || "??").substring(0, 10));
+    if(pkg.user != user){
+      item.find('.article-author-name').append(`<i>(via <a href="https://${pkg.user}.r-universe.dev">${pkg.user}</a>)</i>`);
+    }
+    var img = item.find('.maintainer-avatar').attr('src', get_package_image(pkg));
+    if(pkg.pkglogo)
+      img.removeClass('rounded-circle');
+    item.appendTo('#article-list-group');
+  });
+  if(x.length){
+    $("#article-list-placeholder").hide();
+  } else {
+    $("#article-list-placeholder").text("No rmarkdown vignettes found in this universe.");
+  }
+  update_article_info();
 }
 
 function update_syntax_block(universes, package, user){
@@ -1190,9 +1194,14 @@ init_github_info(user, server).then(function(){
   }
 });
 init_package_descriptions(server, user);
-$('#articles-tab-link').one('shown.bs.tab', function (e) {
-  init_article_list(server, user);
+
+init_article_data(server).then(function(data){
+  iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
+  $('#articles-tab-link').one('shown.bs.tab', function (e) {
+    init_article_list(data, user);
+  });
 });
+
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
   init_packages_table(server, user);
   make_activity_chart(user);
