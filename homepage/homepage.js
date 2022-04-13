@@ -522,8 +522,8 @@ function init_package_descriptions(server, user){
       item.find('.description-topics').append(make_topic_labels(pkg['_builder']));
     });
     $("#package-description-placeholder").hide();
-    lazyload();
   }).then(function(count){
+    if(count > 0) lazyload(); //for badges
     $("#package-description-placeholder").text("No packages found in this username.");
   });
   //});
