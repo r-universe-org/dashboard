@@ -543,39 +543,42 @@ function navigate_iframe(state){
   }
 }
 
-window.articledata = {};
 function update_article_info(){
-  var pkg = articledata[window.iframestate];
-  if(pkg){
-    $('#article-info-author').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
-    if(!pkg.vignette.author && pkg.login){
-      $('#article-info-author').attr("href", `https://${pkg.login}.r-universe.dev`);
-    } else {
-      $('#article-info-author').removeAttr("href");
+  articledatapromise.then(function(data){
+    var pkg = data[window.iframestate];
+    if(pkg){
+      $('#article-info-author').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
+      if(!pkg.vignette.author && pkg.login){
+        $('#article-info-author').attr("href", `https://${pkg.login}.r-universe.dev`);
+      } else {
+        $('#article-info-author').removeAttr("href");
+      }
+      $('#article-info-package').text(pkg.package + " " + pkg.version);
+      $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
+      $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
+      $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
     }
-    $('#article-info-package').text(pkg.package + " " + pkg.version);
-    $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
-    $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
-    $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
-  }
-}
-
-function init_article_data(server){
-  return get_ndjson(server + '/stats/vignettes?all=true').then(function(x){
-    x.forEach(function(pkg, i){
-      var minilink = pkg.package + "/" + pkg.vignette.filename;
-      articledata[minilink] = pkg;
-    });
-    return x;
   });
 }
 
-function init_article_list(x, user){
+function init_article_data(server){
+  var data = {};
+  return get_ndjson(server + '/stats/vignettes?all=true').then(function(x){
+    x.forEach(function(pkg, i){
+      var minilink = pkg.package + "/" + pkg.vignette.filename;
+      data[minilink] = pkg;
+    });
+    return data;
+  });
+}
+
+function init_article_list(data, user){
   function order( a, b ) {
     if(a.vignette.modified < b.vignette.modified) return 1;
     if(a.vignette.modified > b.vignette.modified) return -1;
     return 0;
   }
+  var x = Object.keys(data).map(k => data[k]);
   x.sort(order).forEach(function(pkg, i){
     var item = $("#templatezone .article-item").clone();
     var minilink = pkg.package + "/" + pkg.vignette.filename;
@@ -1196,11 +1199,10 @@ init_github_info(user, server).then(function(){
 init_package_descriptions(server, user);
 
 
-//this also has a side effect setting global 'articledata' state
-var articlesok = init_article_data(server);
+var articledatapromise = init_article_data(server);
 iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
 $('#articles-tab-link').one('shown.bs.tab', function (e) {
-  articlesok.then(data => init_article_list(data, user));
+  articledatapromise.then(data => init_article_list(data, user));
 });
 
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
