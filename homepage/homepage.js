@@ -1106,6 +1106,12 @@ function show_package_details(package){
     var issuetracker = guess_tracker_url(src);
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_labels(builder));
+    if(src._published > "2022-04-11T11:00:00.000Z"){
+      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}/pdf`);
+    } else {
+      details.find('.fa-file-pdf').hide()
+      //remove when all pkgs have been built
+    }
     if(builder.commit.time){
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
     }
