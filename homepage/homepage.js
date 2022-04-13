@@ -483,11 +483,13 @@ function init_package_descriptions(server, user){
     $("<td>").append(md_icon).appendTo(tr);
   }
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
+  var first_page = true;
   ndjson_batch_stream(server + '/stats/descriptions?all=true', function(x){
-    if(x.find(pkg => pkg['_user'] == user)){
+    if(first_page && x.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
       add_badge_row(":total", user);
+      first_page = false;
     }
     x.forEach(function(pkg, i){
       //console.log(pkg)
