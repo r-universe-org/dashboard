@@ -1088,9 +1088,13 @@ function show_package_details(package){
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
+  $('#package-details-spinner').show();
   $('.package-details-container .details-card').remove();
-  var details = $('#templatezone .details-card').clone().prependTo('.package-details-container');
+  $('.package-details-contributors').empty();
+  var details = $('#templatezone .details-card').clone();
   get_path(`${server}/packages/${package}/any`).then(function(x){
+    $('#package-details-spinner').hide();
+    details.prependTo('.package-details-container');
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'] || {};
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
@@ -1151,12 +1155,9 @@ function show_package_details(package){
         item.appendTo(articles);
       });
     }
-
     if(builder.gitstats && builder.gitstats.updates){
       detail_update_chart(package, builder.gitstats);
     }
-
-    $('.package-details-contributors').empty();
     if(builder.gitstats && builder.gitstats.contributions){
       var names = Object.keys(builder.gitstats.contributions);
       names.forEach(function(login){
