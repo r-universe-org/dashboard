@@ -956,7 +956,7 @@ function make_contributor_chart(universe, max, imsize){
 }
 
 function tag_annotations(tags, activity_data){
-  return tags.map(function(x, i){
+  return tags.sort((a, b) => (a.date > b.date) ? 1 : -1).map(function(x, i){
     var date = new Date(x.date);
     var week = date.getWeek();
     var year = date.getWeekYear();
@@ -1172,7 +1172,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'r-lib'
+var devtest = 'rstudio'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
