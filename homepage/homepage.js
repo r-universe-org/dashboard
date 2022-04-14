@@ -981,7 +981,9 @@ function tag_annotations(tags, activity_data){
       arrowHeads: { start: {
         borderDash: [1,0],
         enabled: true,
-        fill: true
+        fill: true,
+        width: 5,
+        length: 5
       }},
       label: {
         backgroundColor: 'rgb(0,0,0,0)',
@@ -989,7 +991,7 @@ function tag_annotations(tags, activity_data){
         enabled: true,
         content: `${latest ? 'Latest tag' : 'Tag'}: ${x.name} (${x.date})`,
         position: 'start',
-        yAdjust: -15
+        yAdjust: -25
       }
     }
   });
