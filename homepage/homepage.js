@@ -982,8 +982,9 @@ function tag_annotations(tags, activity_data){
       borderColor: color,
       borderDash: [20, 5],
       label: {
-        backgroundColor: color,
-        enabled: false,
+        backgroundColor: 'rgb(0,0,0,0)',
+        color: 'rgb(0,0,0,0)',
+        enabled: true,
         content: `${latest ? 'Latest tag' : 'Tag'}: ${x.name} (${x.date})`,
         position: 'start',
         yAdjust: -25
@@ -1029,12 +1030,13 @@ function detail_update_chart(package, gitstats){
         annotation: {
           annotations: tags,
           enter({chart, element}, event) {
-            element.options.label.enabled = true;
+            element.options.label.backgroundColor = element.options.borderColor;
+            element.options.label.color = 'white'
             chart.draw();
           },
           leave({chart, element}, event) {
-            //if(element.options.label.backgroundColor != 'black') return;
-            element.options.label.enabled = false;
+            element.options.label.backgroundColor = 'transparent'
+            element.options.label.color = 'transparent'
             chart.draw();
           }
         }
