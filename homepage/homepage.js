@@ -555,7 +555,10 @@ function update_article_info(){
       } else {
         $('#article-info-author').removeAttr("href");
       }
-      $('#article-info-package').text(pkg.package + " " + pkg.version);
+      $('#article-info-package').text(pkg.package + " " + pkg.version).attr("href", `#package:${pkg.package}`).click(function(e){
+        e.preventDefault();
+        tab_to_package(pkg.package);
+      });
       $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
       $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
       $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
