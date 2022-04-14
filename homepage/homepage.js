@@ -242,7 +242,7 @@ function init_packages_table(server, user){
       var name = pkg.package;
       var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
       var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
-      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.2') || {type:'pending'} // {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
+      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
       var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'unix'};
       var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.1') || {skip: pkg.os_restriction === 'windows'};
       var builddate = new Date(src.date || NaN).yyyymmdd();
