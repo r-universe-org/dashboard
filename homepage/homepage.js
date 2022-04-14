@@ -972,22 +972,24 @@ function tag_annotations(tags, activity_data){
     var bin = activity_data.findIndex(x => x.week == week && x.year == year);
     var latest = (i == tags.length-1);
     var color = latest ? '#dc3545' : 'black';
-    var size = latest ? 3 : 2;
     return {
       type: 'line',
       xMin: bin,
       xMax: bin,
-      yOffset: 40,
-      borderWidth: size,
       borderColor: color,
       borderDash: [20, 5],
+      arrowHeads: { start: {
+        borderDash: [1,0],
+        enabled: true,
+        fill: true
+      }},
       label: {
         backgroundColor: 'rgb(0,0,0,0)',
         color: 'rgb(0,0,0,0)',
         enabled: true,
         content: `${latest ? 'Latest tag' : 'Tag'}: ${x.name} (${x.date})`,
         position: 'start',
-        yAdjust: -25
+        yAdjust: -15
       }
     }
   });
