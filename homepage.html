@@ -366,7 +366,11 @@
         <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
         <p class="card-text package-details-topics clearfix"></p>
       </div>
-      <div class="package-details-article-list list-group"></div>
+      <div class="package-details-article-list list-group">
+        <div class="vignette-failure-alert alert alert-warning m-0 d-none" role="alert">
+          Vignettes for this package failed to build, therefor articles may be unavailable. Please inspect the <a class="vignette-failure-url">build logs</a> for more information.
+        </div>
+      </div>
     </div>
 
     <a class="package-details-contributor text-decoration-none">
@@ -457,6 +461,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=47"></script>
+  <script src="ui/homepage.js?nocache=48"></script>
 </body>
 </html>
