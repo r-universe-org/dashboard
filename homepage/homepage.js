@@ -1113,6 +1113,11 @@ function show_package_details(package){
   get_path(`${server}/packages/${package}/any`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
+    var fail = x.find(x => x._type == 'failure');
+    if(fail){
+      details.find('.build-failure-alert').removeClass('d-none');
+      details.find('.build-failure-url').attr('href', fail._builder.url);
+    }
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'] || {};
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
