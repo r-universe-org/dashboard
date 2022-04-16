@@ -98,11 +98,11 @@ function init_packages_table(org = ":any", maintainer = ""){
       var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
       var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
       var sysdeps = make_sysdeps(pkg, src.distro);
-      var userlink = $("<a>").text(pkg.user).attr("href", "https://" + pkg.user + ".r-universe.dev");
+      var userlink = $("<a>").text(pkg.user).attr("href", "https://" + pkg.user + ".r-universe.dev").addClass('text-secondary');
       var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
       maintainerlink.text(pkg.maintainer).addClass('text-secondary');
       var pkgname = pkg.package;
-      var pkglink = $("<span>").text(pkgname);
+      var pkglink = $("<a>").text(pkgname).attr('href', `https://${pkg.user}.r-universe.dev/ui#package:${name}`);
       if(pkg.os_restriction){
         pkglink = pkglink.append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
       }
