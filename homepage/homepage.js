@@ -1102,6 +1102,28 @@ function populate_download_links(x, details){
   details.find(".package-details-logs").attr('href', src._builder.url);
 }
 
+function populate_revdeps(package){
+  var revdepdiv = $(".package-details-revdeps").empty();
+  get_json(`https://r-universe.dev/stats/usedby?package=${package}`).then(function(revdeps){
+    $('.package-details-revdeps-header').text(package + ' usage');
+    function add_link(dep){
+      $("<a>").text(dep.package)
+      .attr('href', `https://${dep.owner}.r-universe.dev/ui#package:${dep.package}`)
+      .appendTo(revdepdiv);
+      revdepdiv.append(" ");
+    }
+    if(revdeps.hard.length){
+      revdepdiv.append($("<b>").text("Hard reverse dependencies: "))
+      revdeps.hard.forEach(add_link);
+      revdepdiv.append("<br>");
+    }
+    if(revdeps.soft.length){
+      revdepdiv.append($("<b>").text("Soft reverse dependencies: "))
+      revdeps.soft.forEach(add_link);
+    }
+  });
+}
+
 function show_package_details(package){
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
@@ -1110,6 +1132,7 @@ function show_package_details(package){
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
   var details = $('#templatezone .details-card').clone();
+  populate_revdeps(package);
   get_path(`${server}/packages/${package}/any`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
