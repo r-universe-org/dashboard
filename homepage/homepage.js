@@ -1109,6 +1109,11 @@ function populate_revdeps(package){
     function add_link(dep){
       $("<a>").text(dep.package)
       .attr('href', `https://${dep.owner}.r-universe.dev/ui#package:${dep.package}`)
+      .click(function(e){
+        if(dep.owner == user){
+          tab_to_package(dep.package);
+        }
+      })
       .appendTo(revdepdiv);
       revdepdiv.append(" ");
     }
