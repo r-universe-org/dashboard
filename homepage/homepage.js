@@ -1138,7 +1138,7 @@ function populate_revdeps(package){
       revdeps.soft.forEach(add_link);
     }
     if(!revdeps.hard.length && !revdeps.soft.length){
-      revdepdiv.append($("<i>").text(`No reverse for '${package}' in r-universe yet.`))
+      revdepdiv.append($("<i>").text(`No packages in r-universe depending on '${package}' yet.`))
     }
   });
 }
