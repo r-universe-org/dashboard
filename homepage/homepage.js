@@ -1137,6 +1137,9 @@ function populate_revdeps(package){
       revdepdiv.append($("<b>").text("Soft reverse dependencies: "))
       revdeps.soft.forEach(add_link);
     }
+    if(!revdeps.hard.length && !revdeps.soft.length){
+      revdepdiv.append($("<i>").text(`No reverse for '${package}' in r-universe yet.`))
+    }
   });
 }
 
