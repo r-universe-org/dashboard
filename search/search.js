@@ -158,7 +158,7 @@ function maintainer_card(x){
 
 function organization_card(x){
   var item = $("#templatezone .maintainer-item").clone();
-  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.universe}.png`);
+  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.universe}.png?size=224`);
   item.find('.card-text').text(x.universe);
   item.find('.card').attr('href', `https://${x.universe}.r-universe.dev`);
   return item;
