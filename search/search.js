@@ -165,7 +165,7 @@ function organization_card(x){
 }
 
 function load_maintainers(){
-  var pages = 6;
+  var pages = 8;
   var pagesize = 12;
   //for maintainers use: 'https://r-universe.dev/stats/maintainers?limit=100'
   get_ndjson('https://r-universe.dev/stats/universes?organization=1').then(function(data){
