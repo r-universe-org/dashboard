@@ -1,6 +1,6 @@
 $(function(){
   get_ndjson('https://r-universe.dev/stats/universes?organization=1').then(function(x){
-    x.forEach(function(org){
+    x.sort((a,b) => a.packages.length > b.packages.length ? -1 : 1).forEach(function(org){
       var organization = org.universe;
       // uncomment when database is updated
       // This will not show orgs that do not have self-owned packages
