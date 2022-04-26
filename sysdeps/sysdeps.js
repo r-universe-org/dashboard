@@ -41,8 +41,11 @@ function tr(list){
 }
 
 function lib(x){
-  var link = $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt"))
-  return $("<span>").addClass('text-nowrap').text(x.library).append(" ").append(link);
+  var el = $("<span>").addClass('text-nowrap').text(x.library).append(" ");
+  if(x.homepage){
+    $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt")).appendTo(el);
+  }
+  return el;
 }
 
 function trim_version(str){
