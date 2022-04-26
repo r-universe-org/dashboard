@@ -1220,7 +1220,8 @@ function populate_package_details(package){
         item.find('h5').text(x.title);
         item.appendTo(articles);
       });
-    } else if(builder.status == 'failure'){
+    }
+    if(builder.status == 'failure'){
       details.find('.vignette-failure-url').attr('href', builder.url);
       details.find('.vignette-failure-alert').removeClass('d-none');
     }
