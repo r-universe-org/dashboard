@@ -2,19 +2,25 @@ $(function(){
   get_ndjson('https://r-universe.dev/stats/sysdeps').then(function(sysdeps){
     sysdeps.filter(x => x.library).forEach(function(x){
       if(x.library === 'c++') return;
-      var used = $("<div>");
+      var used = $("<div>").css("max-width", "33vw");
       x.usedby.sort(sortpkg).map(link_package).forEach(function(el, i){
         if(i > 0) used.append(" ");
         used.append(el.addClass("text-dark"));
       })
       var runtime = x.packages.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap text-secondary').append("<br>"))
-      var headers = x.headers.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"))
+      var headers = x.headers.sort().map(dep => href(dep, `https://packages.ubuntu.com/${x.distro}/${dep}`).addClass('text-nowrap').append("<br>"));
       var version = trim_version(x.version);
-      var row = tr([lib(x.library), version, runtime, headers, used])
+      var row = tr([lib(x), cleanup_desc(x.description), headers, used]);
       $("tbody").append(row);
     });
   });
 });
+
+function cleanup_desc(str){
+  if(!str) return "";
+  var str = str.charAt(0).toUpperCase() + str.slice(1);
+  return str.replace(/\(.*\)$/, '').replace('SASL -', 'SASL').replace(/[-,]+ .*(shared|runtime|binary|library|legacy|precision|quantum).*$/i, '');
+}
 
 function sortpkg(x, y){
   return x.package.toLowerCase() > y.package.toLowerCase() ? 1 : -1;
@@ -34,8 +40,9 @@ function tr(list){
   return tr;
 }
 
-function lib(str){
-  return $("<span>").addClass('text-nowrap').text(str);
+function lib(x){
+  var link = $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt"))
+  return $("<span>").addClass('text-nowrap').text(x.library).append(" ").append(link);
 }
 
 function trim_version(str){
