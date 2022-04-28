@@ -365,6 +365,9 @@ function init_github_info(ghuser, server){
     if(user.twitter_username){
       $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
     }
+    if(user.followers){
+      $("#github-user-followers").toggleClass("d-none").find('.content').text(user.followers + " followers");
+    }
     update_registry_status(ghuser, server);
   }).catch(alert);
 }
@@ -1249,7 +1252,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'rstudio'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
