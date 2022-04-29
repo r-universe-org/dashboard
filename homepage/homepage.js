@@ -1223,7 +1223,7 @@ function populate_package_details(package){
         item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
         item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
         item.find('.package-details-article-author').text(x.author);
-        item.find('h5').text(x.title);
+        item.find('.article-title').text(x.title);
         item.appendTo(articles);
       });
     }
