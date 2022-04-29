@@ -366,7 +366,9 @@ function init_github_info(ghuser, server){
       $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
     }
     if(user.followers){
-      $("#github-user-followers").toggleClass("d-none").find('.content').text(user.followers + " followers");
+      let count = user.followers;
+      let countstr = count < 1000 ? count : (count/1000).toFixed(1) + 'k';
+      $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr + " followers");
     }
     update_registry_status(ghuser, server);
   }).catch(alert);
