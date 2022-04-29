@@ -236,8 +236,8 @@ function init_packages_table(server, user){
       var org = pkg.user;
       if(universes.indexOf(org) < 0){
         universes.push(org);
-        firstpkg = firstpkg || pkg.package;
-        update_syntax_block(universes, firstpkg, user);
+        //firstpkg = firstpkg || pkg.package;
+        //update_syntax_block(universes, firstpkg, user);
       }
       var name = pkg.package;
       var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
