@@ -1156,6 +1156,7 @@ function populate_package_details(package){
   $('#package-details-spinner').show();
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
+  $(".package-details-gist-name").text(package);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
   get_path(`${server}/packages/${package}/any`).then(function(x){

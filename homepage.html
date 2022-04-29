@@ -255,6 +255,46 @@
               <div class="tab-pane" id="package" role="tabpanel">
                 <div class="p-2 package-details-container">
                   <p id="package-details-spinner"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading package data...</p>
+
+                  <div class="row card mt-4">
+                    <h5 class="package-details-installation-header card-title card-header text-center">Install in R</h5>
+                     <link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-e6d2fd629553.css">
+                     <div class="gist">
+                        <table>
+                           <tbody>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="1"></td>
+                                 <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Enable repository from <span class="title-universe-name"></span></span></td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="2"></td>
+                                 <td class="blob-code blob-code-inner js-file-line">options(<span class="pl-v">repos</span> <span class="pl-k">=</span> c(</td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="3"></td>
+                                 <td class="blob-code blob-code-inner js-file-line">  <span class="pl-v">ropensci</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>https://<span class="title-universe-name"></span>.r-universe.dev<span class="pl-pds">'</span></span>,</td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="4"></td>
+                                 <td class="blob-code blob-code-inner js-file-line">  <span class="pl-v">CRAN</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>https://cloud.r-project.org<span class="pl-pds">'</span></span>))</td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="5"></td>
+                                 <td class="blob-code blob-code-inner js-file-line"></td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="6"></td>
+                                 <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Install packages</span></td>
+                              </tr>
+                              <tr>
+                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="7"></td>
+                                 <td class="blob-code blob-code-inner js-file-line">install.packages(<span class="pl-s"><span class="pl-pds">'</span><span class="package-details-gist-name"></span><span class="pl-pds">'</span></span>)</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+
                   <div class="row card mt-4">
                     <h5 class="card-title card-header text-center">Development</h5>
                     <div class="card-body col-12">
@@ -469,6 +509,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=57"></script>
+  <script src="ui/homepage.js?nocache=58"></script>
 </body>
 </html>
