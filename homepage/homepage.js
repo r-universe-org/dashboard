@@ -1120,29 +1120,29 @@ function link_to_pkg(owner, pkg){
 
 function populate_revdeps(package){
   var revdepdiv = $(".package-details-revdeps").empty();
-  get_json(`https://r-universe.dev/stats/usedby?package=${package}`).then(function(revdeps){
-    $('.package-details-revdeps-header').text(package + ' usage');
-    function add_link(dep){
-      $("<a>").text(dep.package)
-      .attr('href', link_to_pkg(dep.owner, dep.package))
+  $(".package-details-revdeps-header").text(`Other packages using ${package}`)
+  get_ndjson(`https://r-universe.dev/stats/usedbyorg?package=${package}`).then(function(revdeps){
+    function make_link(package, owner){
+      return $("<a>")
+      .text(package)
+      .addClass('text-dark')
+      .attr('href', link_to_pkg(owner, package))
       .click(function(e){
-        if(dep.owner == user){
-          tab_to_package(pkg.Package);
+        if(owner == user){
+          tab_to_package(package);
         }
       })
-      .appendTo(revdepdiv);
-      revdepdiv.append(" ");
     }
-    if(revdeps.hard.length){
-      revdepdiv.append($("<b>").text("Hard reverse dependencies: "))
-      revdeps.hard.forEach(add_link);
-      revdepdiv.append("<br>");
-    }
-    if(revdeps.soft.length){
-      revdepdiv.append($("<b>").text("Soft reverse dependencies: "))
-      revdeps.soft.forEach(add_link);
-    }
-    if(!revdeps.hard.length && !revdeps.soft.length){
+    revdeps.forEach(function(x){
+      var item = $("#templatezone .revdep-item").clone().appendTo(revdepdiv);
+      item.find('.revdep-user-link').attr('href', 'https://' + x.owner + '.r-universe.dev');
+      item.find('.revdep-user-avatar').attr('src', 'https://r-universe.dev/avatars/' + x.owner + '.png?size=120');
+      var packages = item.find('.revdep-user-packages');
+      x.packages.sort((a,b) => a.stars > b.stars ? -1 : 1).forEach(function(pkg){
+        packages.append(make_link(pkg.package, x.owner)).append(" ");
+      });
+    });
+    if(!revdeps.length){
       revdepdiv.append($("<i>").text(`No packages in r-universe depending on '${package}' yet.`))
     }
   });

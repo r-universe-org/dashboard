@@ -303,7 +303,7 @@
                   </div>
                   <div class="row card mt-4">
                     <h5 class="package-details-revdeps-header card-title card-header text-center">Usage</h5>
-                    <p class="card-body p-2 package-details-revdeps"></p>
+                    <ul class="list-group list-group-flush package-details-revdeps"></ul>
                   </div>
                 </div>
               </div>
@@ -429,6 +429,13 @@
       </div>
     </li>
 
+    <li class="revdep-item list-group-item border-light p-1">
+      <div class="row align-items-center">
+        <a class="col-auto revdep-user-link"><img src="https://r-universe.dev/static/nobody.jpg" style="width: 60px;" class="rounded revdep-user-avatar card-img"></a>
+        <div class="col revdep-user-packages"></div>
+      </div>
+    </li>
+
     <a class="package-details-article list-group-item list-group-item-action border-0 pb-1">
       <div class="d-flex w-100 justify-content-between">
         <div>
@@ -504,6 +511,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=60"></script>
+  <script src="ui/homepage.js?nocache=61"></script>
 </body>
 </html>
