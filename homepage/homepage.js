@@ -1236,14 +1236,26 @@ function populate_package_details(package){
     }
     if(builder.gitstats && builder.gitstats.contributions){
       var names = Object.keys(builder.gitstats.contributions);
-      names.forEach(function(login){
+      function add_one_contributor(){
+        if(!names.length) return;
+        var login = names.shift();
         var count = builder.gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
         item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
         item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`)
             .tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
-      });
+      }
+      for(let i = 0; i < 12; i++){
+        add_one_contributor();
+      }
+      if(names.length){
+        var morelink = $('<a href="#">').addClass("btn btn-sm btn-outline-primary m-2").text("Show all...").click(function(e){
+          $(this).remove()
+          e.preventDefault();
+          while(names.length) add_one_contributor();
+        }).appendTo('.package-details-contributors');
+      }
     }
   });
 }
@@ -1255,7 +1267,7 @@ function tab_to_package(package){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'tidyverse'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
