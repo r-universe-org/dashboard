@@ -1236,6 +1236,7 @@ function populate_package_details(package){
     }
     if(builder.gitstats && builder.gitstats.contributions){
       var names = Object.keys(builder.gitstats.contributions);
+      var total = names.length;
       function add_one_contributor(){
         if(!names.length) return;
         var login = names.shift();
@@ -1250,7 +1251,7 @@ function populate_package_details(package){
         add_one_contributor();
       }
       if(names.length){
-        var morelink = $('<a href="#">').addClass("btn btn-sm btn-outline-primary m-2").text("Show all...").click(function(e){
+        var morelink = $('<a href="#">').addClass("btn btn-sm btn-outline-primary m-2").text(`Show all (${total})...`).click(function(e){
           $(this).remove()
           e.preventDefault();
           while(names.length) add_one_contributor();
