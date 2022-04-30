@@ -1267,8 +1267,8 @@ function populate_package_details(package){
         if(x.source == 'gcc' || x.source == 'glibc' || dupes[x.name]) return;
         dupes[x.name] = true;
         var li = $("<li>").appendTo(sysdeplist);
-        $("<b>").text(x.name + ": ").appendTo(li);
-        $("<i>").text(cleanup_desc(x.description) + " ").appendTo(li);
+        $("<b>").text(x.name).appendTo(li);
+        $("<i>").text(" – " + cleanup_desc(x.description) + " ").appendTo(li);
         $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt")).appendTo(li);
         details.find(".system-library-row").removeClass('d-none');
       });
