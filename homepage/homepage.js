@@ -1120,7 +1120,7 @@ function link_to_pkg(owner, pkg){
 
 function populate_revdeps(package){
   var revdepdiv = $(".package-details-revdeps").empty();
-  $(".package-details-revdeps-header").text(`Other users of ${package}`)
+  $(".package-details-revdeps-header").text(`Users of ${package}`)
   get_ndjson(`https://r-universe.dev/stats/usedbyorg?package=${package}`).then(function(revdeps){
     function make_link(package, owner){
       return $("<a>")
