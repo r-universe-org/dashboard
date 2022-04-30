@@ -1253,7 +1253,7 @@ function populate_package_details(package){
         add_one_contributor();
       }
       if(names.length){
-        var morelink = $('<a href="#">').addClass("btn btn-sm btn-outline-primary m-2").text(`Show all... (${total})`).click(function(e){
+        var morelink = $(`<button class="btn btn-sm btn-outline-primary m-2"><i class="fas fa-sync"></i> Show all... (${total})</button>`).click(function(e){
           $(this).remove()
           e.preventDefault();
           while(names.length) add_one_contributor();
