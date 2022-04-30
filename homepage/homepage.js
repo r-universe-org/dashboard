@@ -1157,6 +1157,8 @@ function populate_package_details(package){
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
+  $(".package-details-development-header").text(`${package} development and contributors`);
+  $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
   get_path(`${server}/packages/${package}/any`).then(function(x){
