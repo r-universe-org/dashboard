@@ -1260,6 +1260,19 @@ function populate_package_details(package){
         }).appendTo('.package-details-contributors');
       }
     }
+    if(builder.sysdeps){
+      var sysdeplist = details.find('.system-library-list');
+      var dupes = {};
+      builder.sysdeps.forEach(function(x){
+        if(x.source == 'gcc' || x.source == 'glibc' || dupes[x.name]) return;
+        dupes[x.name] = true;
+        var li = $("<li>").appendTo(sysdeplist);
+        $("<b>").text(x.name + ": ").appendTo(li);
+        $("<i>").text(cleanup_desc(x.description + " ")).appendTo(li);
+        $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt")).appendTo(li);
+        details.find(".system-library-row").removeClass('d-none');
+      });
+    }
   });
 }
 
@@ -1269,8 +1282,14 @@ function tab_to_package(package){
   window.scrollTo(0,0);
 }
 
+function cleanup_desc(str){
+  if(!str) return "";
+  var str = str.charAt(0).toUpperCase() + str.slice(1);
+  return str.replace(/\(.*\)$/, '').replace('SASL -', 'SASL').replace(/[-,]+ .*(shared|runtime|binary|library|legacy|precision|quantum).*$/i, '');
+}
+
 //INIT
-var devtest = 'tidyverse'
+var devtest = 'r-spatial'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';

@@ -405,7 +405,6 @@
         <h5 class="card-title"><span class="cranbadge"></span><span class="package-details-name text-dark"></span>: <small class="text-secondary package-details-title"></small></h5>
         <p class="card-text package-details-description font-italic"></p>
         <p>Authors: <span class="card-text text-dark package-details-author"></span></p>
-
         <p class="d-table">
           <a style="width: 20px" class="fab fa-linux package-details-logs text-dark text-decoration-none grow-on-over"></a>
             <a class="package-details-source"></a><br>
@@ -420,8 +419,13 @@
           The latest version of this package failed to build. Look at the <a class="build-failure-url">build logs</a> for more information.
         </p>
         <p>Issue tracker: <u><a target="_blank" class="card-text text-dark text-underline package-details-issues"></a></u></p>
+        <div class="system-library-row d-none">
+          <p class="float-left">Uses libraries:</p>
+          <ul class="system-library-list list-unstyled d-table pl-2"></ul>
+        </div>
         <p class="card-text"><small class="text-muted package-details-updated">Last updated ??</small></p>
         <p class="card-text package-details-topics clearfix"></p>
+
       </div>
       <div class="package-details-article-list list-group">
         <div class="vignette-failure-alert alert alert-warning m-0 d-none" role="alert">
@@ -523,6 +527,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=64"></script>
+  <script src="ui/homepage.js?nocache=65"></script>
 </body>
 </html>
