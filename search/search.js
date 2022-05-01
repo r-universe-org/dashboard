@@ -55,6 +55,9 @@ $(function(){
     if(buildinfo.commit.time){
       item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
     }
+    if(buildinfo.gitstats.stars){
+      item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
+    }
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
