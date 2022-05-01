@@ -517,6 +517,9 @@ function init_package_descriptions(server, user){
       if(buildinfo.commit.time){
         item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
       }
+      if(buildinfo.gitstats.stars){
+        item.find('.description-github-stars').removeClass("d-none").append(` ${buildinfo.gitstats.stars} stars`)
+      }
       item.find('.package-image').attr('src', get_package_image(buildinfo));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
       attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
@@ -1192,6 +1195,9 @@ function populate_package_details(package){
     }
     if(builder.commit.time){
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
+    }
+    if(builder.gitstats.stars){
+      details.find('.package-details-stars').removeClass('d-none').append(` ${builder.gitstats.stars} stars`);
     }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
