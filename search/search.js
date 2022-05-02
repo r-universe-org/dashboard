@@ -58,6 +58,7 @@ $(function(){
     if(buildinfo.gitstats.stars){
       item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
     }
+    item.find('.description-score').append(` ${pkg.score.toFixed(1)} match`);
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
