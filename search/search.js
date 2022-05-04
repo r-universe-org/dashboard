@@ -58,6 +58,7 @@ $(function(){
     if(buildinfo.gitstats.stars){
       item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
     }
+    item.find('.description-pkgscore').removeClass('d-none').append(` ${pkg._score.toFixed(2)} score`);
     item.find('.description-score').append(` ${pkg.score.toFixed(1)} match`);
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));

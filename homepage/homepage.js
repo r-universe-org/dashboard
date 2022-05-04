@@ -520,6 +520,7 @@ function init_package_descriptions(server, user){
       if(buildinfo.gitstats.stars){
         item.find('.description-github-stars').removeClass("d-none").append(` ${buildinfo.gitstats.stars} stars`)
       }
+      item.find('.description-pkgscore').removeClass('d-none').append(` ${pkg._score.toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(buildinfo));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
       attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
@@ -1198,6 +1199,9 @@ function populate_package_details(package){
     }
     if(builder.gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${builder.gitstats.stars} stars`);
+    }
+    if(src._score){
+      details.find('.package-details-pkgscore').removeClass('d-none').append(` ${src._score.toFixed(2)} score`);
     }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
