@@ -55,7 +55,7 @@ $(function(){
     if(buildinfo.commit.time){
       item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
     }
-    if(buildinfo.gitstats.stars){
+    if(buildinfo.gitstats && buildinfo.gitstats.stars){
       item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
     }
     item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
