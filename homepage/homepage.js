@@ -26,6 +26,10 @@ Date.prototype.yyyymm = function(){
   return this.getWeekYear() + '-' + (wk < 10 ? '0' + wk : wk);
 }
 
+function countstr(count){
+  return count < 1000 ? count : (count/1000).toFixed(1) + 'k';
+}
+
 /* Menu example: https://www.codeply.com/p/eDmT9PMWW3 */
 $(function(){
   function SidebarCollapse() {
@@ -366,9 +370,7 @@ function init_github_info(ghuser, server){
       $("#github-user-twitter").toggleClass("d-none").attr('href', 'https://twitter.com/' + user.twitter_username);
     }
     if(user.followers){
-      let count = user.followers;
-      let countstr = count < 1000 ? count : (count/1000).toFixed(1) + 'k';
-      $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr + " followers");
+      $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr(user.followers) + " followers");
     }
     update_registry_status(ghuser, server);
   }).catch(alert);
@@ -518,7 +520,7 @@ function init_package_descriptions(server, user){
         item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
       }
       if(buildinfo.gitstats.stars){
-        item.find('.description-github-stars').removeClass("d-none").append(` ${buildinfo.gitstats.stars} stars`)
+        item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(buildinfo.gitstats.stars)} stars`)
       }
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(buildinfo));
@@ -1198,7 +1200,7 @@ function populate_package_details(package){
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
     }
     if(builder.gitstats.stars){
-      details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${builder.gitstats.stars} stars`);
+      details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(builder.gitstats.stars)} stars`);
     }
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
