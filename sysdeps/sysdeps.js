@@ -1,5 +1,5 @@
 $(function(){
-  get_ndjson('https://r-universe.dev/stats/sysdeps').then(function(sysdeps){
+  get_ndjson('https://r-universe.dev/stats/sysdeps?all=1').then(function(sysdeps){
     sysdeps.filter(x => x.library).forEach(function(x){
       if(x.library === 'c++') return;
       var used = $("<div>").css("max-width", "33vw");
