@@ -99,11 +99,11 @@ $(function(){
     $('#results-placeholder').hide();
     $('svg').hide('fast');
     $(window).scrollTop(0);
-    get_ndjson('https://r-universe.dev/stats/search?limit=50&all=true&q=' + q).then(function(x){
+    get_ndjson('https://r-universe.dev/stats/ranksearch?limit=50&all=true&q=' + q).then(function(x){
       if(x.length == 0){
         $('#package-description-col-one').append($("<p>").text(`No results for "${q}"`));
       }
-      x.sort((a,b) => a._score*a.match > b._score*b.match ? -1 : 1).forEach(show_pkg_card);
+      x.forEach(show_pkg_card);
     });
   };
 
