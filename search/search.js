@@ -59,7 +59,7 @@ $(function(){
       item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
     }
     item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
-    item.find('.description-score').append(` ${pkg.score.toFixed(1)} match`);
+    item.find('.description-score').append(` ${pkg.match.toFixed(1)} match`);
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
@@ -103,7 +103,7 @@ $(function(){
       if(x.length == 0){
         $('#package-description-col-one').append($("<p>").text(`No results for "${q}"`));
       }
-      x.forEach(show_pkg_card);
+      x.sort((a,b) => a._score*a.match > b._score*b.match ? -1 : 1).forEach(show_pkg_card);
     });
   };
 
