@@ -525,9 +525,7 @@ function init_package_descriptions(server, user){
       if(buildinfo.rundeps){
         item.find('.description-dependencies').removeClass('d-none').append(` ${buildinfo.rundeps.length} dependencies`);
       }
-      if(pkg._usedby){
-        item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
-      }
+      item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(buildinfo));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
@@ -1211,7 +1209,7 @@ function populate_package_details(package){
     if(builder.rundeps){
       details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
     }
-    if(src._usedby){
+    if(src._usedby !== undefined){
       details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`);
     }
     if(src._score){
