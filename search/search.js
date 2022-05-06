@@ -58,6 +58,10 @@ $(function(){
     if(buildinfo.gitstats && buildinfo.gitstats.stars){
       item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
     }
+    if(buildinfo.rundeps){
+      item.find('.description-dependencies').removeClass('d-none').append(` ${buildinfo.rundeps.length} dependencies`);
+    }
+    item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
     item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
     item.find('.description-score').append(` ${pkg.match.toFixed(1)} match`);
     item.find('.package-image').attr('src', get_package_image(buildinfo));

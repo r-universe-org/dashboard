@@ -522,6 +522,12 @@ function init_package_descriptions(server, user){
       if(buildinfo.gitstats.stars){
         item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(buildinfo.gitstats.stars)} stars`)
       }
+      if(buildinfo.rundeps){
+        item.find('.description-dependencies').removeClass('d-none').append(` ${buildinfo.rundeps.length} dependencies`);
+      }
+      if(pkg._usedby){
+        item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
+      }
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(buildinfo));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
@@ -1202,6 +1208,12 @@ function populate_package_details(package){
     if(builder.gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(builder.gitstats.stars)} stars`);
     }
+    if(builder.rundeps){
+      details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
+    }
+    if(src._usedby){
+      details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`);
+    }
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
     }
@@ -1301,7 +1313,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'r-spatial'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
