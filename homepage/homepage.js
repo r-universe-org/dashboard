@@ -1169,6 +1169,8 @@ function populate_package_details(package){
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
+  $(".package-details-readme").addClass('d-none');
+  $(".package-readme-content").empty().collapse('hide');
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
@@ -1228,6 +1230,13 @@ function populate_package_details(package){
     if(maintainer.login){
       details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
+    }
+    if(builder.assets && builder.assets.includes("readme.md")){
+      $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme file`).click(function(e){
+        get_path(`${server}/readme/${package}.html`).then(function(res){
+          $('.package-readme-content').html(res)
+        });
+      });
     }
     if(builder.vignettes){
       var articles = details.find('.package-details-article-list');
