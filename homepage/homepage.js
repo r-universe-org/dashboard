@@ -1219,7 +1219,11 @@ function populate_package_details(package){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme`).off('click').click(function(e){
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
-          doc.find("a").attr("target", "_blank");
+          doc.find("a").attr("target", "_blank").each(function(){
+            if($(this).attr('href').startsWith("#")){
+              $(this).removeAttr('href');
+            }
+          });
           doc.find("h1").addClass("h3");
           doc.find("h2").addClass("h4");
           doc.find("h3").addClass("h5");
@@ -1323,7 +1327,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'r-lib'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
