@@ -1170,7 +1170,6 @@ function populate_package_details(package){
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
   $(".package-details-readme").addClass('d-none');
-  $(".package-readme-content").empty().collapse('hide');
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
@@ -1233,13 +1232,19 @@ function populate_package_details(package){
     }
     if(builder.assets && builder.assets.includes("readme.md")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme file`).click(function(e){
+        $(".package-readme-content").empty().collapse('hide');
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
           doc.find("a").attr("target", "_blank");
-          doc.find('img').on("load", function() {
-            var img = $(this); /* Try to strip badges */
-            if(img[0].naturalHeight < 60 && img[0].naturalWidth < 200) img.remove();
-          }).bind('error', img => $(img).remove());
+          doc.find('img').addClass('d-none').on("load", function() {
+            var img = $(this);
+            /* Do not show badges and broken images */
+            if(img[0].naturalHeight > 60 || img[0].naturalWidth > 200) {
+              img.removeClass('d-none');
+            } else {
+              img.remove();
+            }
+          });
           $('.package-readme-content').append(doc);
         });
       });
