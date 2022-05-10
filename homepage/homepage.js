@@ -1232,7 +1232,7 @@ function populate_package_details(package){
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
     }
     if(builder.assets && builder.assets.includes("readme.md")){
-      $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme file`).click(function(e){
+      $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme`).off('click').click(function(e){
         $(".package-readme-content").empty().collapse('hide');
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
@@ -1337,7 +1337,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
