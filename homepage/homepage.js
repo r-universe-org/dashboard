@@ -1238,7 +1238,7 @@ function populate_package_details(package){
           doc.find('img').on("load", function() {
             var img = $(this); /* Try to strip badges */
             if(img[0].naturalHeight < 60 && img[0].naturalWidth < 200) img.remove();
-          });
+          }).bind('error', img => $(img).remove());
           $('.package-readme-content').append(doc);
         });
       });
