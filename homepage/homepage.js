@@ -1248,7 +1248,7 @@ function populate_package_details(package){
               img.remove();
             }
           });
-          $('.package-readme-content').append(doc);
+          $('.package-readme-content').html(doc);
         });
       });
     }
