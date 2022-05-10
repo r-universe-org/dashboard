@@ -1236,6 +1236,9 @@ function populate_package_details(package){
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
           doc.find("a").attr("target", "_blank");
+          doc.find("h1").addClass("h3");
+          doc.find("h2").addClass("h4");
+          doc.find("h3").addClass("h5");
           doc.find('img').addClass('d-none').on("load", function() {
             var img = $(this);
             /* Do not show badges and broken images */
