@@ -1235,6 +1235,7 @@ function populate_package_details(package){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme file`).click(function(e){
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
+          doc.find("a").attr("target", "_blank");
           doc.find('img').on("load", function() {
             var img = $(this); /* Try to strip badges */
             if(img[0].naturalHeight < 60 && img[0].naturalWidth < 200) img.remove();
