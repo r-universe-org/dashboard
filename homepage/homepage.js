@@ -1234,7 +1234,12 @@ function populate_package_details(package){
     if(builder.assets && builder.assets.includes("readme.md")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme file`).click(function(e){
         get_path(`${server}/readme/${package}.html`).then(function(res){
-          $('.package-readme-content').html(res)
+          var doc = $(res);
+          doc.find('img').on("load", function() {
+            var img = $(this); /* Try to strip badges */
+            if(img[0].naturalHeight < 60 && img[0].naturalWidth < 200) img.remove();
+          });
+          $('.package-readme-content').append(doc);
         });
       });
     }
@@ -1322,7 +1327,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
