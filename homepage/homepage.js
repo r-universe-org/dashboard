@@ -641,22 +641,6 @@ function init_article_list(data, user){
   update_article_info();
 }
 
-function update_syntax_block(universes, package, user){
-  var text = `# Enable universe(s) by ${user}
-  options(repos = c(`;
-  for (const org of universes) {
-    var cleanorg = org.replace(/\W/g, '');
-    text = text + `\n    ${cleanorg} = 'https://${org}.r-universe.dev',`;
-  }
-  text = text +`\n    CRAN = 'https://cloud.r-project.org'))
-
-  # Install some packages
-  install.packages('${package}')`;
-  var code = $("<code>").addClass("language-r").text(text.replace(/\n  /g, "\n"));
-  $('#example-install-code').empty().append(code);
-  Prism.highlightAll();
-}
-
 /* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
 +(function ($) {
   'use strict';
@@ -1250,6 +1234,7 @@ function populate_package_details(package){
             }
           });
           $('.package-readme-content').html(doc);
+          hljs.highlightAll();
         });
       });
     }
