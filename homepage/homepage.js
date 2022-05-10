@@ -1233,7 +1233,6 @@ function populate_package_details(package){
     }
     if(builder.assets && builder.assets.includes("readme.md")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme`).off('click').click(function(e){
-        $(".package-readme-content").empty().collapse('hide');
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
           doc.find("a").attr("target", "_blank");
