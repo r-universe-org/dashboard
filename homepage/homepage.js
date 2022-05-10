@@ -1170,6 +1170,7 @@ function populate_package_details(package){
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
   $(".package-details-readme").addClass('d-none');
+  $(".package-readme-content").empty().collapse('hide');
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
