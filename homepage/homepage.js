@@ -1233,7 +1233,7 @@ function populate_package_details(package){
             var img = $(this);
             /* Do not show badges and broken images */
             if(img[0].naturalHeight > 60 || img[0].naturalWidth > 200) {
-              img.addClass('mb-2').css('max-height', '400px').css('width', 'auto').removeClass('d-none');
+              img.addClass('mb-2').css('max-height', '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
             } else {
               img.remove();
             }
