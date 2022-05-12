@@ -1233,7 +1233,8 @@ function populate_package_details(package){
             var img = $(this);
             /* Do not show badges and broken images */
             if(img[0].naturalHeight > 60 || img[0].naturalWidth > 200) {
-              img.addClass('mb-2').css('max-height', '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
+              var islogo = img.attr('src').includes('logo');
+              img.addClass('mb-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
             } else {
               img.remove();
             }
@@ -1327,7 +1328,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'r-lib'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
