@@ -125,3 +125,13 @@ body {
 .package-contributor-img:hover{
   background-color: #dc3545;
 }
+
+/* Test package: chromote */
+.package-readme-content pre span{
+  word-break: break-all;
+}
+
+/* Test package: js */
+.package-readme-content pre {
+  white-space: pre-wrap;
+}

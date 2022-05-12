@@ -1227,7 +1227,6 @@ function populate_package_details(package){
           doc.find("h1").addClass("h3");
           doc.find("h2").addClass("h4");
           doc.find("h3").addClass("h5");
-          doc.find("pre").css('white-space','pre-wrap'); //for very long lines without whitespace such as 'js' package
           doc.find("table").addClass("table table-sm");
           doc.find('img').addClass('d-none').on("load", function() {
             var img = $(this);
@@ -1328,7 +1327,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'rstudio'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
