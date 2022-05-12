@@ -1234,7 +1234,7 @@ function populate_package_details(package){
             /* Do not show badges and broken images */
             if(img[0].naturalHeight > 60 || img[0].naturalWidth > 200) {
               var islogo = img.attr('src').includes('logo');
-              img.addClass('mb-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
+              img.addClass('p-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
             } else {
               img.remove();
             }
