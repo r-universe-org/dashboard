@@ -1232,7 +1232,7 @@ function populate_package_details(package){
           doc.find('img').addClass('d-none').on("load", function() {
             var img = $(this);
             /* Do not show badges and broken images */
-            if(img[0].naturalHeight > 60 || img[0].naturalWidth > 200) {
+            if(img[0].naturalHeight > 60 || img[0].naturalWidth > 300) {
               var islogo = img.attr('src').includes('logo');
               img.addClass('p-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
             } else {
