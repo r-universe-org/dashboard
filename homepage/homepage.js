@@ -1215,7 +1215,7 @@ function populate_package_details(package){
       details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
     }
-    if(builder.assets && builder.assets.includes("readme.md")){
+    if(builder.assets && builder.assets.includes("readme.html")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme`).off('click').click(function(e){
         get_path(`${server}/readme/${package}.html`).then(function(res){
           var doc = $(res);
