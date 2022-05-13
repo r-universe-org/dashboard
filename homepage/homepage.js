@@ -1144,6 +1144,33 @@ function populate_revdeps(package){
   });
 }
 
+function populate_readme(package){
+  get_path(`${server}/readme/${package}.html`).then(function(res){
+    var doc = $(res);
+    doc.find("a").attr("target", "_blank").each(function(){
+      if($(this).attr('href').startsWith("#")){
+        $(this).removeAttr('href');
+      }
+    });
+    doc.find("h1").addClass("h3");
+    doc.find("h2").addClass("h4");
+    doc.find("h3").addClass("h5");
+    doc.find("table").addClass("table table-sm");
+    doc.find('img').addClass('d-none').on("load", function() {
+      var img = $(this);
+      /* Do not show badges and broken images */
+      if(img[0].naturalHeight > 60 || img[0].naturalWidth > 300) {
+        var islogo = img.attr('src').includes('logo');
+        img.addClass('p-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
+      } else {
+        img.remove();
+      }
+    });
+    $('.package-readme-content').html(doc);
+    hljs.highlightAll();
+  });
+}
+
 function populate_package_details(package){
   if(window.detailpkg == package) return;
   window.detailpkg = package;
@@ -1154,7 +1181,7 @@ function populate_package_details(package){
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
   $(".package-details-readme").addClass('d-none');
-  $(".package-readme-content").empty().collapse('hide');
+  $(".package-readme-content").empty();
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
@@ -1216,32 +1243,8 @@ function populate_package_details(package){
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
     }
     if(builder.assets && builder.assets.includes("readme.html")){
-      $(".package-details-readme").removeClass('d-none').find('a').text(`Show ${package} readme`).off('click').click(function(e){
-        get_path(`${server}/readme/${package}.html`).then(function(res){
-          var doc = $(res);
-          doc.find("a").attr("target", "_blank").each(function(){
-            if($(this).attr('href').startsWith("#")){
-              $(this).removeAttr('href');
-            }
-          });
-          doc.find("h1").addClass("h3");
-          doc.find("h2").addClass("h4");
-          doc.find("h3").addClass("h5");
-          doc.find("table").addClass("table table-sm");
-          doc.find('img').addClass('d-none').on("load", function() {
-            var img = $(this);
-            /* Do not show badges and broken images */
-            if(img[0].naturalHeight > 60 || img[0].naturalWidth > 300) {
-              var islogo = img.attr('src').includes('logo');
-              img.addClass('p-2').css('max-height', islogo ? '200px' : '400px').css('width', 'auto').css('max-width', '90%').removeClass('d-none');
-            } else {
-              img.remove();
-            }
-          });
-          $('.package-readme-content').html(doc);
-          hljs.highlightAll();
-        });
-      });
+      $(".package-details-readme").removeClass('d-none').find('a').text(`${package} README.md`);
+      populate_readme(package);
     }
     if(builder.vignettes){
       var articles = details.find('.package-details-article-list');
