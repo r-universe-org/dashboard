@@ -1187,10 +1187,12 @@ function populate_package_details(package){
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
   get_path(`${server}/craninfo?package=${package}`).then(function(x){
+    var crandiv = details.find('.package-details-cran')
     if(x.version){
-      var crandiv = details.find('.package-details-cran').removeClass('d-none');
       crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
       if(x.date) crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
+    } else {
+      crandiv.append("no")
     }
   });
   get_path(`${server}/packages/${package}/any`).then(function(x){
@@ -1337,7 +1339,7 @@ function cleanup_desc(str){
 }
 
 //INIT
-var devtest = 'rstudio'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
