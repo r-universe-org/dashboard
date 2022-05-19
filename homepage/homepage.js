@@ -1188,7 +1188,6 @@ function populate_package_details(package){
   populate_revdeps(package);
   get_path(`${server}/craninfo?package=${package}`).then(function(x){
     if(x.version){
-      var crandate = x.date.substring(0,10);
       var crandiv = details.find('.package-details-cran').removeClass('d-none');
       crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
       if(x.date) crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
