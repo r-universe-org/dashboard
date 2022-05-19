@@ -1186,6 +1186,14 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
+  get_path(`${server}/craninfo?package=${package}`).then(function(x){
+    if(x.version){
+      var crandate = x.date.substring(0,10);
+      var crandiv = details.find('.package-details-cran').removeClass('d-none');
+      crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
+      if(x.date) crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
+    }
+  });
   get_path(`${server}/packages/${package}/any`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
