@@ -1214,7 +1214,6 @@ function populate_package_details(package){
     details.find('.package-json-link').attr('href', `${server}/packages/${package}`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(x, details);
-    attach_cran_badge(src._user, src.Package, builder.upstream, details.find('.cranbadge'));
     var issuetracker = guess_tracker_url(src);
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_labels(builder));
