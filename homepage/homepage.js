@@ -1186,15 +1186,7 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
-  get_path(`${server}/craninfo?package=${package}`).then(function(x){
-    var crandiv = details.find('.package-details-cran')
-    if(x.version){
-      crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
-      if(x.date) crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
-    } else {
-      crandiv.append("no")
-    }
-  });
+  var craninfo = get_path(`${server}/craninfo?package=${package}&url=1`);
   get_path(`${server}/packages/${package}/any`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
@@ -1322,6 +1314,24 @@ function populate_package_details(package){
         details.find(".system-library-row").removeClass('d-none');
       });
     }
+    craninfo.then(function(x){
+      var crandiv = details.find('.package-details-cran')
+      if(x.version){
+        crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
+        if(x.date) {
+          crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
+        }
+      } else {
+        crandiv.append("no")
+      }
+      if(x.version && x.version != "archived"){
+        var upstream = builder.upstream.toLowerCase();
+        var oncran = x.url && x.url.toLowerCase() == upstream;
+        var tiptext = oncran ? "Verified CRAN package!" : "A package '" + package + "' exists on CRAN but description does not link to:<br/><u>" + upstream + '</u>. This could be another source.';
+        var icon = $("<i>").addClass(oncran ? "fa fa-check" : "fa fa-question-circle popover-dismiss").css('color', oncran ? color_ok : color_bad).tooltip({title: tiptext, html: true});
+        crandiv.find('.cran-checkmark').append(icon);
+      }
+    });
   });
 }
 
