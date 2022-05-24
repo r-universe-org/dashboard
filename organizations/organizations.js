@@ -24,7 +24,7 @@ $(function(){
       }
       //profile.find(".maintainer-more").text(maintainer.email);
       profile.find(".organization-subtitle").text('Updated: ' + new Date(org.updated * 1000 || NaN).toLocaleString());
-      profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + org.organization);
+      profile.find(".organization-universe").attr('href', 'https://github.com/r-universe/' + organization);
       profile.find(".organization-packages").text(org.packages.length + " packages");
       profile.find(".organization-maintainers").text(org.maintainers.length + " maintainers");
       profile.appendTo("#organization-profile-list");
