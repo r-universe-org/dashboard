@@ -346,6 +346,7 @@ function update_registry_status(ghuser, server){
 function init_github_info(ghuser, server){
   $("head title").text("R-universe: " + ghuser);
   $(".title-universe-name").text(ghuser);
+  $(".title-universe-name-clean").text(ghuser.replace(/\W/g, ''));
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
   $("#rss-feed").attr("href", server + '/feed.xml');
   jQuery.get(`https://r-universe.dev/avatars/${user}.keys`).done(function(res){
