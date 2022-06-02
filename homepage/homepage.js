@@ -520,7 +520,7 @@ function init_package_descriptions(server, user){
       if(buildinfo.commit.time){
         item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
       }
-      if(buildinfo.gitstats.stars){
+      if(buildinfo.gitstats && buildinfo.gitstats.stars){
         item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(buildinfo.gitstats.stars)} stars`)
       }
       if(buildinfo.rundeps){
