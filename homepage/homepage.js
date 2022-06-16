@@ -407,7 +407,7 @@ function add_maintainer_icon(maintainer){
   item.find('.maintainer-name').text(maintainer.name)
   if(maintainer.login){
     item.find('.maintainer-link').attr('href', 'https://' + maintainer.login + '.r-universe.dev');
-    item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + maintainer.login + '.png?size=140');
+    item.find('.maintainer-avatar').attr('src', avatar_url(maintainer.login, 140));
   } else {
     item.find('.maintainer-link').attr('target', '_blank').attr('href', 'https://github.com/r-universe-org/help#how-to-link-a-maintainer-email-addresses-to-a-username-on-r-universe');
     item.find('.maintainer-avatar').tooltip({title: `<${maintainer.emails}> not associated with any GitHub account.`});
@@ -1158,7 +1158,7 @@ function populate_revdeps(package){
     revdeps.forEach(function(x){
       var item = $("#templatezone .revdep-item").clone().appendTo(revdepdiv);
       item.find('.revdep-user-link').attr('href', 'https://' + x.owner + '.r-universe.dev');
-      item.find('.revdep-user-avatar').attr('src', 'https://r-universe.dev/avatars/' + x.owner + '.png?size=120');
+      item.find('.revdep-user-avatar').attr('src', avatar_url(x.owner, 120));
       var packages = item.find('.revdep-user-packages');
       x.packages.sort((a,b) => a.stars > b.stars ? -1 : 1).forEach(function(pkg){
         packages.append(make_link(pkg.package, x.owner)).append(" ");
@@ -1371,6 +1371,13 @@ function cleanup_desc(str){
   if(!str) return "";
   var str = str.charAt(0).toUpperCase() + str.slice(1);
   return str.replace(/\(.*\)$/, '').replace('SASL -', 'SASL').replace(/[-,]+ .*(shared|runtime|binary|library|legacy|precision|quantum).*$/i, '');
+}
+
+function avatar_url(login, size){
+  // use generic avatars for gitlab/bitbucket
+  if(login.startsWith('gitlab-')) login = 'gitlab';
+  if(login.startsWith('bitbucket-')) login = 'atlassian';
+  return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
 //INIT
