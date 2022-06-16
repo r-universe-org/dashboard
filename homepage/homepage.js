@@ -343,10 +343,21 @@ function update_registry_status(ghuser, server){
   });
 }
 
-function init_github_info(ghuser, server){
-  $("head title").text("R-universe: " + ghuser);
-  $(".title-universe-name").text(ghuser);
-  $(".title-universe-name-clean").text(ghuser.replace(/\W/g, ''));
+function bitbucket_api_info(ghuser, server){
+  //bitbucket has no public api?
+  $("#github-user-name").text(ghuser.substring(10));
+}
+
+function gitlab_api_info(ghuser, server){
+  var username = ghuser.substring(7);
+  return get_json(`https://gitlab.com/api/v4/users?username=${username}`).then(function(res){
+    var user = res && res[0];
+    $("#github-user-name").text(user.name || ghuser);
+    $("#github-user-avatar").attr('src', user.avatar_url && user.avatar_url.replace(/s=[0-9]+/, 's=400'));
+  });
+}
+
+function github_api_info(ghuser, server){
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
   $("#rss-feed").attr("href", server + '/feed.xml');
   jQuery.get(`https://r-universe.dev/avatars/${user}.keys`).done(function(res){
@@ -373,8 +384,22 @@ function init_github_info(ghuser, server){
     if(user.followers){
       $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr(user.followers) + " followers");
     }
-    update_registry_status(ghuser, server);
-  }).catch(alert);
+  });
+}
+
+function init_user_info(ghuser, server){
+  $("head title").text("R-universe: " + ghuser);
+  $(".title-universe-name").text(ghuser);
+  $(".title-universe-name-clean").text(ghuser.replace(/\W/g, ''));
+  var p1 = update_registry_status(ghuser, server).catch(alert);
+  if(ghuser.startsWith('bitbucket-')){
+    bitbucket_api_info(ghuser, server);
+    return p1;
+  } else if(ghuser.startsWith('gitlab-')){
+    return gitlab_api_info(ghuser, server);
+  } else {
+    return github_api_info(ghuser, server);
+  }
 }
 
 function add_maintainer_icon(maintainer){
@@ -1353,7 +1378,7 @@ var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
-init_github_info(user, server).then(function(){
+init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
   if(!window.location.hash){
     $('#packages-tab-link').click();
