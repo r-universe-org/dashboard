@@ -1241,7 +1241,10 @@ function populate_package_details(package){
       details.find('.fa-file-pdf').hide()
       //remove when all pkgs have been built
     }
-    if(builder.commit.time){
+    var commit = builder.commit;
+    if(commit.time){
+      var committext = `<p class="text-left">Author: ${commit.author.replace(/<.*>/, "")} <br> Date:   ${new Date(commit.time*1000).toString().substring(0, 25)}<br>Message: ${commit.message.replace('\n', '<br>')}</p>`;
+      details.find('.package-details-sha').text(commit.id).attr('href',  `${builder.upstream}/commit/${commit.id}`).tooltip({title: committext, html: true});
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
     }
     if(builder.gitstats.stars){
