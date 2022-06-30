@@ -273,7 +273,7 @@ function init_packages_table(server, user){
       }
       if(src.type){
         var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-        if(!all_ok([src,win,mac,oldwin,oldmac]) || (user == 'ropensci' && !docs_ok(pkg))){
+        if(!all_ok([src,win,mac,oldwin,oldmac]) || (user == 'ropensci' && pkg.registered && !docs_ok(pkg))){
           var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt').click(function(e){
             e.preventDefault();
             rebuildlink.attr("disabled", true).off('click');
