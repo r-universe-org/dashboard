@@ -1207,7 +1207,9 @@ function populate_package_details(package){
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
   $(".package-details-readme").addClass('d-none');
+  $(".package-details-citation").addClass("d-none");
   $(".package-readme-content").empty();
+  $(".package-citation-content").empty();
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
@@ -1223,6 +1225,13 @@ function populate_package_details(package){
     }
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'] || {};
+    if(builder.assets && builder.assets.find(x => x.endsWith('citation.html'))){
+      get_path(`${server}/citation/${package}.html`).then(function(htmlString){
+        var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
+        $(htmlDoc).find('.container').removeClass('container').appendTo('.package-citation-content');
+        $(".package-details-citation").removeClass("d-none");
+      });
+    }
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
     details.find('.package-details-name').text(`${src.Package}`)
     details.find('.package-details-title').text(src.Title);
