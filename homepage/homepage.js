@@ -1155,7 +1155,9 @@ function populate_revdeps(package){
         }
       })
     }
-    revdeps.forEach(function(x){
+    function add_one_user(){
+      if(!revdeps.length) return;
+      var x = revdeps.shift();
       var item = $("#templatezone .revdep-item").clone().appendTo(revdepdiv);
       item.find('.revdep-user-link').attr('href', 'https://' + x.owner + '.r-universe.dev');
       item.find('.revdep-user-avatar').attr('src', avatar_url(x.owner, 120));
@@ -1163,8 +1165,18 @@ function populate_revdeps(package){
       x.packages.sort((a,b) => a.stars > b.stars ? -1 : 1).forEach(function(pkg){
         packages.append(make_link(pkg.package, x.owner)).append(" ");
       });
-    });
-    if(!revdeps.length){
+    }
+    var totalusers = revdeps.length;
+    if(totalusers){
+      for(var i = 0; i < 20; i++) add_one_user();
+      if(revdeps.length){
+        var morelink = $(`<button class="btn btn-sm btn-outline-primary m-2"><i class="fas fa-sync"></i> Show all ${totalusers} users</button>`).click(function(e){
+          $(this).remove()
+          e.preventDefault();
+          while(revdeps.length) add_one_user();
+        }).appendTo(revdepdiv);
+      }
+    } else {
       revdepdiv.append($("<i>").text(`No packages in r-universe depending on '${package}' yet.`))
     }
   });
