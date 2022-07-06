@@ -1210,6 +1210,8 @@ function populate_package_details(package){
   $(".package-details-citation").addClass("d-none");
   $(".package-readme-content").empty();
   $(".package-citation-content").empty();
+  $(".package-details-sha").empty();
+  $(".last-build-status").empty();
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
@@ -1352,6 +1354,7 @@ function populate_package_details(package){
         details.find(".system-library-row").removeClass('d-none');
       });
     }
+    generate_status_icon(builder, src.OS_type);
     craninfo.then(function(x){
       var crandiv = details.find('.package-details-cran')
       if(x.version){
@@ -1371,6 +1374,24 @@ function populate_package_details(package){
       }
     });
   });
+}
+
+function generate_status_icon(builder, os_type){
+  var docfail = builder.status != 'success';
+  var winfail = builder.winbinary && builder.winbinary != 'success' && os_type != 'unix';
+  var macfail = builder.macbinary && builder.macbinary != 'success' && os_type != 'windows';
+  var statustxt = 'Articles and win/mac binaries OK'
+  var success = true;
+  if(docfail || winfail || macfail){
+    var success = false;
+    var statusarr = [];
+    if(docfail) statusarr.push('Vignettes');
+    if(winfail) statusarr.push('Windows');
+    if(macfail) statusarr.push('MacOS');
+    var statustxt = 'Build/check failure for ' + statusarr.join(', ');
+  }
+  var statusicon = $("<a>").attr("href", builder.url).appendTo(".last-build-status").addClass(success ? "fa fa-check" : "fa fa-question-circle").css('color', success ? color_ok : color_bad).tooltip({title: statustxt});
+
 }
 
 function tab_to_package(package){
