@@ -1270,7 +1270,7 @@ function populate_package_details(package){
       details.find('.package-details-sha').text(commit.id).attr('href',  `${builder.upstream}/commit/${commit.id}`).tooltip({title: committext, html: true});
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
     }
-    if(builder.gitstats.stars){
+    if(builder.gitstats && builder.gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(builder.gitstats.stars)} stars`);
     }
     if(builder.rundeps){
