@@ -135,3 +135,8 @@ body {
 .package-readme-content pre {
   white-space: pre-wrap;
 }
+
+.nav-tabs.show .nav-link.active {
+  background-color: #dee2e6;
+  font-weight: bold;
+}
