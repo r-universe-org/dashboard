@@ -132,7 +132,7 @@ body {
 }
 
 /* Test package: js */
-.package-readme-content pre {
+.package-readme-content pre, .package-citation-content pre{
   white-space: pre-wrap;
 }
 
