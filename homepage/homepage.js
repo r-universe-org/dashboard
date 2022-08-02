@@ -1283,7 +1283,7 @@ function populate_package_details(package){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
     }
     if(builder.pkglogo){
-      details.find('.package-details-logo').attr('src', builder.pkglogo).removeClass('d-none');
+      details.find('.package-details-logo').attr('src', builder.pkglogo).addClass('d-md-block');
     }
     var maintainer = builder.maintainer || {};
     details.find('.package-details-maintainer .maintainer-name').text(maintainer.name);
