@@ -140,3 +140,9 @@ body {
   background-color: #dee2e6;
   font-weight: bold;
 }
+
+#minilogo{
+  height: 50px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
