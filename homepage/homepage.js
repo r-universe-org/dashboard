@@ -1366,6 +1366,16 @@ function populate_package_details(package){
         details.find(".system-library-row").removeClass('d-none');
       });
     }
+    if(src._contents && src._contents.datasets){
+      var datasetlist = details.find('.dataset-list');
+      src._contents.datasets.forEach(function(x){
+        if(!x.name || !x.title) return;
+        var li = $("<li>").appendTo(datasetlist);
+        $("<b>").text(x.name).appendTo(li);
+        $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
+        details.find(".dataset-row").removeClass('d-none');
+      });
+    }
     generate_status_icon(builder, src.OS_type);
     craninfo.then(function(x){
       var crandiv = details.find('.package-details-cran')
