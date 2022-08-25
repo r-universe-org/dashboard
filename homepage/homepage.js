@@ -1269,6 +1269,9 @@ function populate_package_details(package){
       var committext = `<p class="text-left">Author: ${commit.author.replace(/<.*>/, "")} <br> Date:   ${new Date(commit.time*1000).toString().substring(0, 25)}<br>Message: ${commit.message.replace('\n', '<br>')}</p>`;
       details.find('.package-details-sha').text(commit.id).attr('href',  `${builder.upstream}/commit/${commit.id}`).tooltip({title: committext, html: true});
       details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
+      if(src.RemoteRef && src.RemoteRef != 'HEAD'){
+        details.find('.package-details-remoteref').text(` (via ${src.RemoteRef})`);
+      }
     }
     if(builder.gitstats && builder.gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(builder.gitstats.stars)} stars`);
