@@ -1381,8 +1381,10 @@ function populate_package_details(package){
     }
     generate_status_icon(builder, src.OS_type);
     craninfo.then(function(x){
-      var crandiv = details.find('.package-details-cran')
-      if(x.version){
+      var crandiv = details.find('.package-details-cran');
+      if(x.registry == 'bioc'){
+        crandiv.html(`On BioConductor: <a class="text-dark text-underline" href="https://bioconductor.org/packages/${package}">${package}</a>`);
+      } else if(x.version){
         crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
         if(x.date) {
           crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
