@@ -141,7 +141,7 @@ function run_icon(run, src, binarystatus){
   };
   if(run && run.status && run.status !== 'none'){
     var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
-    var a = $("<a>").attr('href', run.url).append(i).css('margin-left', '5px');
+    var a = $("<a>").attr('href', run.url || src.url).append(i).css('margin-left', '5px');
     // can be "success" or "Succeeded"
     if(run.status.match(/succ/i)){
       i.css('color', '#22863a');
@@ -298,7 +298,7 @@ function init_packages_table(server, user){
         var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
         maintainerlink.text(pkg.maintainer).addClass('text-secondary');
         var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src), builddate, rebuildlink,
-          [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
+          [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (user == 'bioconductor') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
         } else {
@@ -1469,6 +1469,7 @@ $('#articles-tab-link').one('shown.bs.tab', function (e) {
 });
 
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
+  if(user == 'bioconductor') $(".nobioc").text("")
   init_packages_table(server, user);
   make_activity_chart(user);
 });
