@@ -188,7 +188,7 @@ Date.prototype.yyyymmdd = function() {
     var yyyy = this.getFullYear();
     var mm = this.getMonth() + 1; // getMonth() is zero-based
     var dd = this.getDate();
-    return [yyyy, (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd].join('-');
+    return $("<span>").text([yyyy, (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd].join('-')).addClass('text-nowrap')
   } else {
     return "";
   }
