@@ -179,7 +179,7 @@ function make_sysdeps(builder, distro){
       version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '').replace(/\.[a-z]+$/, '');
       div.append(" (" + version + ")\t");
     });
-    return div;
+    return div.addClass('d-none d-xl-inline'); //todo: set d-xl-table-cell on the parent td element instead
   }
 }
 
