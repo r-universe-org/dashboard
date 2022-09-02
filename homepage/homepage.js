@@ -475,8 +475,9 @@ function get_package_image(buildinfo){
   return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
-function make_topic_labels(builder){
-  var topics = builder.gitstats && builder.gitstats.topics || [];
+function make_topic_labels(builder, color){
+  var color = color || "info";
+  var topics = builder.gitstats && builder.gitstats.topics || builder.exports || [];
   if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
   if(builder.sysdeps){
     builder.sysdeps.forEach(function(x){
@@ -491,7 +492,7 @@ function make_topic_labels(builder){
     topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
       var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
       var topicurl = `https://r-universe.dev/search#${quotedtopic}`;
-      $("<a>").attr("href", topicurl).addClass('badge badge-info mr-1').text(topic).appendTo(topicdiv);
+      $("<a>").attr("href", topicurl).addClass(`badge badge-${color} mr-1`).text(topic).appendTo(topicdiv);
     });
   }
   return topicdiv;
@@ -1286,6 +1287,10 @@ function populate_package_details(package){
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
     }
+    if(src._contents && src._contents.exports){
+      details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
+      $("#exportlist").empty().append(make_topic_labels(src._contents, 'secondary'));
+    }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).addClass('d-md-block');
     }
@@ -1449,7 +1454,7 @@ function avatar_url(login, size){
 }
 
 //INIT
-var devtest = 'bioconductor'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
-  <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=6">
+  <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=7">
 
   <link rel="alternate" type="application/rss+xml" href="/feed.xml">
 
@@ -147,7 +147,7 @@
             <h4 class="navbar-header d-lg-none text-monospace">
               <a href="https://r-universe.dev/"><img id="minilogo" src="https://r-universe.dev/planets.svg"></a>
               <i type="button" class="float-right fas fa-bars navbar-toggle collapsed" data-toggle="collapse" data-target="#myTab"></i> <span class="d-none d-sm-inline">r-universe/</span><span class="title-universe-name">...</span></h4>
-            <ul class="collapse d-lg-flex nav nav-tabs justify-content-end flex-column flex-lg-row" id="myTab" role="tablist">
+            <ul class="collapse d-lg-flex nav nav-tabs justify-content-end flex-column flex-lg-row noanim" id="myTab" role="tablist">
               <li class="mr-auto d-none d-lg-block"><h4 class="mb-0 text-monospace">r-universe/<span class="title-universe-name">...</span></h4></li>
               <li class="nav-item">
                 <a class="nav-link" id="builds-tab-link" data-toggle="tab" href="#builds" role="tab">Builds</a>
@@ -444,8 +444,11 @@
         <a target="_blank" href="https://github.com/r-universe-org/help#how-is-the-package-rank-score-calculated" class="text-muted badge badge-light package-details-pkgscore p-1 border"><i class="fas fa-chart-line text-primary"></i></a>
         <span class="text-muted badge badge-light package-details-dependencies p-1 border d-none"><i class="fas fa-cube text-danger"></i></span>
         <span class="text-muted badge badge-light package-details-dependents p-1 border d-none"><i class="fas fa-cubes text-success"></i></span>
+        <a data-toggle="collapse" href="#exportlist" class="text-muted badge badge-light package-details-exports p-1 border d-none"><i class="fas fa-shapes text-dark"></i></a>
         </p>
         <p class="card-text"><small class="text-muted"><span class="last-build-status"></span> <span class="package-details-updated">Last updated ??</span> from: <a target="_blank" class="package-details-sha text-secondary"></a> <span class="package-details-remoteref"></span></small> </p>
+        <p id="exportlist" class="card-text clearfix noanim collapse"></p>
+
 
       </div>
       <div class="package-details-article-list list-group">
@@ -555,6 +558,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=15"></script>
+  <script src="ui/homepage.js?nocache=16"></script>
 </body>
 </html>

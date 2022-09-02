@@ -147,6 +147,6 @@ body {
   margin-bottom: -10px;
 }
 
-#myTab.collapsing {
+.noanim.collapsing {
   transition: none !important;
 }
