@@ -1414,6 +1414,11 @@ function populate_package_details(package){
       });
     }
   });
+  get_path(`${server}/scienceminer?package=${package}`).then(function(x){
+    if(x.fields && x.fields.number_documents && x.fields.number_documents[0]){
+      details.find(".package-details-mentions").removeClass('d-none').append(` ${x.fields.number_documents[0]} mentions`).attr("href", x.weburl);
+    }
+  });
 }
 
 function generate_status_icon(builder, os_type){
