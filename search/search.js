@@ -137,7 +137,7 @@ $(function(){
 
   //install listeners
   const update_hash = function(){
-    window.location.hash = $("#search-input").val();
+    window.location.hash = encodeURI($("#search-input").val());
   };
   $('#search-input').on("keydown paste input", debounce(update_hash));
   exampletopics.forEach(append_topic);

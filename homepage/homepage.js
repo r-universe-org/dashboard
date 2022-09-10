@@ -491,7 +491,7 @@ function make_topic_labels(builder, color, prefix){
   var topicdiv = $("<span>");
   if(topics && topics.length){
     topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
-      var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
+      var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURI(topic);
       var topicurl = `https://r-universe.dev/search#${prefix}${quotedtopic}`;
       $("<a>").attr("href", topicurl).addClass(`badge badge-${color} mr-1`).text(topic).appendTo(topicdiv);
     });
