@@ -1281,6 +1281,7 @@ function populate_package_details(package){
     }
     if(builder.rundeps){
       details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
+      $("#dependslist .labels").empty().append(make_topic_labels({exports: builder.rundeps}, 'danger'));
     }
     if(src._usedby){
       details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/#needs:${package}`)
@@ -1290,7 +1291,7 @@ function populate_package_details(package){
     }
     if(src._contents && src._contents.exports){
       details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
-      $("#exportlist").empty().append(make_topic_labels(src._contents, 'secondary', 'exports:'));
+      $("#exportlist .labels").empty().append(make_topic_labels(src._contents, 'secondary', 'exports:'));
     }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).addClass('d-md-block');
