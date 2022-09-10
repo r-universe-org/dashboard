@@ -1303,6 +1303,9 @@ function populate_package_details(package){
       details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
       details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
     }
+    details.find(".metric-icons a").click(function(e){
+      $(this).blur();
+    });
     if(builder.assets && builder.assets.includes("readme.html")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`${package} README.md`);
       populate_readme(package);
