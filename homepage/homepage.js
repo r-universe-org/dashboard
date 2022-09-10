@@ -1282,7 +1282,7 @@ function populate_package_details(package){
       details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
     }
     if(src._usedby){
-      details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`);
+      details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/#needs:${package}`)
     }
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
