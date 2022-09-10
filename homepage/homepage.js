@@ -1281,7 +1281,7 @@ function populate_package_details(package){
     }
     if(builder.rundeps){
       details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
-      $("#dependslist .labels").empty().append(make_topic_labels({exports: builder.rundeps}, 'danger'));
+      $("#dependslist .labels").empty().append(make_topic_labels({exports: builder.rundeps}, 'danger', 'package:'));
     }
     if(src._usedby){
       details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/#needs:${package}`)
