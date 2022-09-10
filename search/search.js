@@ -65,7 +65,9 @@ $(function(){
       item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
     }
     item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
-    item.find('.description-score').append(` ${pkg.match.toFixed(1)} match`);
+    if(pkg.match){
+      item.find('.description-score').removeClass('d-none').append(` ${pkg.match.toFixed(1)} match`);
+    }
     item.find('.package-image').attr('src', get_package_image(buildinfo));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
