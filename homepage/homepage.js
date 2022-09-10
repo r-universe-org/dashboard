@@ -475,8 +475,9 @@ function get_package_image(buildinfo){
   return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
-function make_topic_labels(builder, color){
+function make_topic_labels(builder, color, prefix){
   var color = color || "info";
+  var prefix = prefix || "";
   var topics = builder.gitstats && builder.gitstats.topics || builder.exports || [];
   if(typeof topics === 'string') topics = [topics]; //hack for auto-unbox bug
   if(builder.sysdeps){
@@ -491,7 +492,7 @@ function make_topic_labels(builder, color){
   if(topics && topics.length){
     topics.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
       var quotedtopic = topic.includes("-") ? `"${topic}"` : topic;
-      var topicurl = `https://r-universe.dev/search#${quotedtopic}`;
+      var topicurl = `https://r-universe.dev/search#${prefix}${quotedtopic}`;
       $("<a>").attr("href", topicurl).addClass(`badge badge-${color} mr-1`).text(topic).appendTo(topicdiv);
     });
   }
@@ -1289,7 +1290,7 @@ function populate_package_details(package){
     }
     if(src._contents && src._contents.exports){
       details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
-      $("#exportlist").empty().append(make_topic_labels(src._contents, 'secondary'));
+      $("#exportlist").empty().append(make_topic_labels(src._contents, 'secondary', 'exports:'));
     }
     if(builder.pkglogo){
       details.find('.package-details-logo').attr('src', builder.pkglogo).addClass('d-md-block');
