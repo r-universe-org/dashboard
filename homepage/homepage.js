@@ -1242,7 +1242,8 @@ function populate_package_details(package){
     }
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     var builder = src['_builder'] || {};
-    if(builder.assets && builder.assets.find(x => x.endsWith('citation.html'))){
+    var assets = src['_contents'] && src['_contents'].assets || [];
+    if(assets.find(x => x.endsWith('citation.html'))){
       get_path(`${server}/citation/${package}.html`).then(function(htmlString){
         var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
         $(htmlDoc).find('.container').removeClass('container').appendTo('.package-citation-content');
@@ -1308,7 +1309,7 @@ function populate_package_details(package){
     details.find(".metric-icons a").click(function(e){
       $(this).blur();
     });
-    if(builder.assets && builder.assets.includes("readme.html")){
+    if(assets.includes("readme.html")){
       $(".package-details-readme").removeClass('d-none').find('a').text(`${package} README.md`);
       populate_readme(package);
     }
