@@ -54,11 +54,11 @@ function docs_icon(job){
   }
 }
 
-function make_sysdeps(builder, distro){
-  if(builder && builder.sysdeps){
+function make_sysdeps(pkg, distro){
+  if(pkg && pkg.sysdeps){
     var div = $("<div>").css("max-width", "33vw");
     var unique = {};
-    builder.sysdeps.forEach(x => unique[x.name] = x);
+    pkg.sysdeps.forEach(x => unique[x.name] = x);
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
       //var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);

@@ -73,8 +73,9 @@ $(function(){
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var builder = pkg['_builder'];
     var topics = builder.gitstats && builder.gitstats.topics || [];
-    if(builder.sysdeps){
-      builder.sysdeps.forEach(function(x){
+    var sysdeps = pkg['_contents'] && pkg['_contents'].sysdeps;
+    if(sysdeps){
+      sysdeps.forEach(function(x){
         if(x.name && !topics.includes(x.name)){
           topics.push(x.name)
         }

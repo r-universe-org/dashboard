@@ -166,11 +166,11 @@ function all_ok(runs){
   return runs.every(is_success);
 }
 
-function make_sysdeps(builder, distro){
-  if(builder && builder.sysdeps){
+function make_sysdeps(pkg, distro){
+  if(pkg && pkg.sysdeps){
     var div = $("<div>").css("max-width", "33vw");
     var unique = {};
-    builder.sysdeps.forEach(x => unique[x.name] = x);
+    pkg.sysdeps.forEach(x => unique[x.name] = x);
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
       //var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
@@ -566,7 +566,7 @@ function init_package_descriptions(server, user){
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
-      item.find('.description-topics').append(make_topic_labels(pkg['_builder']));
+      item.find('.description-topics').append(make_topic_labels({gitstats: pkg['_builder'].gitstats, sysdeps: pkg['_contents'].sysdeps}));
     });
     $("#package-description-placeholder").hide();
   }).then(function(count){
@@ -1260,7 +1260,7 @@ function populate_package_details(package){
     populate_download_links(x, details);
     var issuetracker = guess_tracker_url(src);
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
-    details.find('.package-details-topics').empty().append(make_topic_labels(builder));
+    details.find('.package-details-topics').empty().append(make_topic_labels({gitstats: builder.gitstats, sysdeps:src['_contents'].sysdeps}));
     if(src._published > "2022-04-11T11:00:00.000Z"){
       details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}.pdf`);
     } else {
@@ -1368,10 +1368,11 @@ function populate_package_details(package){
         }).appendTo('.package-details-contributors');
       }
     }
-    if(builder.sysdeps){
+    var sysdeps = src['_contents'] && src['_contents'].sysdeps;
+    if(sysdeps){
       var sysdeplist = details.find('.system-library-list');
       var dupes = {};
-      builder.sysdeps.forEach(function(x){
+      sysdeps.forEach(function(x){
         if(x.source == 'gcc' || x.source == 'glibc' || dupes[x.name]) return;
         dupes[x.name] = true;
         var li = $("<li>").appendTo(sysdeplist);
