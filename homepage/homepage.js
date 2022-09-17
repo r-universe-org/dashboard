@@ -463,15 +463,11 @@ function pretty_dependencies(pkg){
   return pkg['_hard_deps'].map(x => x.package).join(', ');
 }
 
-function get_package_image(buildinfo){
-  if(buildinfo.pkglogo){
-    if(!buildinfo.pkglogo.startsWith('http')){
-      var upstream = buildinfo.upstream.replace(/\.git$/, '');
-      buildinfo.pkglogo = upstream + '/raw/HEAD/' + buildinfo.pkglogo;
-    }
-    return buildinfo.pkglogo;
-  }
-  var ghuser = buildinfo.login || buildinfo.maintainer.login || "r-universe";
+function get_package_image(pkg){
+  var pkglogo = pkg['_contents'] && pkg['_contents'].pkglogo;
+  if(pkglogo && pkglogo.startsWith('http'))
+    return pkglogo;
+  var ghuser = pkg['_builder'].maintainer.login || "r-universe";
   return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
@@ -559,7 +555,7 @@ function init_package_descriptions(server, user){
         item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
       }
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
-      item.find('.package-image').attr('src', get_package_image(buildinfo));
+      item.find('.package-image').attr('src', get_package_image(pkg));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
       attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
       add_badge_row(pkg.Package, org);
@@ -1294,8 +1290,8 @@ function populate_package_details(package){
       details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
       $("#exportlist .labels").empty().append(make_topic_labels(src._contents, 'secondary', 'exports:'));
     }
-    if(builder.pkglogo){
-      details.find('.package-details-logo').attr('src', builder.pkglogo).addClass('d-md-block');
+    if(src._contents && src._contents.pkglogo){
+      details.find('.package-details-logo').attr('src', src._contents.pkglogo).addClass('d-md-block');
     }
     var maintainer = builder.maintainer || {};
     details.find('.package-details-maintainer .maintainer-name').text(maintainer.name);

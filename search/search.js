@@ -9,18 +9,6 @@ $(function(){
     return $('<a>').text(txt || link).attr('href', link);
   }
 
-  function get_package_image(buildinfo){
-    if(buildinfo.pkglogo){
-      if(!buildinfo.pkglogo.startsWith('http')){
-        var upstream = buildinfo.upstream.replace(/\.git$/, '');
-        buildinfo.pkglogo = upstream + '/raw/HEAD/' + buildinfo.pkglogo;
-      }
-      return buildinfo.pkglogo;
-    }
-    var ghuser = buildinfo.login || buildinfo.maintainer.login || "r-universe";
-    return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
-  }
-
   function pretty_time_diff(ts){
     var date = new Date(ts*1000);
     var now = new Date();
@@ -68,7 +56,7 @@ $(function(){
     if(pkg.match){
       item.find('.description-score').removeClass('d-none').append(` ${pkg.match.toFixed(1)} match`);
     }
-    item.find('.package-image').attr('src', get_package_image(buildinfo));
+    item.find('.package-image').attr('src', `https://r-universe.dev/avatars/${pkg['_owner']}.png?size=140`);
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var builder = pkg['_builder'];
