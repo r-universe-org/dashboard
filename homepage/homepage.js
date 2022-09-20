@@ -548,8 +548,9 @@ function init_package_descriptions(server, user){
       if(buildinfo.gitstats && buildinfo.gitstats.stars){
         item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(buildinfo.gitstats.stars)} stars`)
       }
-      if(buildinfo.rundeps){
-        item.find('.description-dependencies').removeClass('d-none').append(` ${buildinfo.rundeps.length} dependencies`);
+      var rundeps = pkg['_contents'] && pkg['_contents'].rundeps;
+      if(rundeps){
+        item.find('.description-dependencies').removeClass('d-none').append(` ${rundeps.length} dependencies`);
       }
       if(pkg._usedby){
         item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
@@ -1276,9 +1277,10 @@ function populate_package_details(package){
     if(builder.gitstats && builder.gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(builder.gitstats.stars)} stars`);
     }
-    if(builder.rundeps){
-      details.find('.package-details-dependencies').removeClass('d-none').append(` ${builder.rundeps.length} dependencies`);
-      $("#dependslist .labels").empty().append(make_topic_labels({exports: builder.rundeps}, 'danger', 'package:'));
+    var rundeps = src._contents.rundeps;
+    if(rundeps){
+      details.find('.package-details-dependencies').removeClass('d-none').append(` ${rundeps.length} dependencies`);
+      $("#dependslist .labels").empty().append(make_topic_labels({exports: rundeps}, 'danger', 'package:'));
     }
     if(src._usedby){
       details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/#needs:${package}`)
