@@ -467,7 +467,8 @@ function get_package_image(pkg){
   var pkglogo = pkg['_contents'] && pkg['_contents'].pkglogo;
   if(pkglogo && pkglogo.startsWith('http'))
     return pkglogo;
-  var ghuser = pkg['_builder'].maintainer.login || "r-universe";
+  var maintainer = pkg['_builder'] && pkg['_builder'].maintainer || {};
+  var ghuser = pkg.login || maintainer.login || "r-universe";
   return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
 }
 
