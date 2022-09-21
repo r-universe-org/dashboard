@@ -29,25 +29,23 @@ $(function(){
   function show_pkg_card(pkg, i){
     var org = pkg['_user'];
     var item = $("#templatezone .package-description-item").clone();
-    var login = pkg['_builder'].maintainer.login;
-    if(login) {
-      item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
+    var maintainer = pkg.maintainer || {};
+    if(maintainer.login) {
+      item.find('.package-maintainer').attr('href', `https://${maintainer.login}.r-universe.dev`);
     }
     item.find('.package-link').attr('href', `https://${org}.r-universe.dev/ui#package:${pkg.Package}`);
     item.find('.package-name').text(pkg.Package);
-    item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
+    item.find('.package-maintainer').text(maintainer.name);
     item.find('.package-title').text(pkg.Title);
     item.find('.package-description').text(pkg.Description.replace('\n', ' '));
-    //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
-    const buildinfo = pkg['_builder'];
-    if(buildinfo.commit.time){
-      item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
+    if(pkg.updated){
+      item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg.updated));
     }
-    if(buildinfo.gitstats && buildinfo.gitstats.stars){
-      item.find('.description-stars').removeClass('d-none').append(` ${buildinfo.gitstats.stars} stars`);
+    if(pkg.stars){
+      item.find('.description-stars').removeClass('d-none').append(` ${pkg.stars} stars`);
     }
-    if(buildinfo.rundeps){
-      item.find('.description-dependencies').removeClass('d-none').append(` ${buildinfo.rundeps.length} dependencies`);
+    if(pkg.rundeps){
+      item.find('.description-dependencies').removeClass('d-none').append(` ${pkg.rundeps.length} dependencies`);
     }
     if(pkg._usedby){
       item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
@@ -59,15 +57,9 @@ $(function(){
     item.find('.package-image').attr('src', `https://r-universe.dev/avatars/${pkg['_owner']}.png?size=140`);
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
-    var builder = pkg['_builder'];
-    var topics = builder.gitstats && builder.gitstats.topics || [];
-    var sysdeps = pkg['_contents'] && pkg['_contents'].sysdeps;
-    if(sysdeps){
-      sysdeps.forEach(function(x){
-        if(x.name && !topics.includes(x.name)){
-          topics.push(x.name)
-        }
-      });
+    var topics = pkg.topics || [];
+    if(pkg.sysdeps){
+      topics = topics.concat(pkg.sysdeps);
     }
     if(topics && topics.length){
       var topicdiv = item.find('.description-topics').removeClass('d-none');
