@@ -99,7 +99,7 @@ $(function(){
   };
 
   $(window).on('hashchange', function(e) {
-    $('#search-input').val(decodeURI(get_hash()));
+    $('#search-input').val(decodeURIComponent(get_hash()));
     update_results();
   });
 
@@ -112,7 +112,7 @@ $(function(){
   //init page first
   var hash = get_hash();
   if(hash.length > 1){
-    $('#search-input').val(decodeURI(hash));
+    $('#search-input').val(decodeURIComponent(hash));
     update_results();
   } else {
     $('#search-input').focus();
@@ -120,7 +120,7 @@ $(function(){
 
   //install listeners
   const update_hash = function(){
-    window.location.hash = encodeURI($("#search-input").val());
+    window.location.hash = encodeURIComponent($("#search-input").val());
   };
   $('#search-input').on("keydown paste input", debounce(update_hash));
   exampletopics.forEach(append_topic);
@@ -132,7 +132,7 @@ $(function(){
 
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
-  var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURI(topic);
+  var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURIComponent(topic);
   $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + quotedtopic).text(topic).appendTo('#topics-list');
   $('#topics-list').append(", ");
 }
