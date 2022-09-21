@@ -54,7 +54,7 @@ $(function(){
     if(pkg.match){
       item.find('.description-score').removeClass('d-none').append(` ${pkg.match.toFixed(1)} match`);
     }
-    item.find('.package-image').attr('src', `https://r-universe.dev/avatars/${pkg['_owner']}.png?size=140`);
+    item.find('.package-image').attr('src', avatar_url(pkg['_owner'], 140));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
     var topics = pkg.topics || [];
@@ -144,7 +144,7 @@ function load_all_topics(){
 
 function maintainer_card(x){
   var item = $("#templatezone .maintainer-item").clone();
-  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.login}.png`);
+  item.find('.card-img-top').attr('src', avatar_url(x.login, 224));
   item.find('.card-text').text(x.name);
   item.find('.card').attr('href', `https://${x.login}.r-universe.dev`);
   return item;
@@ -152,7 +152,7 @@ function maintainer_card(x){
 
 function organization_card(x){
   var item = $("#templatezone .maintainer-item").clone();
-  item.find('.card-img-top').attr('src', `https://r-universe.dev/avatars/${x.universe}.png?size=224`);
+  item.find('.card-img-top').attr('src', avatar_url(x.universe, 224));
   item.find('.card-text').text(x.universe);
   item.find('.card').attr('href', `https://${x.universe}.r-universe.dev`);
   return item;
@@ -184,6 +184,14 @@ function load_summary_stats(){
     const stats = data[0];
     Object.keys(stats).forEach(key => $(`#summary-n-${key}`).text(stats[key]));
   });
+}
+
+function avatar_url(login, size){
+  // use generic avatars for gitlab/bitbucket
+  if(login.startsWith('gitlab-')) login = 'gitlab';
+  if(login.startsWith('bitbucket-')) login = 'atlassian';
+  login = login.replace('[bot]', '');
+  return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
 function debounce(func, timeout = 300){
