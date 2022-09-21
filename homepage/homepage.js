@@ -469,7 +469,7 @@ function get_package_image(pkg){
     return pkglogo;
   var maintainer = pkg['_builder'] && pkg['_builder'].maintainer || {};
   var ghuser = pkg.login || maintainer.login || "r-universe";
-  return 'https://r-universe.dev/avatars/' + ghuser + '.png?size=140';
+  return avatar_url(ghuser, 140);
 }
 
 function make_topic_badges(pkginfo){
@@ -870,7 +870,7 @@ function make_contributor_chart(universe, max, imsize){
     const contribs = contributors.map(x => -1* x.contributions);
     const contribpkgs = contributors.map(x => x.packages);
     const mypkgs = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
-    const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
+    const avatars = logins.map(x => avatar_url(x, size));
     const images = avatars.map(x => undefined);
     const promises = avatars.map(download_avatar);
 
@@ -1308,7 +1308,7 @@ function populate_package_details(package){
     }
     if(maintainer.login){
       details.find('.package-details-maintainer a').attr('href', `https://${maintainer.login}.r-universe.dev`);
-      details.find('.package-details-maintainer img').attr('src', `https://r-universe.dev/avatars/${maintainer.login}.png?size=140`);
+      details.find('.package-details-maintainer img').attr('src', avatar_url(maintainer.login, 140));
     }
     details.find(".metric-icons a").click(function(e){
       $(this).blur();
@@ -1358,8 +1358,7 @@ function populate_package_details(package){
         var count = gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
         item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
-        item.find("img").attr('src', `https://r-universe.dev/avatars/${login}.png?size=160`)
-            .tooltip({title: `${login} made ${count} contributions to ${package}`});
+        item.find("img").attr('src', avatar_url(login, 160)).tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
       }
       for(let i = 0; i < 12; i++){
@@ -1469,6 +1468,7 @@ function avatar_url(login, size){
   // use generic avatars for gitlab/bitbucket
   if(login.startsWith('gitlab-')) login = 'gitlab';
   if(login.startsWith('bitbucket-')) login = 'atlassian';
+  login = login.replace('[bot]', '');
   return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
