@@ -130,7 +130,8 @@ $(function(){
 
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
-  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + topic).text(topic).appendTo('#topics-list');
+  var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURI(topic);
+  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + quotedtopic).text(topic).appendTo('#topics-list');
   $('#topics-list').append(", ");
 }
 
