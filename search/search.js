@@ -88,11 +88,13 @@ $(function(){
     $('#results-placeholder').hide();
     $('svg').hide('fast');
     $(window).scrollTop(0);
-    get_ndjson('https://r-universe.dev/stats/ranksearch?limit=50&all=true&q=' + q).then(function(x){
-      if(x.length == 0){
-        $('#package-description-col-one').append($("<p>").text(`No results for "${q}"`));
+    get_path('https://r-universe.dev/stats/powersearch?limit=50&all=true&q=' + q).then(function(x){
+      if(!x.total){
+        $('#search-results-comment').text(`No results for "${q}"`);
+      } else {
+        $('#search-results-comment').text(`Showing ${x.results.length} of total ${x.total} results`);
       }
-      x.forEach(show_pkg_card);
+      x.results.forEach(show_pkg_card);
     });
   };
 
