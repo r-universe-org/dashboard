@@ -1429,6 +1429,8 @@ function populate_package_details(package){
     if(x.fields && x.fields.number_documents && x.fields.number_documents[0]){
       details.find(".package-details-mentions").removeClass('d-none').append(` ${x.fields.number_documents[0]} mentions`).attr("href", x.weburl);
     }
+  }).catch((error) => {
+    console.log(`No ScienceMiner data found ${package}`);
   });
 }
 
@@ -1484,7 +1486,7 @@ init_package_descriptions(server, user);
 
 
 var articledatapromise = init_article_data(server);
-iFrameResize({ log: false, checkOrigin: false }, '#viewerframe');
+iFrameResize({ log: false, checkOrigin: false, warningTimeout: 0 }, '#viewerframe');
 $('#articles-tab-link').one('shown.bs.tab', function (e) {
   articledatapromise.then(data => init_article_list(data, user));
 });
