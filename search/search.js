@@ -90,7 +90,7 @@ $(function(){
     $(window).scrollTop(0);
     get_path('https://r-universe.dev/stats/powersearch?limit=50&all=true&q=' + q).then(function(x){
       if(!x.total){
-        $('#search-results-comment').text(`No results for "${q}"`);
+        $('#search-results-comment').text(`No results for "${decodeURIComponent(q)}"`);
       } else {
         $('#search-results-comment').text(`Showing ${x.results.length} of total ${x.total} results\n`);
         var qlink = $('<a href="#"><small>(show query)</small></a>').appendTo('#search-results-comment');
