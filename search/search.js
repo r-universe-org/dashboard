@@ -3,7 +3,58 @@ const exampletopics = ['maps', 'bayesian', 'ecology', 'climate', 'genome', 'gam'
   'spatial', 'database', 'pdf', 'shiny', 'rstudio', 'machine learning', 'prediction',
   'birds', 'fish', 'sports']
 
+const searchfields = {
+  'package' : 'exact package name',
+  'owner' : 'github user/organization of the package repository',
+  'contributor' : 'contributor (github username)',
+  'author' : 'author name (free text)',
+  'maintainer' : 'maintainer name (free text)',
+  'topic' : 'keyword/topic label',
+  'needs' : 'packages that transitively depend on this package',
+  'exports' : 'name of a function or dataset in the package'
+}
+
 $(function(){
+
+  function build_search_fields(){
+    var searchdiv = $("#extra-search-fields");
+    for (const field in searchfields) {
+      var item = $("#templatezone .search-field-item").clone();
+      var idname = `search-item-${field}`;
+      item.find("label").attr("for", idname).text(field)
+      item.find("input").attr("id", idname).attr("data-field", field).attr("placeholder", searchfields[field]).change(function(){
+        var fieldname = $(this).attr("data-field");
+        var fieldvalue = $(this).val().replace(" ", "+");
+        var query =  fieldvalue ? `${fieldname}:${fieldvalue}` : "";
+        var re = new RegExp(`${fieldname}:(\\S+)`, "i");
+        var oldquery = $('#search-input').val();
+        if(oldquery.match(re)){
+          newquery = oldquery.replace(re, query);
+        } else {
+          newquery = `${oldquery} ${query}`;
+        }
+        $('#search-input').val(newquery.trim());
+        update_hash();
+      });
+      item.appendTo(searchdiv);
+      searchdiv.on('shown.bs.collapse', populate_search_fields);
+    }
+  }
+
+  function populate_search_fields(){
+    if(!$("#extra-search-fields").hasClass('show')) return;
+    $(".search-item-input").val("");
+    var re = new RegExp(`(\\S+):(\\S+)`, "ig");
+    var matches = $('#search-input').val().match(re);
+    if(!matches) return;
+    matches.forEach(function(item){
+      var out = item.split(":");
+      if(out.length == 2){
+        var field = out[0].toLowerCase();
+        $(`#search-item-${field}`).val(out[1].replace("+", " "));
+      }
+    });
+  }
 
   function a(link, txt){
     return $('<a>').text(txt || link).attr('href', link);
@@ -104,10 +155,13 @@ $(function(){
     });
   };
 
-  $(window).on('hashchange', function(e) {
+  function on_hash_change(e){
     $('#search-input').val(decodeURIComponent(get_hash()));
+    populate_search_fields();
     update_results();
-  });
+  }
+
+  $(window).on('hashchange', on_hash_change);
 
   $('#search-button').click(function(){
     $(this).blur();
@@ -118,8 +172,7 @@ $(function(){
   //init page first
   var hash = get_hash();
   if(hash.length > 1){
-    $('#search-input').val(decodeURIComponent(hash));
-    update_results();
+    on_hash_change();
   } else {
     $('#search-input').focus();
   }
@@ -132,6 +185,7 @@ $(function(){
   exampletopics.forEach(append_topic);
   const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
   $('#topics-list').append(more);
+  build_search_fields();
   load_summary_stats();
   load_maintainers();
 });

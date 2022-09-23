@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="../dashboard.css?nocache=6">
-  <link rel="stylesheet" href="search.css?nocache=3">
+  <link rel="stylesheet" href="search.css?nocache=4">
   <title>R-universe: personal package repositories for R!</title>
 </head>
 <body>
@@ -163,8 +163,10 @@
               <input type="text" id="search-input" class="form-control" placeholder="Search for a package, author, topic, keyword, ...">
               <div class="input-group-append">
                 <button id="search-button" class="btn btn-outline-secondary" type="button">Search</button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="collapse" data-target="#extra-search-fields"></button>
               </div>
             </div>
+            <div class="card card-body border-top-0 collapse noanim" id="extra-search-fields" style="margin-right: 46px;"></div>
           </div>
         </div>
         <div id="results-placeholder" class="py-4" style="max-width: 920px; margin: auto;">
@@ -240,6 +242,13 @@
     <div class="carousel-item" data-interval="5000">
       <div class="row justify-content-center maintainer-row"></div>
     </div>
+
+    <div class="form-group row search-field-item">
+      <label class="col-sm-3 col-lg-2 col-form-label col-form-label-sm"></label>
+      <div class="col-sm-9 col-lg-10">
+        <input type="text" class="bg-light form-control form-control-sm search-item-input">
+      </div>
+    </div>
   </div>
 
 
@@ -249,7 +258,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="../dashboard.js"></script>
-  <script src="search.js?nocache=55"></script>
+  <script src="search.js?nocache=57"></script>
 
 </body>
 </html>

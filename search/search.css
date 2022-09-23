@@ -89,3 +89,8 @@ svg {
 .carousel-control-next {
   right: -35px;
 }
+
+#extra-search-fields ::placeholder {
+  opacity: .6;
+  font-style: italic;
+}
