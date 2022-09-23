@@ -37,7 +37,10 @@ $(function(){
         update_hash();
       });
       item.appendTo(searchdiv);
-      searchdiv.on('shown.bs.collapse', populate_search_fields);
+      searchdiv.on('shown.bs.collapse', function(){
+        $('#search-item-package').focus();
+        populate_search_fields();
+      });
     }
     var closelink = $("<a>").attr("href", "#").text("close").addClass("float-right").click(function(e){
       e.preventDefault();
@@ -56,7 +59,7 @@ $(function(){
       var out = item.split(":");
       if(out.length == 2){
         var field = out[0].toLowerCase();
-        $(`#search-item-${field}`).val(out[1].replace("+", " "));
+        $(`#search-item-${field}`).val(out[1].replace("+", " ")).focus();
       }
     });
   }
