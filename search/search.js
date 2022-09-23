@@ -39,6 +39,11 @@ $(function(){
       item.appendTo(searchdiv);
       searchdiv.on('shown.bs.collapse', populate_search_fields);
     }
+    var closelink = $("<a>").attr("href", "#").text("close").addClass("float-right").click(function(e){
+      e.preventDefault();
+      searchdiv.collapse('hide');
+    });
+    searchdiv.append($("<span>").append(closelink));
   }
 
   function populate_search_fields(){
