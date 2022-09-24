@@ -24,7 +24,7 @@ $(function(){
       item.find("label").attr("for", idname).text(field)
       item.find("input").attr("id", idname).attr("data-field", field).attr("placeholder", searchfields[field]).change(function(){
         var fieldname = $(this).attr("data-field");
-        var fieldvalue = $(this).val().replace(" ", "+");
+        var fieldvalue = $(this).val().trim().replace(/\s+/g, '+');
         var query =  fieldvalue ? `${fieldname}:${fieldvalue}` : "";
         var re = new RegExp(`${fieldname}:(\\S+)`, "i");
         var oldquery = $('#search-input').val();
@@ -58,7 +58,7 @@ $(function(){
       var out = item.split(":");
       if(out.length == 2){
         var field = out[0].toLowerCase();
-        $(`#search-item-${field}`).val(out[1].replace("+", " "));
+        $(`#search-item-${field}`).val(out[1].replace(/[+]/g, ' '));
       }
     });
   }
