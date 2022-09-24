@@ -151,13 +151,13 @@ $(function(){
         $('#search-results-comment').text(`No results for "${decodeURIComponent(q)}"`);
       } else {
         $('#search-results-comment').text(`Showing ${x.results.length} of total ${x.total} results\n`);
-        var qlink = $('<a href="#"><small>(show query)</small></a>').appendTo('#search-results-comment');
-        qlink.click(function(e){
-          e.preventDefault();
-          $(this).hide();
-          $('#search-results-comment').append("<br>").append($("<code>").text(JSON.stringify(x.query)));
-        })
       }
+      var qlink = $('<a href="#"><small>(show query)</small></a>').appendTo('#search-results-comment');
+      qlink.click(function(e){
+        e.preventDefault();
+        $(this).hide();
+        $('#search-results-comment').append($("<code>").text(JSON.stringify(x.query)));
+      });
       x.results.forEach(show_pkg_card);
     });
   };
