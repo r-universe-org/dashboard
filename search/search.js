@@ -38,7 +38,6 @@ $(function(){
       });
       item.appendTo(searchdiv);
       searchdiv.on('shown.bs.collapse', function(){
-        $('#search-item-package').focus();
         populate_search_fields();
       });
     }
@@ -59,7 +58,7 @@ $(function(){
       var out = item.split(":");
       if(out.length == 2){
         var field = out[0].toLowerCase();
-        $(`#search-item-${field}`).val(out[1].replace("+", " ")).focus();
+        $(`#search-item-${field}`).val(out[1].replace("+", " "));
       }
     });
   }
@@ -173,6 +172,7 @@ $(function(){
 
   $('#search-button').click(function(){
     $(this).blur();
+    $("#extra-search-fields").collapse('hide');
     window.location.hash="";
     update_hash();
   });
