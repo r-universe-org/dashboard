@@ -1432,6 +1432,20 @@ function populate_package_details(package){
   }).catch((error) => {
     console.log(`No ScienceMiner data found ${package}`);
   });
+  if(user == 'ropensci'){
+    get_json('https://badges.ropensci.org/json/onboarded.json').then(function(onboarded){
+      var reviewdata = onboarded.find(x => x.pkgname == package);
+      if(reviewdata){
+        var reviewdiv = details.find('.package-details-peerreview').removeClass('d-none');
+        var reviewurl = `https://github.com/ropensci/software-review/issues/${reviewdata.iss_no}`
+        var icon = $('<i class="fa fa-check"></i>').css('color', color_ok).tooltip({title: "Package has been peer reviewed by the rOpenSci community"});
+        reviewdiv.find('.peerreview-status').append(reviewdata.status == 'reviewed' ? icon : `(${reviewdata.status})`);
+        reviewdiv.find('.peerreview-link').attr("href", reviewurl).text("ropensci#" + reviewdata.iss_no);
+      }
+    }).catch((error) => {
+      console.log("Failed to load onboarded.json")
+    });
+  }
 }
 
 function generate_status_icon(builder, os_type){
