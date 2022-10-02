@@ -35,6 +35,11 @@ $(function(){
         }
         $('#search-input').val(newquery.trim());
         update_hash();
+      }).keypress(function(e){
+        if(e.keyCode === 13){
+          //close panel on enter key
+          searchdiv.collapse('hide');
+        }
       });
       item.appendTo(searchdiv);
       searchdiv.on('shown.bs.collapse', function(){
