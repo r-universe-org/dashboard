@@ -1317,8 +1317,8 @@ function populate_package_details(package){
       $(".package-details-readme").removeClass('d-none').find('a').text(`${package} README.md`);
       populate_readme(package);
     }
-    if(assets.includes("extra/NEWS.txt")){
-      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS.txt`);
+    if(assets.includes("extra/NEWS.html")){
+      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS`);
     }
     var vignettes = src['_contents'] && src['_contents'].vignettes;
     if(vignettes){
