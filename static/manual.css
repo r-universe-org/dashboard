@@ -1,0 +1,33 @@
+h1.manual-title{
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+.description-table th {
+  text-align: left;
+  vertical-align: top;
+}
+
+.description-table {
+  border-spacing: 5px;
+  margin-bottom: 20px;
+}
+
+pre.language-r{
+  border-top: solid 1px #F0F0F0;
+  box-shadow: 5px 5px 7px 0px lightgrey;
+  padding: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  margin-right: 1em;
+  margin-left: 0.5em;
+  background-color: #f7f7f7;
+  border-left: solid #F0F0F0 2px;
+}
+
+pre.language-r:hover{
+  border-left: solid #4070a0 2px;
+  transition: all 0.3s ease;
+}
+
