@@ -1265,11 +1265,11 @@ function populate_package_details(package){
     var gitstats = src['_contents'] && src['_contents'].gitstats || {};
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
-    if(src._published > "2022-04-11T11:00:00.000Z"){
+    if(assets.includes("manual.pdf")){
       details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}.pdf`);
-    } else {
-      details.find('.fa-file-pdf').hide()
-      //remove when all pkgs have been built
+    }
+    if(assets.includes(`extra/${package}.html`)){
+      details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/manual/${package}.html`);
     }
     var commit = builder.commit;
     if(commit.time){
@@ -1319,6 +1319,8 @@ function populate_package_details(package){
     }
     if(assets.includes("extra/NEWS.html")){
       details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS`);
+    } else {
+      details.find('.details-news-icon').hide()
     }
     var vignettes = src['_contents'] && src['_contents'].vignettes;
     if(vignettes){
