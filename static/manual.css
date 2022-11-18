@@ -36,3 +36,17 @@ a.help-page-title{
   color:black;
 }
 
+.help-index-item {
+  list-style-type: decimal;
+  line-height: 1.6;
+}
+
+.help-index-item a{
+  color: black;
+  text-decoration: none;
+}
+
+.help-index-item a:hover{
+  text-decoration: underline;
+}
+
