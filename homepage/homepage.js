@@ -1320,7 +1320,7 @@ function populate_package_details(package){
     if(assets.includes("extra/NEWS.html")){
       details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS`);
     } else {
-      details.find('.details-news-icon').hide()
+      details.find('.details-news').hide()
     }
     var vignettes = src['_contents'] && src['_contents'].vignettes;
     if(vignettes){
