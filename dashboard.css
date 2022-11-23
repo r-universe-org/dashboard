@@ -1,5 +1,5 @@
 body {
-  font-size: .875rem; 
+  font-size: .875rem;
 }
 
 #sidebar-container .fa {
@@ -149,4 +149,36 @@ body {
 
 .noanim.collapsing {
   transition: none !important;
+}
+
+/* Below is copied from bootstrap material design theme */
+
+a {
+  color: #3b71ca;
+}
+
+.table-sm>:not(caption)>*>* {
+  padding: 0.5rem;
+}
+
+.nav-tabs .nav-link {
+  border-width: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  text-transform: uppercase;
+  line-height: 1;
+  font-weight: 500;
+  font-size: 12px;
+  color: rgba(0,0,0,0.55);
+  padding: 17px 29px 16px 29px;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.nav-tabs {
+  border-bottom: 0;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  color: #3b71ca;
+  border-color: #3b71ca;
 }

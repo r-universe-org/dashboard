@@ -1122,7 +1122,7 @@ function populate_download_links(x, details){
   var wins = x.filter(x => x._type == 'win');
   var macs = x.filter(x => x._type == 'mac');
   var srcfile = `${src.Package}_${src.Version}.tar.gz`;
-  details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile).addClass("text-primary");
+  details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
   wins.forEach(function(pkg){
     var build = pkg.Built.R.substring(0,3);
     var filename = `${pkg.Package}_${pkg.Version}.zip`;
