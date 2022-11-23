@@ -151,6 +151,11 @@ body {
   transition: none !important;
 }
 
+.sidebar-user-details .list-group-item {
+  padding-top: 5px;
+  padding-bottom: 7px;
+}
+
 /* Below is copied from bootstrap material design theme */
 
 a {

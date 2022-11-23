@@ -386,6 +386,9 @@ function github_api_info(ghuser, server){
     if(user.followers){
       $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr(user.followers) + " followers");
     }
+    if(user.type == 'User'){
+      $("#github-user-avatar").addClass("rounded-circle");
+    }
   });
 }
 
@@ -1492,7 +1495,7 @@ function avatar_url(login, size){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'hadley'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
