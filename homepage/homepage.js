@@ -389,7 +389,7 @@ function github_api_info(ghuser, server){
     if(user.type == 'User'){
       $("#github-user-avatar").addClass("rounded-circle").addClass("card");
     } else {
-      $("#github-user-avatar").addClass("p-2");
+      //$("#github-user-avatar").addClass("p-2");
     }
   });
 }
