@@ -496,7 +496,7 @@ function make_exports_badges(contents, package){
   labels.forEach(function(label){
     var page = help.find(function(x) {return x.topics && x.topics.includes(label)});
     var labelurl = `${server}/manual/${package}.html#${page && page.page.replace(/.html$/, "")}`;
-    $("<a>").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
+    $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
   });
   return div;
 }
