@@ -489,6 +489,18 @@ function make_topic_badges(pkginfo){
   return make_badges(topics);
 }
 
+function make_exports_badges(contents, package){
+  var div = $("<span>");
+  var labels = contents.exports || [];
+  var help = contents.help || [];
+  labels.forEach(function(label){
+    var page = help.find(function(x) {return x.topics && x.topics.includes(label)});
+    var labelurl = `${server}/manual/${package}.html#${page && page.page.replace(/.html$/, "")}`;
+    $("<a>").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
+  });
+  return div;
+}
+
 function make_badges(labels, color, prefix){
   var color = color || "info";
   var prefix = prefix || "";
@@ -1301,7 +1313,11 @@ function populate_package_details(package){
     }
     if(src._contents && src._contents.exports){
       details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
-      $("#exportlist .labels").empty().append(make_badges(src._contents.exports, 'secondary', 'exports:'));
+      if(assets.includes(`extra/${package}.html`)){
+        $("#exportlist .labels").empty().append(make_exports_badges(src._contents, package));
+      } else {
+        $("#exportlist .labels").empty().append(make_badges(src._contents.exports, 'secondary', 'exports:'));
+      }
     }
     if(src._contents && src._contents.pkglogo){
       details.find('.package-details-logo').attr('src', src._contents.pkglogo).addClass('d-md-block');
