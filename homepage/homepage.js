@@ -399,6 +399,7 @@ function init_user_info(ghuser, server){
   $(".title-universe-name").text(ghuser);
   $(".title-universe-name-clean").text(ghuser.replace(/\W/g, ''));
   var p1 = update_registry_status(ghuser, server).catch(alert);
+  var p2 = init_user_summary(server);
   if(ghuser.startsWith('bitbucket-')){
     bitbucket_api_info(ghuser, server);
     return p1;
@@ -407,6 +408,23 @@ function init_user_info(ghuser, server){
   } else {
     return github_api_info(ghuser, server);
   }
+}
+
+function init_user_summary(server){
+  return get_json(`${server}/stats/summary?all=true`).then(function(stats){
+    $("#github-user-packages .content").text(stats.packages + ' packages').click(function(e){
+      e.preventDefault();
+      $("#packages-tab-link").click();
+    });
+    $("#github-user-articles .content").text(stats.articles + ' articles').click(function(e){
+      e.preventDefault();
+      $("#articles-tab-link").click();
+    });
+    $("#github-user-contributors .content").text(stats.contributors + ' contributors').click(function(e){
+      e.preventDefault();
+      $("#contributors-tab-link").click();
+    });
+  })
 }
 
 function add_maintainer_icon(maintainer){
@@ -746,6 +764,16 @@ function init_article_list(data, user){
             window.location.pathname + url
             );
         }
+
+        $(element).on('shown.bs.tab', () => window.scrollTo(0,0));
+
+        /* hides top navbar when focussing on single package/article
+        if(tab == '#view' || tab == '#package'){
+          $('#myTab').addClass('d-lg-none').removeClass('d-lg-flex');
+        } else {
+          $("#myTab").addClass('d-lg-flex').removeClass('d-lg-none');
+        }
+        */
       });
 
       /* Once on page load */
@@ -1520,7 +1548,7 @@ var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-univ
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
   if(!window.location.hash){
-    $('#packages-tab-link').click();
+    $('#builds-tab-link').click();
   }
 });
 init_package_descriptions(server, user);

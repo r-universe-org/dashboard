@@ -331,7 +331,7 @@
           <div class="col-xl-auto d-none d-xl-block">
             <div style="width:280px;">
               <div class="sidebar-metadata">
-                <img id="github-user-avatar" src="https://r-universe.dev/static/nobody.jpg" class="rounded card-img-top" style="min-height: 262px;">
+                <a href="/"><img id="github-user-avatar" src="https://r-universe.dev/static/nobody.jpg" class="rounded card-img-top" style="min-height: 262px;"></a>
                 <div class="card-body">
                   <h5 class="card-title">
                     <span id="github-user-name"></span>
@@ -360,8 +360,17 @@
                   <li id="github-user-emails" class="d-none list-group-item border-light">
                     <span class="fa fa-envelope fa-fw mr-3 d-inline-flex"></span><span class="content d-inline-flex"></span>
                   </li>
+                  <li id="github-user-packages" class="list-group-item border-light">
+                    <span class="fa fa-box-open fa-fw mr-3 d-inline-flex"></span><a href="#packages" class="content d-inline-flex text-dark"></a>
+                  </li>
+                  <li id="github-user-articles" class="list-group-item border-light">
+                    <span class="fa fa-file-alt fa-fw mr-3 d-inline-flex"></span><a href="#articles" class="content d-inline-flex text-dark"></a>
+                  </li>
+                  <li id="github-user-contributors" class="list-group-item border-light">
+                    <span class="fa fa-user-astronaut fa-fw mr-3 d-inline-flex"></span><a href="#contributors" class="content d-inline-flex text-dark"></a>
+                  </li>
                   <li id="github-user-followers" class="d-none list-group-item border-light">
-                    <span class="fas fa-user-friends mr-3 d-inline-flex"></span><span class="content d-inline-flex"></span>
+                    <span class="fa fa-user-friends fa-fw mr-3 d-inline-flex"></span><span class="content d-inline-flex"></span>
                   </li>
                 </ul>
 
@@ -557,6 +566,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="ui/homepage.js?nocache=44"></script>
+  <script src="ui/homepage.js?nocache=46"></script>
 </body>
 </html>
