@@ -256,8 +256,7 @@ function load_maintainers(){
 }
 
 function load_summary_stats(){
-  get_ndjson('https://r-universe.dev/stats/summary').then(function(data){
-    const stats = data[0];
+  get_json('https://r-universe.dev/stats/summary').then(function(stats){
     Object.keys(stats).forEach(key => $(`#summary-n-${key}`).text(stats[key]));
   });
 }
