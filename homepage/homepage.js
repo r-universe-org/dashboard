@@ -499,7 +499,7 @@ function make_topic_badges(pkginfo){
   var topics = pkginfo.gitstats && pkginfo.gitstats.topics || [];
   if(pkginfo.sysdeps){
     pkginfo.sysdeps.forEach(function(x){
-      if(x.name && !topics.includes(x.name)){
+      if(x.name && Array.isArray(topics) && !topics.includes(x.name)){
         topics.push(x.name)
       }
     });
@@ -512,7 +512,7 @@ function make_exports_badges(contents, package){
   var labels = contents.exports || [];
   var help = contents.help || [];
   labels.forEach(function(label){
-    var page = help.find(function(x) {return x.topics && x.topics.includes(label)});
+    var page = help.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(label)});
     var labelurl = `${server}/manual/${package}.html#${page && page.page.replace(/.html$/, "")}`;
     $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
   });
