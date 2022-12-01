@@ -387,8 +387,9 @@ function github_api_info(ghuser, server){
       $("#github-user-followers").toggleClass("d-none").find('.content').text(countstr(user.followers) + " followers");
     }
     if(user.type == 'User'){
-      $("#github-user-avatar").addClass("rounded-circle").addClass("card");
+      $("#github-user-avatar").addClass("rounded-circle");
     } else {
+      $("#github-user-avatar").removeClass("rounded-circle");
       //$("#github-user-avatar").addClass("p-2");
     }
   });
