@@ -782,8 +782,7 @@ function init_article_list(data, user){
         navigate_iframe(window.location.hash.substring(6));
         $(element).tab('show');
       } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
-        populate_package_details(window.location.hash.substring(9));
-        $(element).tab('show');
+        tab_to_package(window.location.hash.substring(9));
       } else if (!window.location.hash && $(element).is('.active')) {
         // Shows the first element if there are no query parameters.
         $(element).tab('show').trigger('show.bs.tab');
