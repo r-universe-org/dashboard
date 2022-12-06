@@ -1279,7 +1279,6 @@ function populate_package_details(package){
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
   $(".package-details-gist-name").text(package);
-  $(".package-details-readme").addClass('d-none');
   $(".package-details-citation").addClass("d-none");
   $(".package-readme-content").empty();
   $(".package-citation-content").empty();
@@ -1376,7 +1375,6 @@ function populate_package_details(package){
       $(this).blur();
     });
     if(assets.includes("readme.html")){
-      $(".package-details-readme").removeClass('d-none');
       populate_readme(package);
     }
     if(assets.includes("extra/NEWS.html")){
