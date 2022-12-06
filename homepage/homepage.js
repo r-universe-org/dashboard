@@ -536,10 +536,11 @@ function make_badges(labels, color, prefix){
 }
 
 function make_help_table(contents, package){
-  var tbody = $('.manpages-table tbody');
+  var tbody = $('.manpages-table tbody').empty();
   var help = contents.help || [];
   help.forEach(function(page){
-    var link = a(`${server}/manual/${package}.html#${page.page}`, page.title).attr("target", "_blank");
+    var name = page.page.replace(/\.html$/, "");
+    var link = a(`${server}/manual/${package}.html#${name}`, page.title || name).attr("target", "_blank");
     tr([link, Array.isArray(page.topics) && page.topics.join(" ")]).appendTo(tbody);
   });
 }
@@ -1375,7 +1376,7 @@ function populate_package_details(package){
       $(this).blur();
     });
     if(assets.includes("readme.html")){
-      $(".package-details-readme").removeClass('d-none').find('a').text(`${package} README.md`);
+      $(".package-details-readme").removeClass('d-none');
       populate_readme(package);
     }
     if(assets.includes("extra/NEWS.html")){

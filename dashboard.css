@@ -156,6 +156,15 @@ body {
   padding-bottom: 7px;
 }
 
+.manpages-table th {
+  border: none;
+  width: 50%;
+}
+
+.manpages-table td {
+  border-color: #eeeeee;
+}
+
 /* Below is copied from bootstrap material design theme */
 
 a {
