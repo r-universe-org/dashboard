@@ -729,90 +729,6 @@ function init_article_list(data, user){
   update_article_info();
 }
 
-/* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
-+(function ($) {
-  'use strict';
-  $.fn.historyTabs = function () {
-    var that = this;
-
-    /* Create back-button handler */
-    window.addEventListener('popstate', function (event) {
-      if (event.state) {
-        navigate_iframe(event.state.view);
-        $(that)
-        .filter('[href="' + event.state.tab + '"]')
-        .tab('show');
-      }
-    });
-
-    /* This is a last resort, in case of a missing click handler */
-    window.addEventListener('hashchange', function (event) {
-      if(window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      }
-    });
-
-    return this.each(function (index, element) {
-      var tab = $(this).attr('href');
-
-      /* On each tab click */
-      $(element).on('show.bs.tab', function () {
-        var stateObject = {
-          tab: tab,
-          view: tab == '#view' ? window.iframestate : null,
-          detailpkg: tab == '#view' ? window.detailpkg : null
-        };
-        var url = tab;
-        if (tab == '#view') {
-          url = tab + ":" + window.iframestate;
-        } else {
-          navigate_iframe(null);
-        }
-        if (tab == '#package') {
-          url = tab + ":" + window.detailpkg;
-        }
-
-        if (window.location.hash && url !== window.location.hash) {
-          window.history.pushState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        } else {
-          window.history.replaceState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        }
-
-        $(element).on('shown.bs.tab', () => window.scrollTo(0,0));
-
-        /* hides top navbar when focussing on single package/article
-        if(tab == '#view' || tab == '#package'){
-          $('#myTab').addClass('d-lg-none').removeClass('d-lg-flex');
-        } else {
-          $("#myTab").addClass('d-lg-flex').removeClass('d-lg-none');
-        }
-        */
-      });
-
-      /* Once on page load */
-      if (tab === '#view' && window.location.hash.startsWith("#view:")){
-        navigate_iframe(window.location.hash.substring(6));
-        $(element).tab('show');
-      } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      } else if (!window.location.hash && $(element).is('.active')) {
-        // Shows the first element if there are no query parameters.
-        $(element).tab('show').trigger('show.bs.tab');
-      } else if (tab === window.location.hash) {
-        $(element).tab('show');
-      }
-    });
-  };
-})(jQuery);
-
 function sort_packages(array){
   return array.sort((a, b) => (a.count > b.count) ? -1 : 1);
 }
@@ -1544,12 +1460,6 @@ function generate_status_icon(builder, os_type){
 
 }
 
-function tab_to_package(package){
-  populate_package_details(package);
-  $("#package-tab-link").tab('show');
-  window.scrollTo(0,0);
-}
-
 function cleanup_desc(str){
   if(!str) return "";
   var str = str.charAt(0).toUpperCase() + str.slice(1);
@@ -1564,6 +1474,35 @@ function avatar_url(login, size){
   return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
+function tab_to_package(package){
+  populate_package_details(package);
+  $("#package-tab-link").tab('show');
+  window.scrollTo(0,0);
+  pushState({}, null, `/${package}`);
+}
+
+function render_view(state){
+
+  //alert("Rendering: " + location.href);
+}
+
+function init_ui(){
+  $('a[data-toggle="tab"]').each(function (index, element) {
+    var link = $(this)
+    var tab = $(this).attr('href').replace(/^#/, '');
+    $(element).on('show.bs.tab', function () {
+      window.history.pushState({tab:tab}, null, window.location.pathname + '?tab=' + tab);
+      render_view();
+    });
+    window.addEventListener('popstate', function(event){
+      if(event.state && event.state.tab == tab){
+        link.tab('show');
+      }
+    });
+  });
+  render_view();
+}
+
 //INIT
 var devtest = 'ropensci'
 var host = location.hostname;
@@ -1571,9 +1510,6 @@ var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
-  if(!window.location.hash){
-    $('#builds-tab-link').click();
-  }
 });
 init_package_descriptions(server, user);
 
@@ -1592,4 +1528,4 @@ $('#builds-tab-link').one('shown.bs.tab', function (e) {
 $('#contributors-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
-$('a[data-toggle="tab"]').historyTabs();
+init_ui();
