@@ -535,6 +535,15 @@ function make_badges(labels, color, prefix){
   return div;
 }
 
+function make_help_table(contents, package){
+  var tbody = $('.manpages-table tbody');
+  var help = contents.help || [];
+  help.forEach(function(page){
+    var link = a(`${server}/manual/${package}.html#${page.page}`, page.title).attr("target", "_blank");
+    tr([link, Array.isArray(page.topics) && page.topics.join(" ")]).appendTo(tbody);
+  });
+}
+
 function init_package_descriptions(server, user){
   function add_badge_row(name, org){
     var tr = $("<tr>").appendTo(name.startsWith(":") ? $("#badges-table-body1") : $("#badges-table-body2"));
@@ -1346,6 +1355,9 @@ function populate_package_details(package){
       } else {
         $("#exportlist .labels").empty().append(make_badges(src._contents.exports, 'secondary', 'exports:'));
       }
+    }
+    if(src._contents && src._contents.help){
+      make_help_table(src._contents, package);
     }
     if(src._contents && src._contents.pkglogo){
       details.find('.package-details-logo').attr('src', src._contents.pkglogo).addClass('d-md-block');
