@@ -306,7 +306,7 @@ function init_packages_table(server, user){
           [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (user == 'bioconductor') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-        } else {
+        } else if(user != 'bioconductor') {
           attach_cran_badge(name, pkg.upstream, pkglink);
         }
         rows[name] ? rows[name].after(row) : tbody.append(row);
@@ -614,7 +614,9 @@ function init_package_descriptions(server, user){
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(pkg));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-      attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
+      if(!(contents.gitstats && contents.gitstats.bioconductor)){
+        attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
+      }
       add_badge_row(pkg.Package, org);
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
@@ -1475,9 +1477,7 @@ function populate_package_details(package){
       crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
     } else {
       get_cran_status(package).then(function(x){
-        if(x.registry == 'bioc'){
-          crandiv.html(`On BioConductor: <a class="text-dark text-underline" href="https://bioconductor.org/packages/${package}">${package}</a>`);
-        } else if(x.version){
+        if(x.version){
           var versiontxt = x.version === 'archived' ? `${package} (archived)` : `${package}-${x.version}`;
           crandiv.find('.cran-version').text(versiontxt).attr('href', `https://cran.r-project.org/package=${package}`);
           if(x.date) {
