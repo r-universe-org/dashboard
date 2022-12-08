@@ -1469,7 +1469,7 @@ function populate_package_details(package){
       crandiv.find('.cran-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
       crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
     } else {
-      get_path(`${server}/craninfo?package=${package}&url=1`).then(function(x){
+      get_path(`${server}/cranstatus/${package}?url=1`).then(function(x){
         if(x.registry == 'bioc'){
           crandiv.html(`On BioConductor: <a class="text-dark text-underline" href="https://bioconductor.org/packages/${package}">${package}</a>`);
         } else if(x.version){
