@@ -196,22 +196,22 @@ Date.prototype.yyyymmdd = function() {
 
 var crandata = {};
 function get_cran_status(package){
-  crandata[package] = crandata[package] || get_json(`${server}/cranstatus/${package}?url=true`);
+  crandata[package] = crandata[package] || get_json(`${server}/cranstatus/${package}`);
   return crandata[package];
 }
 
-function attach_cran_badge(package, url, el){
+function attach_cran_badge(package, url, el, cranicon){
   get_cran_status(package).then(function(craninfo){
     if(!craninfo.version){
       return; //not a CRAN package
     }
     if(craninfo.version === 'archived'){
       var color = "orange";
-      var iconclass = "fas fa-exclamation-circle";
+      var iconclass = "fa fa-exclamation-circle";
       var tiptext = `Package ${package} was archived on CRAN!`;
     } else if(compare_url(url, craninfo.urls || craninfo.url || "")){
       var color = color_ok;
-      var iconclass = "fa fa-award";
+      var iconclass = cranicon || "fa fa-award";
       var tiptext = "Verified CRAN package!";
     } else {
       var color = color_bad;
@@ -231,11 +231,9 @@ function attach_cran_badge(package, url, el){
   });
 }
 
-function compare_url(url, cran){
-  if(Array.isArray(cran)){
-    cran = cran.join(" ");
-  }
-  return cran.trim().toLowerCase().includes(url.trim().toLowerCase());
+function compare_url(giturl, cran){
+  var str = giturl.trim().toLowerCase().replace("https://", "");
+  return cran.join().toLowerCase().includes(str);
 }
 
 function init_packages_table(server, user){
@@ -1476,24 +1474,19 @@ function populate_package_details(package){
       crandiv.find('.cran-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
       crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
     } else {
-      get_path(`${server}/cranstatus/${package}?url=1`).then(function(x){
+      get_cran_status(package).then(function(x){
         if(x.registry == 'bioc'){
           crandiv.html(`On BioConductor: <a class="text-dark text-underline" href="https://bioconductor.org/packages/${package}">${package}</a>`);
         } else if(x.version){
-          crandiv.find('.cran-version').text(`${package}-${x.version}`).attr('href', `https://cran.r-project.org/package=${package}`);
+          var versiontxt = x.version === 'archived' ? `${package} (archived)` : `${package}-${x.version}`;
+          crandiv.find('.cran-version').text(versiontxt).attr('href', `https://cran.r-project.org/package=${package}`);
           if(x.date) {
             crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
           }
         } else {
           crandiv.append("no")
         }
-        if(x.version && x.version != "archived"){
-          var upstream = builder.upstream.toLowerCase();
-          var oncran = x.url && x.url.toLowerCase() == upstream;
-          var tiptext = oncran ? "Verified CRAN package!" : "A package '" + package + "' exists on CRAN but description does not link to:<br/><u>" + upstream + '</u>. This could be another source.';
-          var icon = $("<i>").addClass(oncran ? "fa fa-check" : "fa fa-question-circle popover-dismiss").css('color', oncran ? color_ok : color_bad).tooltip({title: tiptext, html: true});
-          crandiv.find('.cran-checkmark').append(icon);
-        }
+        attach_cran_badge(package, builder.upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
       });
     }
   });
