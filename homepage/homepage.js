@@ -209,7 +209,7 @@ function attach_cran_badge(package, url, el){
       var color = "orange";
       var iconclass = "fas fa-exclamation-circle";
       var tiptext = `Package ${package} was archived on CRAN!`;
-    } else if(compare_url(url,craninfo.url || "nocranurl")){
+    } else if(compare_url(url, craninfo.urls || craninfo.url || "")){
       var color = color_ok;
       var iconclass = "fa fa-award";
       var tiptext = "Verified CRAN package!";
@@ -231,8 +231,11 @@ function attach_cran_badge(package, url, el){
   });
 }
 
-function compare_url(input, cran){
-  return input.trim().toLowerCase().includes(cran.trim().toLowerCase());
+function compare_url(url, cran){
+  if(Array.isArray(cran)){
+    cran = cran.join(" ");
+  }
+  return cran.trim().toLowerCase().includes(url.trim().toLowerCase());
 }
 
 function init_packages_table(server, user){
