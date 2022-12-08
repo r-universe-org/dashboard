@@ -194,41 +194,45 @@ Date.prototype.yyyymmdd = function() {
   }
 };
 
-async function get_metadata(org){
-  console.log("Retrieving metadata for: " + org)
-  var url = 'https://raw.githubusercontent.com/r-universe/' + org + '/master/.metadata.json';
-  const response = await fetch(url);
-  if (response.ok)
-    return response.json();
-  throw new Error("HTTP Error: " + response.status)
+var crandata = {};
+function get_cran_status(package){
+  crandata[package] = crandata[package] || get_json(`${server}/cranstatus/${package}?url=true`);
+  return crandata[package];
 }
 
-var crandata = {};
-function attach_cran_badge(org, name, url, el){
-  crandata[org] = crandata[org] || get_metadata(org);
-  crandata[org].then(function(pkgs){
-    var row = pkgs.find(x => x.package == name);
-    if(row && row.oncran !== undefined){
-      var oncran = row.oncran;
-      var icon = $("<i>").addClass(oncran ? "fa fa-award" : "fa fa-question-circle popover-dismiss").
-      css('color', oncran ? color_ok : color_bad);
-      var cranlink = $("<a>")
-      cranlink.
-      attr("href", "https://cran.r-project.org/package=" + name).
-      attr("target", "_blank").
-      css("margin-left", "5px").
-      css("margin-right", "10px").
-      append(icon);
-      el.after(cranlink);
-      if(url.substring(0,27) == 'https://github.com/r-forge/'){
-        url = 'https://r-forge.r-project.org';
-      }
-      var tiptext = oncran ? "Verified CRAN package!" : "A package '" + name + "' exists on CRAN but description does not link to:<br/><u>" + url + '</u>. This could be another source.';
-      cranlink.tooltip({title: tiptext, html: true});
+function attach_cran_badge(package, url, el){
+  get_cran_status(package).then(function(craninfo){
+    if(!craninfo.version){
+      return; //not a CRAN package
     }
+    if(craninfo.version === 'archived'){
+      var color = "orange";
+      var iconclass = "fas fa-exclamation-circle";
+      var tiptext = `Package ${package} was archived on CRAN!`;
+    } else if(compare_url(url,craninfo.url || "nocranurl")){
+      var color = color_ok;
+      var iconclass = "fa fa-award";
+      var tiptext = "Verified CRAN package!";
+    } else {
+      var color = color_bad;
+      var iconclass = "fa fa-question-circle popover-dismiss";
+      var tiptext = `A package '${package}' exists on CRAN but description does not link to:<br/><u>${url}</u>. This could be another source.`;
+    }
+    var icon = $("<i>").addClass(iconclass).css('color', color);
+    var cranlink = $("<a>").attr("href", "https://cran.r-project.org/package=" + package).
+      attr("target", "_blank").css("margin-left", "5px").css("margin-right", "10px").append(icon);
+    el.after(cranlink);
+    if(url.substring(0,27) == 'https://github.com/r-forge/'){
+      url = 'https://r-forge.r-project.org';
+    }
+    cranlink.tooltip({title: tiptext, html: true});
   }).catch((error) => {
-    console.log('Failed to load metadata:', error);
+    console.log('Failed to load attach CRAN badge:', error);
   });
+}
+
+function compare_url(input, cran){
+  return input.trim().toLowerCase().includes(cran.trim().toLowerCase());
 }
 
 function init_packages_table(server, user){
@@ -302,7 +306,7 @@ function init_packages_table(server, user){
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
         } else {
-          attach_cran_badge(org, name, pkg.upstream, pkglink);
+          attach_cran_badge(name, pkg.upstream, pkglink);
         }
         rows[name] ? rows[name].after(row) : tbody.append(row);
         rows[name] = row;
@@ -609,7 +613,7 @@ function init_package_descriptions(server, user){
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(pkg));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-      attach_cran_badge(org, pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
+      attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
       add_badge_row(pkg.Package, org);
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
