@@ -206,7 +206,7 @@ function attach_cran_badge(package, url, el, cranicon){
       return; //not a CRAN package
     }
     if(craninfo.version === 'archived'){
-      var color = "orange";
+      var color = color_meh;
       var iconclass = "fa fa-exclamation-circle";
       var tiptext = `Package ${package} was archived on CRAN!`;
     } else if(compare_url(url, craninfo.urls || craninfo.url || "")){
