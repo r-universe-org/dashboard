@@ -1183,6 +1183,7 @@ function populate_download_links(x, details){
   var src = x.find(x => x._type == 'src');
   var wins = x.filter(x => x._type == 'win');
   var macs = x.filter(x => x._type == 'mac');
+  var linux = x.filter(x => x._type == 'linux');
   var srcfile = `${src.Package}_${src.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
   wins.forEach(function(pkg){
@@ -1198,6 +1199,14 @@ function populate_download_links(x, details){
     var maclinks = details.find('.package-details-macos');
     $("<a>").text(filename).attr('href', `${server}/bin/macosx/contrib/${build}/${filename}`).appendTo(maclinks);
     maclinks.append(` (r-${build}) `)
+  });
+  linux.forEach(function(pkg){
+    var build = pkg.Built.R.substring(0,3);
+    var distro = pkg['_builder'].distro;
+    var filename = `${pkg.Package}_${pkg.Version}.tar.gz`;
+    var linuxlinks = details.find('.package-details-linux');
+    $("<a>").text(filename).attr('href', `${server}/bin/linux/${distro}/${build}/src/contrib/${filename}`).appendTo(linuxlinks);
+    linuxlinks.append(` (r-${build}-${distro}) `)
   });
   details.find(".package-details-logs").attr('href', src._builder.url);
 }
