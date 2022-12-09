@@ -1208,6 +1208,7 @@ function populate_download_links(x, details){
     $("<a>").text(filename).attr('href', `${server}/bin/linux/${distro}/${build}/src/contrib/${filename}`).appendTo(linuxlinks);
     linuxlinks.append(` (r-${build}-${distro}) `)
   });
+  $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
   details.find(".package-details-logs").attr('href', src._builder.url);
 }
 
