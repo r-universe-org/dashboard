@@ -196,7 +196,7 @@ Date.prototype.yyyymmdd = function() {
 
 var crandata = {};
 function get_cran_status(package){
-  crandata[package] = crandata[package] || get_json(`${server}/cranstatus/${package}`);
+  crandata[package] = crandata[package] || get_json(`${server}/shared/cranstatus/${package}`);
   return crandata[package];
 }
 
@@ -1503,7 +1503,7 @@ function populate_package_details(package){
       });
     }
   });
-  get_path(`${server}/scienceminer?package=${package}`).then(function(x){
+  get_path(`${server}/shared/scienceminer/${package}`).then(function(x){
     if(x.fields && x.fields.number_documents && x.fields.number_documents[0]){
       details.find(".package-details-mentions").removeClass('d-none').append(` ${x.fields.number_documents[0]} mentions`).attr("href", x.weburl);
     }
