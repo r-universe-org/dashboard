@@ -232,6 +232,9 @@ function attach_cran_badge(package, url, el, cranicon){
 }
 
 function compare_url(giturl, cran){
+  if(giturl.includes("r-forge")) {
+    return true; //don't validate git-svn r-forge urls
+  }
   var str = giturl.trim().toLowerCase().replace("https://", "");
   return cran.join().toLowerCase().includes(str);
 }
