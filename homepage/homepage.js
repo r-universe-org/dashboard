@@ -271,6 +271,7 @@ function init_packages_table(server, user){
       if(src.type !== 'failure'){
         pkglink.attr("href", link_to_pkg(org, name)).click(function(e){
           if(org == user){
+            e.preventDefault();
             tab_to_package(name);
           }
         });
@@ -592,6 +593,7 @@ function init_package_descriptions(server, user){
       item.find('.package-name').text(pkg.Package)
       item.find('.package-link').attr("href", link_to_pkg(org, pkg.Package)).click(function(e){
         if(org == user){
+          e.preventDefault();
           tab_to_package(pkg.Package);
         }
       });
@@ -658,7 +660,8 @@ function update_article_info(){
       } else {
         $('#article-info-author').removeAttr("href");
       }
-      $('#article-info-package').text(pkg.package + " " + pkg.version).attr("href", `#package:${pkg.package}`).click(function(e){
+      $('#article-info-package').text(pkg.package + " " + pkg.version).attr("href", `./${pkg.package}`).click(function(e){
+        e.preventDefault();
         tab_to_package(pkg.package);
       });
       $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
@@ -728,90 +731,6 @@ function init_article_list(data, user){
   }
   update_article_info();
 }
-
-/* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
-+(function ($) {
-  'use strict';
-  $.fn.historyTabs = function () {
-    var that = this;
-
-    /* Create back-button handler */
-    window.addEventListener('popstate', function (event) {
-      if (event.state) {
-        navigate_iframe(event.state.view);
-        $(that)
-        .filter('[href="' + event.state.tab + '"]')
-        .tab('show');
-      }
-    });
-
-    /* This is a last resort, in case of a missing click handler */
-    window.addEventListener('hashchange', function (event) {
-      if(window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      }
-    });
-
-    return this.each(function (index, element) {
-      var tab = $(this).attr('href');
-
-      /* On each tab click */
-      $(element).on('show.bs.tab', function () {
-        var stateObject = {
-          tab: tab,
-          view: tab == '#view' ? window.iframestate : null,
-          detailpkg: tab == '#view' ? window.detailpkg : null
-        };
-        var url = tab;
-        if (tab == '#view') {
-          url = tab + ":" + window.iframestate;
-        } else {
-          navigate_iframe(null);
-        }
-        if (tab == '#package') {
-          url = tab + ":" + window.detailpkg;
-        }
-
-        if (window.location.hash && url !== window.location.hash) {
-          window.history.pushState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        } else {
-          window.history.replaceState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        }
-
-        $(element).on('shown.bs.tab', () => window.scrollTo(0,0));
-
-        /* hides top navbar when focussing on single package/article
-        if(tab == '#view' || tab == '#package'){
-          $('#myTab').addClass('d-lg-none').removeClass('d-lg-flex');
-        } else {
-          $("#myTab").addClass('d-lg-flex').removeClass('d-lg-none');
-        }
-        */
-      });
-
-      /* Once on page load */
-      if (tab === '#view' && window.location.hash.startsWith("#view:")){
-        navigate_iframe(window.location.hash.substring(6));
-        $(element).tab('show');
-      } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      } else if (!window.location.hash && $(element).is('.active')) {
-        // Shows the first element if there are no query parameters.
-        $(element).tab('show').trigger('show.bs.tab');
-      } else if (tab === window.location.hash) {
-        $(element).tab('show');
-      }
-    });
-  };
-})(jQuery);
 
 function sort_packages(array){
   return array.sort((a, b) => (a.count > b.count) ? -1 : 1);
@@ -1217,8 +1136,8 @@ function populate_download_links(x, details){
 
 function link_to_pkg(owner, pkg){
   if(owner === user)
-    return `#package:${pkg}`;
-  return `https://${owner}.r-universe.dev/ui#package:${pkg}`
+    return `./${pkg}`;
+  return `https://${owner}.r-universe.dev/${pkg}`
 }
 
 function populate_revdeps(package){
@@ -1232,6 +1151,7 @@ function populate_revdeps(package){
       .attr('href', link_to_pkg(owner, package))
       .click(function(e){
         if(owner == user){
+          e.preventDefault();
           tab_to_package(package);
         }
       })
@@ -1545,6 +1465,11 @@ function generate_status_icon(builder, os_type){
 }
 
 function tab_to_package(package){
+  var oldstate = history.state || {};
+  var newstate = {istab: false, package: package}
+  if(oldstate.package != newstate.package){
+    history.pushState(newstate, '', `./${package}`)
+  }
   populate_package_details(package);
   $("#package-tab-link").tab('show');
   window.scrollTo(0,0);
@@ -1564,19 +1489,29 @@ function avatar_url(login, size){
   return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
+function basename(x){
+  return x.split(/[\\/]/).pop();
+}
+
 //INIT
-var devtest = 'ropensci'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
-  if(!window.location.hash){
+  if(!window.location.pathname){
     $('#builds-tab-link').click();
+  } else {
+    var page_id = basename(window.location.pathname);
+    if($(`#${page_id}-tab-link`).length){
+      $(`#${page_id}-tab-link`).click();
+    } else {
+      tab_to_package(page_id);
+    }
   }
 });
 init_package_descriptions(server, user);
-
 
 var articledatapromise = init_article_data(server);
 iFrameResize({ log: false, checkOrigin: false, warningTimeout: 0 }, '#viewerframe');
@@ -1592,4 +1527,21 @@ $('#builds-tab-link').one('shown.bs.tab', function (e) {
 $('#contributors-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
-$('a[data-toggle="tab"]').historyTabs();
+
+$('#tab-list .nav-link').on('show.bs.tab', function(e){
+  var oldstate = history.state || {};
+  var newstate = {istab: true, id: $(this).attr('id')}
+  if(newstate.id != 'package-tab-link' && oldstate.id != newstate.id){
+    history.pushState(newstate, '', $(this).attr("href").replace("#", "./"))
+  }
+});
+
+addEventListener('popstate', function(e){
+  var state = e.state;
+  if(state && state.istab){
+    $(`#${state.id}`).tab('show');
+  }
+  if(state && state.package){
+    tab_to_package(state.package);
+  }
+});
