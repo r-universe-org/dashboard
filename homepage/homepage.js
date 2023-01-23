@@ -523,7 +523,7 @@ function make_exports_badges(contents, package){
   var help = contents.help || [];
   labels.forEach(function(label){
     var page = help.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(label)});
-    var labelurl = `${server}/manual/${package}.html#${page && page.page.replace(/.html$/, "")}`;
+    var labelurl = `${server}/${package}/manual.html#${page && page.page.replace(/.html$/, "")}`;
     $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
   });
   return div;
@@ -549,7 +549,7 @@ function make_help_table(contents, package){
   var help = contents.help || [];
   help.forEach(function(page){
     var name = page.page.replace(/\.html$/, "");
-    var link = a(`${server}/manual/${package}.html#${name}`, page.title || name).attr("target", "_blank");
+    var link = a(`${server}/${package}/manual.html#${name}`, page.title || name).attr("target", "_blank");
     tr([link, Array.isArray(page.topics) && page.topics.join(" ")]).appendTo(tbody);
   });
 }
@@ -1190,7 +1190,7 @@ function populate_revdeps(package){
 }
 
 function populate_readme(package){
-  get_path(`${server}/readme/${package}.html`).then(function(res){
+  get_path(`${server}/${package}/doc/readme.html`).then(function(res){
     var doc = $(res);
     doc.find("a").attr("target", "_blank").each(function(){
       if($(this).attr('href').startsWith("#")){
@@ -1246,7 +1246,7 @@ function populate_package_details(package){
     var builder = src['_builder'] || {};
     var assets = src['_contents'] && src['_contents'].assets || [];
     if(assets.find(x => x.endsWith('citation.html'))){
-      get_path(`${server}/citation/${package}.html`).then(function(htmlString){
+      get_path(`${server}/${package}/citation.html`).then(function(htmlString){
         var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
         $(htmlDoc).find('.container').removeClass('container').appendTo('.package-citation-content');
         $(".package-details-citation").removeClass("d-none");
@@ -1257,8 +1257,8 @@ function populate_package_details(package){
     details.find('.package-details-title').text(src.Title);
     details.find('.package-details-description').text(src.Description);
     details.find('.package-details-author').text(normalize_authors(src.Author));
-    details.find('.citation-link').attr('href', `${server}/citation/${package}.cff`);
-    details.find('.package-json-link').attr('href', `${server}/packages/${package}`);
+    details.find('.citation-link').attr('href', `${server}/${package}/citation.cff`);
+    details.find('.package-json-link').attr('href', `${server}/${package}/json`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(x, details);
     var issuetracker = guess_tracker_url(src);
@@ -1266,10 +1266,10 @@ function populate_package_details(package){
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
     if(assets.includes("manual.pdf")){
-      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}.pdf`);
+      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/${package}/${package}.pdf`);
     }
     if(assets.includes(`extra/${package}.html`)){
-      details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/manual/${package}.html`);
+      details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/${package}/doc/manual.html`);
     }
     var commit = builder.commit;
     if(commit.time){
@@ -1324,7 +1324,7 @@ function populate_package_details(package){
       populate_readme(package);
     }
     if(assets.includes("extra/NEWS.html")){
-      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS`);
+      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/${package}/NEWS`);
     } else {
       details.find('.details-news').hide()
     }
