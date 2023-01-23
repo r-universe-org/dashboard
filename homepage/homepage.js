@@ -636,18 +636,26 @@ function init_package_descriptions(server, user){
   //});
 }
 
-function navigate_iframe(state){
-  if(window.iframestate !== state){
-    var iframe = frames['viewerframe'];
-    iframe.location.replace(state ? server + "/articles/" + state : 'about:blank');
-    window.iframestate = state;
-    console.log('Navigating iframe to: ' + state);
+function display_article(minilink){
+  if(window.iframestate !== minilink){
+    window.iframestate = minilink;
+    console.log('Navigating iframe to: ' + minilink);
+    var pkg = minilink.split("/")[0];
+    var file = minilink.split("/")[1];
+    frames['viewerframe'].location.replace(server + "/" + pkg + '/doc/' + file);
     update_article_info();
-    if(state){
+    if(minilink){
       document.getElementById('viewerframe').onload=function(){$('#article-placeholder').hide()};
       $('#article-placeholder').show();
     }
   }
+  var oldstate = history.state || {};
+  var newstate = {article: true, minilink: minilink}
+  if(oldstate.minilink != newstate.minilink){
+    history.pushState(newstate, '', `./articles/${minilink}`);
+  }
+  $("#view-tab-link").tab('show');
+  window.scrollTo(0,0);
 }
 
 function update_article_info(){
@@ -664,8 +672,8 @@ function update_article_info(){
         e.preventDefault();
         tab_to_package(pkg.package);
       });
-      $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
-      $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
+      $('#article-info-source').attr('href', server + "/" + pkg.package + '/doc/' + pkg.vignette.source).text(pkg.vignette.source);
+      $('#article-info-html').attr('href', server + "/" + pkg.package + '/doc/'+ pkg.vignette.filename).text(pkg.vignette.filename);
       $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
     }
   });
@@ -693,9 +701,9 @@ function init_article_list(data, user){
     var item = $("#templatezone .article-item").clone();
     var minilink = pkg.package + "/" + pkg.vignette.filename;
     if(pkg.user == user){
-      item.attr("href", server + "/articles/" + minilink);
+      item.attr("href", `${server}/${pkg.package}/doc/${pkg.vignette.filename}`);
     } else {
-      item.attr("href", "https://" + pkg.user + ".r-universe.dev/articles/" + minilink);
+      item.attr("href", `https://${pkg.user}.r-universe.dev/${pkg.package}/doc/${pkg.vignette.filename}`);
     }
     if(!pkg.vignette.filename.endsWith('html')){
       item.attr("target", "_blank")
@@ -703,11 +711,9 @@ function init_article_list(data, user){
       item.click(function(e){
         e.preventDefault();
         if(pkg.user == user){
-          navigate_iframe(minilink);
-          $("#view-tab-link").tab('show');
-          window.scrollTo(0,0);
+          display_article(minilink);
         } else {
-          window.location.href = `https://${pkg.user}.r-universe.dev/ui#view:${minilink}`;
+          window.location.href = `https://${pkg.user}.r-universe.dev/articles/${minilink}`;
         }
       });
     }
@@ -886,7 +892,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.location.href = `https://${user}.r-universe.dev/ui#contributors`;
+        window.location.href = `https://${user}.r-universe.dev/contributors`;
       }
     };
 
@@ -1328,13 +1334,11 @@ function populate_package_details(package){
       vignettes.forEach(function(x){
         var minilink = `${src.Package}/${x.filename}`;
         var item = $("#templatezone .package-details-article").clone();
-        item.attr('href', `https://${src._user}.r-universe.dev/articles/${minilink}`);
+        item.attr('href', `https://${src._user}.r-universe.dev/${src.Package}/doc/${x.filename}`);
         if(minilink.endsWith('html')){
           item.click(function(e){
             e.preventDefault();
-            navigate_iframe(minilink);
-            $("#view-tab-link").tab('show');
-            window.scrollTo(0,0);
+            display_article(minilink);
           });
         }
         item.find('.detail-article-source').text(x.source);
@@ -1362,7 +1366,7 @@ function populate_package_details(package){
         var login = names.shift();
         var count = gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
-        item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
+        item.attr('href', `https://${login}.r-universe.dev/contributors`);
         item.find("img").attr('src', avatar_url(login, 160)).tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
       }
@@ -1498,10 +1502,17 @@ var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
+
+//Hack for relative links within subpages
+if(server) $("head base").attr("href", location.pathname.replace(/[^/]*$/, ''))
+
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
+  var isarticle = window.location.pathname.match(new RegExp('^.*/articles/(.*/.*)$'));
   if(!window.location.pathname){
     $('#builds-tab-link').click();
+  } if(window.location.pathname.match(isarticle)){
+    display_article(isarticle[1])
   } else {
     var page_id = basename(window.location.pathname);
     if($(`#${page_id}-tab-link`).length){
@@ -1528,20 +1539,24 @@ $('#contributors-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
 
-$('#tab-list .nav-link').on('show.bs.tab', function(e){
+$('#tab-list .nav-item:not(.d-none) .nav-link').on('show.bs.tab', function(e){
   var oldstate = history.state || {};
   var newstate = {istab: true, id: $(this).attr('id')}
-  if(newstate.id != 'package-tab-link' && oldstate.id != newstate.id){
+  if(oldstate.id != newstate.id){
     history.pushState(newstate, '', $(this).attr("href").replace("#", "./"))
   }
 });
 
 addEventListener('popstate', function(e){
   var state = e.state;
+  //alert("pop:\n" + JSON.stringify(state))
   if(state && state.istab){
     $(`#${state.id}`).tab('show');
   }
   if(state && state.package){
     tab_to_package(state.package);
+  }
+  if(state && state.article){
+    display_article(state.minilink);
   }
 });
