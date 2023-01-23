@@ -1234,7 +1234,7 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
-  get_path(`${server}/packages/${package}/any`).then(function(x){
+  get_path(`${server}/${package}/files`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
     var fail = x.find(x => x._type == 'failure');
