@@ -523,7 +523,7 @@ function make_exports_badges(contents, package){
   var help = contents.help || [];
   labels.forEach(function(label){
     var page = help.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(label)});
-    var labelurl = `${server}/${package}/manual.html#${page && page.page.replace(/.html$/, "")}`;
+    var labelurl = `${server}/${package}/doc/manual.html#${page && page.page.replace(/.html$/, "")}`;
     $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
   });
   return div;
@@ -549,7 +549,7 @@ function make_help_table(contents, package){
   var help = contents.help || [];
   help.forEach(function(page){
     var name = page.page.replace(/\.html$/, "");
-    var link = a(`${server}/${package}/manual.html#${name}`, page.title || name).attr("target", "_blank");
+    var link = a(`${server}/${package}/doc/manual.html#${name}`, page.title || name).attr("target", "_blank");
     tr([link, Array.isArray(page.topics) && page.topics.join(" ")]).appendTo(tbody);
   });
 }
