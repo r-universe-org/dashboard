@@ -271,6 +271,7 @@ function init_packages_table(server, user){
       if(src.type !== 'failure'){
         pkglink.attr("href", link_to_pkg(org, name)).click(function(e){
           if(org == user){
+            e.preventDefault();
             tab_to_package(name);
           }
         });
@@ -522,7 +523,7 @@ function make_exports_badges(contents, package){
   var help = contents.help || [];
   labels.forEach(function(label){
     var page = help.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(label)});
-    var labelurl = `${server}/manual/${package}.html#${page && page.page.replace(/.html$/, "")}`;
+    var labelurl = `${server}/${package}/doc/manual.html#${page && page.page.replace(/.html$/, "")}`;
     $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
   });
   return div;
@@ -548,7 +549,7 @@ function make_help_table(contents, package){
   var help = contents.help || [];
   help.forEach(function(page){
     var name = page.page.replace(/\.html$/, "");
-    var link = a(`${server}/manual/${package}.html#${name}`, page.title || name).attr("target", "_blank");
+    var link = a(`${server}/${package}/doc/manual.html#${name}`, page.title || name).attr("target", "_blank");
     tr([link, Array.isArray(page.topics) && page.topics.join(" ")]).appendTo(tbody);
   });
 }
@@ -592,6 +593,7 @@ function init_package_descriptions(server, user){
       item.find('.package-name').text(pkg.Package)
       item.find('.package-link').attr("href", link_to_pkg(org, pkg.Package)).click(function(e){
         if(org == user){
+          e.preventDefault();
           tab_to_package(pkg.Package);
         }
       });
@@ -634,18 +636,26 @@ function init_package_descriptions(server, user){
   //});
 }
 
-function navigate_iframe(state){
-  if(window.iframestate !== state){
-    var iframe = frames['viewerframe'];
-    iframe.location.replace(state ? server + "/articles/" + state : 'about:blank');
-    window.iframestate = state;
-    console.log('Navigating iframe to: ' + state);
+function display_article(minilink){
+  if(window.iframestate !== minilink){
+    window.iframestate = minilink;
+    console.log('Navigating iframe to: ' + minilink);
+    var pkg = minilink.split("/")[0];
+    var file = minilink.split("/")[1];
+    frames['viewerframe'].location.replace(server + "/" + pkg + '/doc/' + file);
     update_article_info();
-    if(state){
+    if(minilink){
       document.getElementById('viewerframe').onload=function(){$('#article-placeholder').hide()};
       $('#article-placeholder').show();
     }
   }
+  var oldstate = history.state || {};
+  var newstate = {article: true, minilink: minilink}
+  if(oldstate.minilink != newstate.minilink){
+    history.pushState(newstate, '', `./articles/${minilink}`);
+  }
+  $("#view-tab-link").tab('show');
+  window.scrollTo(0,0);
 }
 
 function update_article_info(){
@@ -658,11 +668,12 @@ function update_article_info(){
       } else {
         $('#article-info-author').removeAttr("href");
       }
-      $('#article-info-package').text(pkg.package + " " + pkg.version).attr("href", `#package:${pkg.package}`).click(function(e){
+      $('#article-info-package').text(pkg.package + " " + pkg.version).attr("href", `./${pkg.package}`).click(function(e){
+        e.preventDefault();
         tab_to_package(pkg.package);
       });
-      $('#article-info-source').attr('href', server + "/articles/" + pkg.package + '/' + pkg.vignette.source).text(pkg.vignette.source);
-      $('#article-info-html').attr('href', server + "/articles/" + pkg.package + '/'+ pkg.vignette.filename).text(pkg.vignette.filename);
+      $('#article-info-source').attr('href', server + "/" + pkg.package + '/doc/' + pkg.vignette.source).text(pkg.vignette.source);
+      $('#article-info-html').attr('href', server + "/" + pkg.package + '/doc/'+ pkg.vignette.filename).text(pkg.vignette.filename);
       $('#article-info-date').text((pkg.vignette.modified || "??").substring(0, 10));
     }
   });
@@ -690,9 +701,9 @@ function init_article_list(data, user){
     var item = $("#templatezone .article-item").clone();
     var minilink = pkg.package + "/" + pkg.vignette.filename;
     if(pkg.user == user){
-      item.attr("href", server + "/articles/" + minilink);
+      item.attr("href", `${server}/${pkg.package}/doc/${pkg.vignette.filename}`);
     } else {
-      item.attr("href", "https://" + pkg.user + ".r-universe.dev/articles/" + minilink);
+      item.attr("href", `https://${pkg.user}.r-universe.dev/${pkg.package}/doc/${pkg.vignette.filename}`);
     }
     if(!pkg.vignette.filename.endsWith('html')){
       item.attr("target", "_blank")
@@ -700,11 +711,9 @@ function init_article_list(data, user){
       item.click(function(e){
         e.preventDefault();
         if(pkg.user == user){
-          navigate_iframe(minilink);
-          $("#view-tab-link").tab('show');
-          window.scrollTo(0,0);
+          display_article(minilink);
         } else {
-          window.location.href = `https://${pkg.user}.r-universe.dev/ui#view:${minilink}`;
+          window.location.href = `https://${pkg.user}.r-universe.dev/articles/${minilink}`;
         }
       });
     }
@@ -728,90 +737,6 @@ function init_article_list(data, user){
   }
   update_article_info();
 }
-
-/* Tab history: https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs */
-+(function ($) {
-  'use strict';
-  $.fn.historyTabs = function () {
-    var that = this;
-
-    /* Create back-button handler */
-    window.addEventListener('popstate', function (event) {
-      if (event.state) {
-        navigate_iframe(event.state.view);
-        $(that)
-        .filter('[href="' + event.state.tab + '"]')
-        .tab('show');
-      }
-    });
-
-    /* This is a last resort, in case of a missing click handler */
-    window.addEventListener('hashchange', function (event) {
-      if(window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      }
-    });
-
-    return this.each(function (index, element) {
-      var tab = $(this).attr('href');
-
-      /* On each tab click */
-      $(element).on('show.bs.tab', function () {
-        var stateObject = {
-          tab: tab,
-          view: tab == '#view' ? window.iframestate : null,
-          detailpkg: tab == '#view' ? window.detailpkg : null
-        };
-        var url = tab;
-        if (tab == '#view') {
-          url = tab + ":" + window.iframestate;
-        } else {
-          navigate_iframe(null);
-        }
-        if (tab == '#package') {
-          url = tab + ":" + window.detailpkg;
-        }
-
-        if (window.location.hash && url !== window.location.hash) {
-          window.history.pushState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        } else {
-          window.history.replaceState(
-            stateObject,
-            document.title,
-            window.location.pathname + url
-            );
-        }
-
-        $(element).on('shown.bs.tab', () => window.scrollTo(0,0));
-
-        /* hides top navbar when focussing on single package/article
-        if(tab == '#view' || tab == '#package'){
-          $('#myTab').addClass('d-lg-none').removeClass('d-lg-flex');
-        } else {
-          $("#myTab").addClass('d-lg-flex').removeClass('d-lg-none');
-        }
-        */
-      });
-
-      /* Once on page load */
-      if (tab === '#view' && window.location.hash.startsWith("#view:")){
-        navigate_iframe(window.location.hash.substring(6));
-        $(element).tab('show');
-      } else if (tab === '#package' && window.location.hash.startsWith("#package:")){
-        tab_to_package(window.location.hash.substring(9));
-      } else if (!window.location.hash && $(element).is('.active')) {
-        // Shows the first element if there are no query parameters.
-        $(element).tab('show').trigger('show.bs.tab');
-      } else if (tab === window.location.hash) {
-        $(element).tab('show');
-      }
-    });
-  };
-})(jQuery);
 
 function sort_packages(array){
   return array.sort((a, b) => (a.count > b.count) ? -1 : 1);
@@ -967,7 +892,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.location.href = `https://${user}.r-universe.dev/ui#contributors`;
+        window.location.href = `https://${user}.r-universe.dev/contributors`;
       }
     };
 
@@ -1217,8 +1142,8 @@ function populate_download_links(x, details){
 
 function link_to_pkg(owner, pkg){
   if(owner === user)
-    return `#package:${pkg}`;
-  return `https://${owner}.r-universe.dev/ui#package:${pkg}`
+    return `./${pkg}`;
+  return `https://${owner}.r-universe.dev/${pkg}`
 }
 
 function populate_revdeps(package){
@@ -1232,6 +1157,7 @@ function populate_revdeps(package){
       .attr('href', link_to_pkg(owner, package))
       .click(function(e){
         if(owner == user){
+          e.preventDefault();
           tab_to_package(package);
         }
       })
@@ -1264,7 +1190,7 @@ function populate_revdeps(package){
 }
 
 function populate_readme(package){
-  get_path(`${server}/readme/${package}.html`).then(function(res){
+  get_path(`${server}/${package}/doc/readme.html`).then(function(res){
     var doc = $(res);
     doc.find("a").attr("target", "_blank").each(function(){
       if($(this).attr('href').startsWith("#")){
@@ -1308,7 +1234,7 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   populate_revdeps(package);
-  get_path(`${server}/packages/${package}/any`).then(function(x){
+  get_path(`${server}/${package}/files`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
     var fail = x.find(x => x._type == 'failure');
@@ -1320,7 +1246,7 @@ function populate_package_details(package){
     var builder = src['_builder'] || {};
     var assets = src['_contents'] && src['_contents'].assets || [];
     if(assets.find(x => x.endsWith('citation.html'))){
-      get_path(`${server}/citation/${package}.html`).then(function(htmlString){
+      get_path(`${server}/${package}/citation.html`).then(function(htmlString){
         var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
         $(htmlDoc).find('.container').removeClass('container').appendTo('.package-citation-content');
         $(".package-details-citation").removeClass("d-none");
@@ -1331,8 +1257,8 @@ function populate_package_details(package){
     details.find('.package-details-title').text(src.Title);
     details.find('.package-details-description').text(src.Description);
     details.find('.package-details-author').text(normalize_authors(src.Author));
-    details.find('.citation-link').attr('href', `${server}/citation/${package}.cff`);
-    details.find('.package-json-link').attr('href', `${server}/packages/${package}`);
+    details.find('.citation-link').attr('href', `${server}/${package}/citation.cff`);
+    details.find('.package-json-link').attr('href', `${server}/${package}/json`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(x, details);
     var issuetracker = guess_tracker_url(src);
@@ -1340,10 +1266,10 @@ function populate_package_details(package){
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
     if(assets.includes("manual.pdf")){
-      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/manual/${package}.pdf`);
+      details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/${package}/${package}.pdf`);
     }
     if(assets.includes(`extra/${package}.html`)){
-      details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/manual/${package}.html`);
+      details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/${package}/doc/manual.html`);
     }
     var commit = builder.commit;
     if(commit.time){
@@ -1398,7 +1324,7 @@ function populate_package_details(package){
       populate_readme(package);
     }
     if(assets.includes("extra/NEWS.html")){
-      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/docs/${package}/NEWS`);
+      details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/${package}/NEWS`);
     } else {
       details.find('.details-news').hide()
     }
@@ -1408,13 +1334,11 @@ function populate_package_details(package){
       vignettes.forEach(function(x){
         var minilink = `${src.Package}/${x.filename}`;
         var item = $("#templatezone .package-details-article").clone();
-        item.attr('href', `https://${src._user}.r-universe.dev/articles/${minilink}`);
+        item.attr('href', `https://${src._user}.r-universe.dev/${src.Package}/doc/${x.filename}`);
         if(minilink.endsWith('html')){
           item.click(function(e){
             e.preventDefault();
-            navigate_iframe(minilink);
-            $("#view-tab-link").tab('show');
-            window.scrollTo(0,0);
+            display_article(minilink);
           });
         }
         item.find('.detail-article-source').text(x.source);
@@ -1442,7 +1366,7 @@ function populate_package_details(package){
         var login = names.shift();
         var count = gitstats.contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
-        item.attr('href', `https://${login}.r-universe.dev/ui#contributors`);
+        item.attr('href', `https://${login}.r-universe.dev/contributors`);
         item.find("img").attr('src', avatar_url(login, 160)).tooltip({title: `${login} made ${count} contributions to ${package}`});
         item.appendTo('.package-details-contributors');
       }
@@ -1545,6 +1469,11 @@ function generate_status_icon(builder, os_type){
 }
 
 function tab_to_package(package){
+  var oldstate = history.state || {};
+  var newstate = {package: package}
+  if(oldstate.package != newstate.package){
+    history.pushState(newstate, '', `./${package}`)
+  }
   populate_package_details(package);
   $("#package-tab-link").tab('show');
   window.scrollTo(0,0);
@@ -1564,19 +1493,37 @@ function avatar_url(login, size){
   return `https://r-universe.dev/avatars/${login}.png?size=${size}`;
 }
 
+function basename(x){
+  return x.split(/[\\/]/).pop();
+}
+
 //INIT
-var devtest = 'ropensci'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
+
+//Hack for relative links within subpages
+if(server) $("head base").attr("href", location.pathname.replace(/[^/]*$/, ''))
+
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
-  if(!window.location.hash){
+  var isarticle = window.location.pathname.match(new RegExp('^(.*/)articles/(.*/.*)$'));
+  if(!window.location.pathname){
     $('#builds-tab-link').click();
+  } else if(isarticle){
+    display_article(isarticle[2]);
+    $("head base").attr("href", isarticle[1]);
+  } else {
+    var page_id = basename(window.location.pathname);
+    if($(`#${page_id}-tab-link`).length){
+      $(`#${page_id}-tab-link`).click();
+    } else {
+      tab_to_package(page_id);
+    }
   }
 });
 init_package_descriptions(server, user);
-
 
 var articledatapromise = init_article_data(server);
 iFrameResize({ log: false, checkOrigin: false, warningTimeout: 0 }, '#viewerframe');
@@ -1592,4 +1539,25 @@ $('#builds-tab-link').one('shown.bs.tab', function (e) {
 $('#contributors-tab-link').one('shown.bs.tab', function (e) {
   make_contributor_chart(user, 30);
 });
-$('a[data-toggle="tab"]').historyTabs();
+
+$('#tab-list .nav-item:not(.d-none) .nav-link').on('show.bs.tab', function(e){
+  var oldstate = history.state || {};
+  var newstate = {tab: $(this).attr('id')}
+  if(oldstate.tab != newstate.tab){
+    history.pushState(newstate, '', $(this).attr("href").replace("#", "./"))
+  }
+});
+
+addEventListener('popstate', function(e){
+  var state = e.state || {};
+  //alert("pop:\n" + JSON.stringify(state))
+  if(state.tab){
+    $(`#${state.tab}`).tab('show');
+  }
+  if(state.package){
+    tab_to_package(state.package);
+  }
+  if(state.article){
+    display_article(state.minilink);
+  }
+});
