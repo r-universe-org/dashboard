@@ -1470,7 +1470,7 @@ function generate_status_icon(builder, os_type){
 
 function tab_to_package(package){
   var oldstate = history.state || {};
-  var newstate = {istab: false, package: package}
+  var newstate = {package: package}
   if(oldstate.package != newstate.package){
     history.pushState(newstate, '', `./${package}`)
   }
@@ -1541,22 +1541,22 @@ $('#contributors-tab-link').one('shown.bs.tab', function (e) {
 
 $('#tab-list .nav-item:not(.d-none) .nav-link').on('show.bs.tab', function(e){
   var oldstate = history.state || {};
-  var newstate = {istab: true, id: $(this).attr('id')}
-  if(oldstate.id != newstate.id){
+  var newstate = {tab: $(this).attr('id')}
+  if(oldstate.tab != newstate.tab){
     history.pushState(newstate, '', $(this).attr("href").replace("#", "./"))
   }
 });
 
 addEventListener('popstate', function(e){
-  var state = e.state;
+  var state = e.state || {};
   //alert("pop:\n" + JSON.stringify(state))
-  if(state && state.istab){
-    $(`#${state.id}`).tab('show');
+  if(state.tab){
+    $(`#${state.tab}`).tab('show');
   }
-  if(state && state.package){
+  if(state.package){
     tab_to_package(state.package);
   }
-  if(state && state.article){
+  if(state.article){
     display_article(state.minilink);
   }
 });
