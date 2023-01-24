@@ -1508,11 +1508,12 @@ if(server) $("head base").attr("href", location.pathname.replace(/[^/]*$/, ''))
 
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
-  var isarticle = window.location.pathname.match(new RegExp('^.*/articles/(.*/.*)$'));
+  var isarticle = window.location.pathname.match(new RegExp('^(.*/)articles/(.*/.*)$'));
   if(!window.location.pathname){
     $('#builds-tab-link').click();
-  } if(window.location.pathname.match(isarticle)){
-    display_article(isarticle[1])
+  } else if(isarticle){
+    display_article(isarticle[2]);
+    $("head base").attr("href", isarticle[1]);
   } else {
     var page_id = basename(window.location.pathname);
     if($(`#${page_id}-tab-link`).length){
