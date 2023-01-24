@@ -96,7 +96,7 @@ $(function(){
     if(maintainer.login) {
       item.find('.package-maintainer').attr('href', `https://${maintainer.login}.r-universe.dev`);
     }
-    item.find('.package-link').attr('href', `https://${org}.r-universe.dev/ui#package:${pkg.Package}`);
+    item.find('.package-link').attr('href', `https://${org}.r-universe.dev/${pkg.Package}`);
     item.find('.package-name').text(pkg.Package);
     item.find('.package-maintainer').text(maintainer.name);
     item.find('.package-title').text(pkg.Title);

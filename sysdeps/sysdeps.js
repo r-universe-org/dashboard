@@ -53,7 +53,7 @@ function trim_version(str){
 }
 
 function link_package(x){
-  return href(x.package, `https://${x.owner}.r-universe.dev/ui#package:${x.package}`);
+  return href(x.package, `https://${x.owner}.r-universe.dev/${x.package}`);
 }
 
 function href(txt, url){

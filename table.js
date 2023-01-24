@@ -102,7 +102,7 @@ function init_packages_table(org = ":any", maintainer = ""){
       var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
       maintainerlink.text(pkg.maintainer).addClass('text-secondary');
       var pkgname = pkg.package;
-      var pkglink = $("<a>").text(pkgname).attr('href', `https://${pkg.user}.r-universe.dev/ui#package:${name}`);
+      var pkglink = $("<a>").text(pkgname).attr('href', `https://${pkg.user}.r-universe.dev/${name}`);
       if(pkg.os_restriction){
         pkglink = pkglink.append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
       }

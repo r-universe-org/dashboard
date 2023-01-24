@@ -19,19 +19,17 @@ $(function(){
   function pkg_to_el(pkg){
     var item = $("#templatezone .article-item").clone();
     var universe = "https://" + pkg.universe + ".r-universe.dev";
-    item.find('.article-link').attr("href", universe + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
     if(pkg.vignette.filename.endsWith('html')){
-      item.find('.article-link').attr("href", universe + "/#view:" + pkg.package + "/" + pkg.vignette.filename);
-    } else {
       item.find('.article-link').attr("href", universe + "/articles/" + pkg.package + "/" + pkg.vignette.filename);
-      item.attr("target", "_blank");
+    } else {
+      item.find('.article-link').attr("href", universe + "/" + pkg.package + "/doc/" + pkg.vignette.filename);
     }
     item.find('.article-title').text(pkg.vignette.title);
     item.find('.article-package-version').text(pkg.package + " " + pkg.version);
     item.find('.article-author-name').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
     item.find('.article-modified').text('Last update: ' + pkg.vignette.modified.substring(0, 10));
     item.find('.article-created').text('Started: ' + pkg.vignette.created.substring(0, 10));
-    item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '#articles');
+    item.find('.article-universe').text('@' + pkg.universe).attr("href", universe + '/articles');
     if(pkg.login){
       item.find('.maintainer-avatar').attr('src', 'https://r-universe.dev/avatars/' + pkg.login + '.png?size=140');
     }
