@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>
+var hash = (window.location.hash || "").replace(/^#/, "");
+if(hash == 'builds'){
+  window.location.replace("/builds");
+} else if(hash == 'contributors'){
+  window.location.replace("/contributors");
+} else if(hash == 'packages'){
+  window.location.replace("/packages");
+} else if(hash == 'articles'){
+  window.location.replace("/articles");
+} else if(hash == 'badges'){
+  window.location.replace("/badges");
+} else if(hash.startsWith('package:')){
+  window.location.replace(`/${hash.substring(8)}`);
+} else if(hash.startsWith('view:')){
+  window.location.replace(`/articles/${hash.substring(5)}`);
+} else {
+  window.location.replace(`/`);
+}
+  </script>
+</head>
+<body>
+The dashboard has moved... redirecting you to the <a href="/">new front-end</a>.
+</body>
+</html>
