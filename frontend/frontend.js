@@ -1114,6 +1114,7 @@ function populate_download_links(x, details){
   var linux = x.filter(x => x._type == 'linux');
   var srcfile = `${src.Package}_${src.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
+  details.find('.package-details-json').attr('href', `${server}/${src.Package}/json`).text(`${src.Package}/json`);
   wins.forEach(function(pkg){
     var build = pkg.Built.R.substring(0,3);
     var filename = `${pkg.Package}_${pkg.Version}.zip`;
