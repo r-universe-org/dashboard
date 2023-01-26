@@ -1150,7 +1150,7 @@ function link_to_pkg(owner, pkg){
 function populate_revdeps(package){
   var revdepdiv = $(".package-details-revdeps").empty();
   $(".package-details-revdeps-header").text(`Users of ${package}`)
-  get_ndjson(`https://r-universe.dev/stats/usedbyorg?package=${package}`).then(function(revdeps){
+  return get_ndjson(`https://r-universe.dev/stats/usedbyorg?package=${package}`).then(function(revdeps){
     function make_link(package, owner){
       return $("<a>")
       .text(package)
@@ -1191,7 +1191,7 @@ function populate_revdeps(package){
 }
 
 function populate_readme(package){
-  get_path(`${server}/${package}/doc/readme.html`).then(function(res){
+  return get_path(`${server}/${package}/doc/readme.html`).then(function(res){
     var doc = $(res);
     doc.find("a").attr("target", "_blank").each(function(){
       if($(this).attr('href').startsWith("#")){
@@ -1217,7 +1217,7 @@ function populate_readme(package){
   });
 }
 
-function populate_package_details(package){
+function populate_package_details(package, hash){
   if(window.detailpkg == package) return;
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
@@ -1234,7 +1234,7 @@ function populate_package_details(package){
   $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
-  populate_revdeps(package);
+  var promises = [populate_revdeps(package)];
   get_path(`${server}/${package}/files`).then(function(x){
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
@@ -1247,11 +1247,11 @@ function populate_package_details(package){
     var builder = src['_builder'] || {};
     var assets = src['_contents'] && src['_contents'].assets || [];
     if(assets.find(x => x.endsWith('citation.html'))){
-      get_path(`${server}/${package}/citation.html`).then(function(htmlString){
+      promises.push(get_path(`${server}/${package}/citation.html`).then(function(htmlString){
         var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
         $(htmlDoc).find('.container').removeClass('container').appendTo('.package-citation-content');
         $(".package-details-citation").removeClass("d-none");
-      });
+      }));
     }
     details.find('.package-details-header').text(`${src._owner}/${src.Package} ${src.Version}`);
     details.find('.package-details-name').text(`${src.Package}`)
@@ -1322,7 +1322,7 @@ function populate_package_details(package){
       $(this).blur();
     });
     if(assets.includes("readme.html")){
-      populate_readme(package);
+      promises.push(populate_readme(package));
     }
     if(assets.includes("extra/NEWS.html")){
       details.find('.package-details-news').text(`NEWS`).attr('href', `${server}/${package}/NEWS`);
@@ -1427,6 +1427,13 @@ function populate_package_details(package){
         attach_cran_badge(package, builder.upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
       });
     }
+    /* scroll to target. This is a bit ugly right now because a async content after page load */
+    var target = document.getElementById(hash.replace('#', ''));
+    if(target){
+      Promise.allSettled(promises).then(function(){
+        target.scrollIntoView();
+      });
+    }
   });
   get_path(`${server}/shared/scienceminer/${package}`).then(function(x){
     if(x.fields && x.fields.number_documents && x.fields.number_documents[0]){
@@ -1469,15 +1476,15 @@ function generate_status_icon(builder, os_type){
 
 }
 
-function tab_to_package(package){
+function tab_to_package(package, hash){
+  window.scrollTo(0,0);
   var oldstate = history.state || {};
   var newstate = {package: package}
   if(oldstate.package != newstate.package){
-    history.pushState(newstate, '', `./${package}`)
+    history.pushState(newstate, '', `./${package}${hash || ""}`)
   }
-  populate_package_details(package);
+  populate_package_details(package, hash);
   $("#package-tab-link").tab('show');
-  window.scrollTo(0,0);
 }
 
 function cleanup_desc(str){
@@ -1520,7 +1527,7 @@ init_user_info(user, server).then(function(){
     if($(`#${page_id}-tab-link`).length){
       $(`#${page_id}-tab-link`).click();
     } else {
-      tab_to_package(page_id);
+      tab_to_package(page_id, window.location.hash);
     }
   }
 });

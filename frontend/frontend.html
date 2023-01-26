@@ -301,17 +301,17 @@
                      </div>
                   </div>
 
-                  <div class="package-details-citation row d-none card mt-4">
+                  <div id="citation" class="package-details-citation row d-none card mt-4">
                     <a href="#collapsecitation" class="h5 card-title card-header text-center text-dark" data-toggle="collapse">Citation</a>
                     <div id="collapsecitation" class="package-citation-content card-body collapse show"></div>
                   </div>
 
-                  <div class="package-details-readme row card mt-4">
+                  <div id="readme" class="package-details-readme row card mt-4">
                     <a href="#collapsereadme" class="h5 card-title card-header text-center text-dark" data-toggle="collapse">Readme and manuals</a>
                     <div id="collapsereadme" class="card-body collapse show">
                       <div class="package-readme-content"></div>
 
-                      <h2 class="h4">Reference manual</h2>
+                      <h2 id="reference" class="h4">Reference manual</h2>
 
                       <table class="col-12 table table-sm table-hover manpages-table">
                         <thead>
@@ -325,7 +325,7 @@
                     </div>
                   </div>
 
-                  <div class="row card mt-4 d-none d-lg-block">
+                  <div id="development" class="row card mt-4 d-none d-lg-block">
                     <h5 class="card-title card-header text-center package-details-development-header">development and contributors</h5>
                     <div class="card-body col-12">
                       <div class="p-0">
@@ -335,7 +335,7 @@
                     </div>
                   </div>
 
-                  <div class="row card mt-4">
+                  <div id="users" class="row card mt-4">
                     <h5 class="package-details-revdeps-header card-title card-header text-center">Usage</h5>
                     <ul class="list-group list-group-flush package-details-revdeps"></ul>
                   </div>
@@ -586,6 +586,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=2"></script>
+  <script src="frontend/frontend.js?nocache=9"></script>
 </body>
 </html>
