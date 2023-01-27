@@ -1217,7 +1217,7 @@ function populate_readme(package){
   });
 }
 
-function populate_package_details(package, hash){
+function populate_package_details(package){
   if(window.detailpkg == package) return;
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
@@ -1427,13 +1427,12 @@ function populate_package_details(package, hash){
         attach_cran_badge(package, builder.upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
       });
     }
-    /* scroll to target. This is a bit ugly right now because a async content after page load */
-    var target = document.getElementById(hash.replace('#', ''));
-    if(target){
-      Promise.allSettled(promises).then(function(){
-        target.scrollIntoView();
-      });
-    }
+    /* force re-scroll to target after  async content after page load */
+    Promise.allSettled(promises).then(function(){
+      hash = window.location.hash;
+      window.location.hash = "";
+      window.location.hash = hash;
+    });
   });
   get_path(`${server}/shared/scienceminer/${package}`).then(function(x){
     if(x.fields && x.fields.number_documents && x.fields.number_documents[0]){
@@ -1483,7 +1482,7 @@ function tab_to_package(package, hash){
   if(oldstate.package != newstate.package){
     history.pushState(newstate, '', `./${package}${hash || ""}`)
   }
-  populate_package_details(package, hash);
+  populate_package_details(package);
   $("#package-tab-link").tab('show');
 }
 
