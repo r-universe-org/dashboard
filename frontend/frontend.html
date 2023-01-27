@@ -250,8 +250,8 @@
                 <div class="p-2 package-details-container">
                   <p id="package-details-spinner"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading package data...</p>
 
-                  <div class="row card mt-4">
-                    <h5 class="package-details-installation-header card-title card-header text-center">Using this package in R</h5>
+                  <div id="install" class="row card mt-4">
+                    <a href="#install" class="plink h5 card-title card-header text-center text-dark">Install in R</a>
                      <link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-e6d2fd629553.css">
                      <div class="gist">
                         <table>
@@ -302,17 +302,15 @@
                   </div>
 
                   <div id="citation" class="package-details-citation row d-none card mt-4">
-                    <a href="#collapsecitation" class="h5 card-title card-header text-center text-dark" data-toggle="collapse">Citation</a>
-                    <div id="collapsecitation" class="package-citation-content card-body collapse show"></div>
+                    <a href="#citation" class="plink h5 card-title card-header text-center text-dark">Citation</a>
+                    <div class="package-citation-content card-body"></div>
                   </div>
 
                   <div id="readme" class="package-details-readme row card mt-4">
-                    <a href="#collapsereadme" class="h5 card-title card-header text-center text-dark" data-toggle="collapse">Readme and manuals</a>
-                    <div id="collapsereadme" class="card-body collapse show">
+                    <a href="#readme" class="plink h5 card-title card-header text-center text-dark">Readme and manuals</a>
+                    <div class="card-body">
                       <div class="package-readme-content"></div>
-
-                      <h2 id="reference" class="h4">Reference manual</h2>
-
+                      <a href="#reference" id="reference" class="plink h4 text-dark">Reference manual</a>
                       <table class="col-12 table table-sm table-hover manpages-table">
                         <thead>
                           <tr>
@@ -325,8 +323,8 @@
                     </div>
                   </div>
 
-                  <div id="development" class="row card mt-4 d-none d-lg-block">
-                    <h5 class="card-title card-header text-center package-details-development-header">development and contributors</h5>
+                  <div id="development" class="row card mt-4">
+                    <a href="#development" class="plink h5 card-title card-header text-center text-dark">Development and contributors</a>
                     <div class="card-body col-12">
                       <div class="p-0">
                         <canvas id="package-updates-canvas" class="col p-0" height="300"></canvas>
@@ -336,7 +334,7 @@
                   </div>
 
                   <div id="users" class="row card mt-4">
-                    <h5 class="package-details-revdeps-header card-title card-header text-center">Usage</h5>
+                    <a href="#users" class="plink h5 card-title card-header text-center text-dark">Usage by other packages</a>
                     <ul class="list-group list-group-flush package-details-revdeps"></ul>
                   </div>
                 </div>
@@ -586,6 +584,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=9"></script>
+  <script src="frontend/frontend.js?nocache=11"></script>
 </body>
 </html>

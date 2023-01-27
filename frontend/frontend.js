@@ -1149,7 +1149,6 @@ function link_to_pkg(owner, pkg){
 
 function populate_revdeps(package){
   var revdepdiv = $(".package-details-revdeps").empty();
-  $(".package-details-revdeps-header").text(`Users of ${package}`)
   return get_ndjson(`https://r-universe.dev/stats/usedbyorg?package=${package}`).then(function(revdeps){
     function make_link(package, owner){
       return $("<a>")
@@ -1222,6 +1221,10 @@ function populate_package_details(package){
   window.detailpkg = package;
   const old = Chart.getChart('package-updates-canvas');
   if(old) old.destroy();
+  $('.plink').each(function(el){
+    //workaround for basename breaking local links
+    $(this).attr('href', package + $(this).attr('href'))
+  });
   $('#package-details-spinner').show();
   $('.package-details-container .details-card').remove();
   $('.package-details-contributors').empty();
@@ -1231,7 +1234,6 @@ function populate_package_details(package){
   $(".package-citation-content").empty();
   $(".package-details-sha").empty();
   $(".last-build-status").empty();
-  $(".package-details-development-header").text(`${package} development and contributors`);
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   var promises = [populate_revdeps(package)];
