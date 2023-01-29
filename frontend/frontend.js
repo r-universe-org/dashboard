@@ -1246,6 +1246,7 @@ function populate_package_details(package){
       details.find('.build-failure-url').attr('href', fail._builder.url);
     }
     var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
+    $("head title").text(`R-universe: ${src._user}/${src.Package}`);
     var builder = src['_builder'] || {};
     var assets = src['_contents'] && src['_contents'].assets || [];
     if(assets.find(x => x.endsWith('citation.html'))){
