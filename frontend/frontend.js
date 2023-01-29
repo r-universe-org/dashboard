@@ -1223,7 +1223,7 @@ function populate_package_details(package){
   if(old) old.destroy();
   $('.plink').each(function(el){
     //workaround for basename breaking local links
-    $(this).attr('href', package + $(this).attr('href'))
+    $(this).attr('href', package + $(this).attr('href').replace(/.*#/, '#'));
   });
   $('#package-details-spinner').show();
   $('.package-details-container .details-card').remove();
