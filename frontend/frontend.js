@@ -1108,37 +1108,38 @@ function guess_tracker_url(src){
 }
 
 function populate_download_links(x, details){
-  var src = x.find(x => x._type == 'src');
-  var wins = x.filter(x => x._type == 'win');
-  var macs = x.filter(x => x._type == 'mac');
-  var linux = x.filter(x => x._type == 'linux');
-  var srcfile = `${src.Package}_${src.Version}.tar.gz`;
+  var package = x.Package;
+  var wins = x.binaries.filter(x => x.os == 'win');
+  var macs = x.binaries.filter(x => x.os == 'mac');
+  var linux = x.binaries.filter(x => x.os == 'linux');
+  var srcfile = `${package}_${x.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
-  details.find('.package-details-json').attr('href', `${server}/${src.Package}/json`).text(`${src.Package}/json`);
-  wins.forEach(function(pkg){
-    var build = pkg.Built.R.substring(0,3);
-    var filename = `${pkg.Package}_${pkg.Version}.zip`;
+  details.find('.package-details-json').attr('href', `${server}/${package}/json`).text(`${package}/json`);
+  wins.forEach(function(binary){
+    var build = binary.r.substring(0,3);
+    var filename = `${package}_${binary.version}.zip`;
     var winlinks = details.find('.package-details-windows');
     $("<a>").text(filename).attr('href', `${server}/bin/windows/contrib/${build}/${filename}`).appendTo(winlinks);
     winlinks.append(` (r-${build}) `)
   });
-  macs.forEach(function(pkg){
-    var build = pkg.Built.R.substring(0,3);
-    var filename = `${pkg.Package}_${pkg.Version}.tgz`;
+  macs.forEach(function(binary){
+    var build = binary.r.substring(0,3);
+    var filename = `${package}_${binary.version}.tgz`;
     var maclinks = details.find('.package-details-macos');
     $("<a>").text(filename).attr('href', `${server}/bin/macosx/contrib/${build}/${filename}`).appendTo(maclinks);
     maclinks.append(` (r-${build}) `)
   });
-  linux.forEach(function(pkg){
-    var build = pkg.Built.R.substring(0,3);
-    var distro = pkg['_builder'].distro;
-    var filename = `${pkg.Package}_${pkg.Version}.tar.gz`;
+
+  linux.forEach(function(binary){
+    var build = binary.r.substring(0,3);
+    var distro = binary.distro || "unknown";
+    var filename = `${package}_${binary.version}.tar.gz`;
     var linuxlinks = details.find('.package-details-linux');
     $("<a>").text(filename).attr('href', `${server}/bin/linux/${distro}/${build}/src/contrib/${filename}`).appendTo(linuxlinks);
     linuxlinks.append(` (r-${build}-${distro}) `)
   });
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
-  details.find(".package-details-logs").attr('href', src._builder.url);
+  details.find(".package-details-logs").attr('href', x._builder.url);
 }
 
 function link_to_pkg(owner, pkg){
@@ -1237,15 +1238,16 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   var promises = [populate_revdeps(package)];
-  get_path(`${server}/${package}/files`).then(function(x){
+  get_path(`${server}/${package}/json`).then(function(src){
+    if(!src){
+      alert("Failed to find package " + package);
+    }
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
-    var fail = x.find(x => x._type == 'failure');
-    if(fail){
+    if(src.failure){
       details.find('.build-failure-alert').removeClass('d-none');
-      details.find('.build-failure-url').attr('href', fail._builder.url);
+      details.find('.build-failure-url').attr('href', src.failure.url);
     }
-    var src = x.find(x => x._type == 'src') || alert("Failed to find package " + package);
     $("head title").text(`R-universe: ${src._user}/${src.Package}`);
     var builder = src['_builder'] || {};
     var assets = src['_contents'] && src['_contents'].assets || [];
@@ -1264,7 +1266,7 @@ function populate_package_details(package){
     details.find('.citation-link').attr('href', `${server}/${package}/citation.cff`);
     details.find('.package-json-link').attr('href', `${server}/${package}/json`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
-    populate_download_links(x, details);
+    populate_download_links(src, details);
     var issuetracker = guess_tracker_url(src);
     var gitstats = src['_contents'] && src['_contents'].gitstats || {};
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
