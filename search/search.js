@@ -201,6 +201,7 @@ $(function(){
   build_search_fields();
   load_summary_stats();
   load_maintainers();
+  load_blog_posts();
 });
 
 function append_topic(topic, i){
@@ -258,6 +259,19 @@ function load_maintainers(){
 function load_summary_stats(){
   get_json('https://r-universe.dev/stats/summary').then(function(stats){
     Object.keys(stats).forEach(key => $(`#summary-n-${key}`).text(stats[key]));
+  });
+}
+
+function load_blog_posts(){
+  get_json('https://ropensci.org/r-universe/index.json').then(function(posts){
+    posts.items.forEach(function(x){
+      var dt = new Date(x.date);
+      var datestr =`${dt.toLocaleString('default', { month: 'long' })} ${dt.getDay()}, ${dt.getFullYear()}`;
+      var item = $("<li>").appendTo(".blog-posts");
+      item.append('<i class="fas fa-angle-double-right text-secondary"></i> ')
+      $("<a>").appendTo(item).attr("href", x.url).text(x.title);
+      $("<span>").appendTo(item).text(datestr);
+    });
   });
 }
 
