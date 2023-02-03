@@ -95,15 +95,9 @@ svg {
   font-style: italic;
 }
 
-.blog-posts {
-  padding: 0;
-  margin: 0 0 25px 0;
-}
-
 .blog-posts li {
-  padding: 7px 5px;
-  list-style-type: none;
-  border-bottom: 1px solid #EEE;
+  padding: 3px 5px;
+  list-style-type: "»";
 }
 
 .blog-posts li span {

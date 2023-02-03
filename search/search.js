@@ -268,7 +268,6 @@ function load_blog_posts(){
       var dt = new Date(x.date);
       var datestr =`${dt.toLocaleString('default', { month: 'long' })} ${dt.getDay()}, ${dt.getFullYear()}`;
       var item = $("<li>").appendTo(".blog-posts");
-      item.append('<i class="fas fa-angle-double-right text-secondary"></i> ')
       $("<a>").appendTo(item).attr("href", x.url).text(x.title);
       $("<span>").appendTo(item).text(datestr);
     });
