@@ -266,7 +266,7 @@ function load_blog_posts(){
   get_json('https://ropensci.org/r-universe/index.json').then(function(posts){
     posts.items.forEach(function(x){
       var dt = new Date(x.date);
-      var datestr =`${dt.toLocaleString('default', { month: 'long' })} ${dt.getDay()}, ${dt.getFullYear()}`;
+      var datestr =`${dt.toLocaleString('default', { month: 'long' })} ${dt.getDate()}, ${dt.getFullYear()}`;
       var item = $("<li>").appendTo(".blog-posts");
       $("<a>").appendTo(item).attr("href", x.url).text(x.title);
       $("<span>").appendTo(item).addClass("d-none d-lg-inline").text(datestr);
