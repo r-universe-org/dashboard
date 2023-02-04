@@ -269,7 +269,7 @@ function load_blog_posts(){
       var datestr =`${dt.toLocaleString('default', { month: 'long' })} ${dt.getDay()}, ${dt.getFullYear()}`;
       var item = $("<li>").appendTo(".blog-posts");
       $("<a>").appendTo(item).attr("href", x.url).text(x.title);
-      $("<span>").appendTo(item).text(datestr);
+      $("<span>").appendTo(item).addClass("d-none d-lg-inline").text(datestr);
     });
   });
 }

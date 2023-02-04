@@ -95,9 +95,13 @@ svg {
   font-style: italic;
 }
 
+.blog-posts {
+  padding-left: 10px;
+}
+
 .blog-posts li {
   padding: 3px 5px;
-  list-style-type: "»";
+  list-style-type: "»" !important;
 }
 
 .blog-posts li span {
