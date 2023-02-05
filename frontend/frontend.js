@@ -1107,6 +1107,10 @@ function guess_tracker_url(src){
   return upstream;
 }
 
+function sortfun(a,b){
+  return a.r < b.r ? 1 : -1;
+}
+
 function populate_download_links(x, details){
   var package = x.Package;
   var wins = x.binaries.filter(x => x.os == 'win');
@@ -1115,14 +1119,14 @@ function populate_download_links(x, details){
   var srcfile = `${package}_${x.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
   details.find('.package-details-json').attr('href', `${server}/${package}/json`).text(`${package}/json`);
-  wins.forEach(function(binary){
+  wins.sort(sortfun).forEach(function(binary){
     var build = binary.r.substring(0,3);
     var filename = `${package}_${binary.version}.zip`;
     var winlinks = details.find('.package-details-windows');
     $("<a>").text(filename).attr('href', `${server}/bin/windows/contrib/${build}/${filename}`).appendTo(winlinks);
     winlinks.append(` (r-${build}) `)
   });
-  macs.forEach(function(binary){
+  macs.sort(sortfun).forEach(function(binary){
     var build = binary.r.substring(0,3);
     var filename = `${package}_${binary.version}.tgz`;
     var maclinks = details.find('.package-details-macos');
