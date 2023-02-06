@@ -250,57 +250,6 @@
                 <div class="p-2 package-details-container">
                   <p id="package-details-spinner"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading package data...</p>
 
-                  <div id="install" class="row card mt-4">
-                    <a href="#install" class="plink h5 card-title card-header text-center text-dark">Install in R</a>
-                     <link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-e6d2fd629553.css">
-                     <div class="gist">
-                        <table>
-                           <tbody>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="1"></td>
-                                 <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Enable repository from <span class="title-universe-name"></span></span></td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="2"></td>
-                                 <td class="blob-code blob-code-inner js-file-line">options(<span class="pl-v">repos</span> <span class="pl-k">=</span> c(</td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="3"></td>
-                                 <td class="blob-code blob-code-inner js-file-line">  <span class="pl-v title-universe-name-clean"></span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>https://<span class="title-universe-name"></span>.r-universe.dev<span class="pl-pds">'</span></span>,</td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="4"></td>
-                                 <td class="blob-code blob-code-inner js-file-line">  <span class="pl-v">CRAN</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>https://cloud.r-project.org<span class="pl-pds">'</span></span>))</td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="5"></td>
-                                 <td class="blob-code blob-code-inner js-file-line"></td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="6"></td>
-                                 <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Download and install <span class="package-details-gist-name"></span> in R</span></td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="7"></td>
-                                 <td class="blob-code blob-code-inner js-file-line">install.packages(<span class="pl-s"><span class="pl-pds">'</span><span class="package-details-gist-name"></span><span class="pl-pds">'</span></span>)</td>
-                              </tr>
-                              <tr>
-                                 <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="8"></td>
-                                 <td class="blob-code blob-code-inner js-file-line"></td>
-                              </tr>
-                              <tr>
-                                <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="9"></td>
-                                <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Browse the <span class="package-details-gist-name"></span> manual pages</span></td>
-                              </tr>
-                              <tr>
-                                <td class="blob-num js-line-number js-code-nav-line-number js-blob-rnum" data-line-number="10"></td>
-                                <td class="blob-code blob-code-inner js-file-line">help(<span class="pl-v">package</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="package-details-gist-name"></span><span class="pl-pds">'</span></span>)</td>
-                              </tr>
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
-
                   <div id="citation" class="package-details-citation row d-none card mt-4">
                     <a href="#citation" class="plink h5 card-title card-header text-center text-dark">Citation</a>
                     <div class="package-citation-content card-body"></div>
@@ -450,11 +399,27 @@
             <a class="package-details-json"></a> (API access)<br>
           <span class="details-news"><a style="width: 20px" class="fas fa-file-alt package-details-logs text-dark text-decoration-none grow-on-over"></a><a target="_blank" class="package-details-news"></a> <br></span>
         </p>
+
+        <div id="install" class="row card m-0 mb-3 py-1">
+           <link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-e6d2fd629553.css">
+           <div class="gist">
+              <table>
+                 <tbody>
+                    <tr>
+                       <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Install <span class="package-details-gist-name"></span> in R:</td>
+                    </tr>
+                    <tr>
+                      <td id="file-install-r-LC2" class="blob-code blob-code-inner js-file-line">install.packages(<span class="pl-s"><span class="pl-pds">&#39;</span><span class="package-details-gist-name"></span><span class="pl-pds">&#39;</span></span>, <span class="pl-v">repos</span> <span class="pl-k">=</span> c(<span class="pl-s"><span class="pl-pds">&#39;</span>https://<span class="title-universe-name"></span>.r-universe.dev<span class="pl-pds">&#39;</span></span>, <span class="pl-s"><span class="pl-pds">&#39;</span>https://cloud.r-project.org<span class="pl-pds">&#39;</span></span>))</td>
+                   </tr>
+                </tbody>
+             </table>
+          </div>
+        </div>
+
         <p class="build-failure-alert alert alert-danger d-none" role="alert">
           The latest version of this package failed to build. Look at the <a class="build-failure-url">build logs</a> for more information.
         </p>
         <p class="package-details-peerreview mb-2 d-none">Peer review: <u><a target="_blank" href="#" class="peerreview-link text-dark"></a></u> <span class="peerreview-status"></span></p>
-        <p class="package-details-cran mb-2"><span class="cran-title">On CRAN:</span> <u><a class="cran-version text-dark"></a></u> <span class="cran-date text-muted"></span> <span class="cran-checkmark"></span></p>
         <p class="mb-2">Issue tracker: <u><a target="_blank" class="card-text text-dark package-details-issues"></a></u></p>
         <div class="system-library-row d-none">
           <span class="float-left">Uses libs:</span>
@@ -464,6 +429,7 @@
           <span class="float-left">Datasets:</span>
           <ul class="dataset-list list-unstyled d-table pl-1 mb-2"></ul>
         </div>
+        <p class="package-details-cran mb-2"><span class="cran-title">On CRAN:</span> <u><a class="cran-version text-dark"></a></u> <span class="cran-date text-muted"></span> <span class="cran-checkmark"></span></p>
         <p class="card-text package-details-topics clearfix"></p>
         <p class="metric-icons">
           <a data-toggle="collapse" href="#exportlist" class="text-muted badge badge-light package-details-exports p-1 border d-none"><i class="fas fa-shapes text-dark"></i></a>
