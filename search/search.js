@@ -34,7 +34,7 @@ $(function(){
           newquery = `${oldquery} ${query}`;
         }
         $('#search-input').val(newquery.trim());
-        update_hash();
+        do_search();
       }).keypress(function(e){
         if(e.keyCode === 13){
           //close panel on enter key
@@ -135,17 +135,18 @@ $(function(){
     }
   }
 
-  function get_hash(){
-    return window.location.hash.replace(/^#/, '');
+  function get_query(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get('q') || "";
   }
 
   function update_results(){
-    if(!window.location.href.includes('#')){
+    var q = $("#search-input").val();
+    if(!q){
       $('.search-results').empty();
       $('#results-placeholder').show();
       $('svg').show('fast', () => $('#search-input').focus());
     }
-    var q = get_hash();
     if(q.length < 2) return;
     $('.search-results').empty();
     $('#results-placeholder').hide();
@@ -167,34 +168,49 @@ $(function(){
     });
   };
 
-  function on_hash_change(e){
-    $('#search-input').val(decodeURIComponent(get_hash()));
-    populate_search_fields();
-    update_results();
-  }
-
-  $(window).on('hashchange', on_hash_change);
+  function do_search(){
+    var search = $("#search-input").val();
+    var state = history.state || {};
+    if(state.search != search){
+      history.pushState({search: search}, '', search ? `./?q=${encodeURIComponent(search)}` : `./`);
+      populate_search_fields();
+      update_results();
+    }
+  };
 
   $('#search-button').click(function(){
     $(this).blur();
     $("#extra-search-fields").collapse('hide');
-    window.location.hash="";
-    update_hash();
+    do_search();
   });
 
-  //init page first
-  var hash = get_hash();
-  if(hash.length > 1){
-    on_hash_change();
-  } else {
-    $('#search-input').focus();
+  function restore_from_query(e){
+    $('#search-input').val(decodeURIComponent(get_query()));
+    do_search();
   }
 
-  //install listeners
-  const update_hash = function(){
-    window.location.hash = encodeURIComponent($("#search-input").val());
-  };
-  $('#search-input').on("keydown paste input", debounce(update_hash));
+  addEventListener('popstate', function(e){
+    var state = e.state || {};
+    $('#search-input').val(state.search);
+    populate_search_fields();
+    update_results();
+  });
+
+  //first page init
+  if(get_query().length){
+    restore_from_query()
+  } else {
+    var oldhash = window.location.hash.replace(/^#/, '');
+    if(oldhash){
+      // for backward compatibility with old UI, remove eventually
+      history.replaceState({q: oldhash}, '', `./?q=${oldhash}`)
+      restore_from_query()
+    } else {
+      $('#search-input').focus();
+    }
+  }
+
+  $('#search-input').on("keydown paste input", debounce(do_search));
   exampletopics.forEach(append_topic);
   const more = $('<a>').attr('href', '#').text("... (more popular topics)").click(load_all_topics);
   $('#topics-list').append(more);
@@ -207,7 +223,7 @@ $(function(){
 function append_topic(topic, i){
   if(skiptopics.includes(topic)) return;
   var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURIComponent(topic);
-  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", '#' + quotedtopic).text(topic).appendTo('#topics-list');
+  $("<a>").addClass("text-secondary font-weight-bold font-italic").attr("href", './?q=' + quotedtopic).text(topic).appendTo('#topics-list');
   $('#topics-list').append(", ");
 }
 

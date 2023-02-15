@@ -174,7 +174,7 @@ function make_sysdeps(pkg, distro){
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
       //var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
-      var url = `https://r-universe.dev/search/#${key}`
+      var url = `https://r-universe.dev/search/?q=${key}`
       $("<a>").text(key).attr("href", url).appendTo(div);
       version = x.version.replace(/[0-9.]+:/, '').replace(/[+-].*/, '').replace(/\.[a-z]+$/, '');
       div.append(" (" + version + ")\t");
@@ -537,7 +537,7 @@ function make_badges(labels, color, prefix){
   if(labels && labels.length){
     labels.filter(x => skiptopics.indexOf(x) < 0).forEach(function(topic){
       var quotedtopic = topic.includes("-") ? `"${topic}"` : encodeURIComponent(topic);
-      var topicurl = `https://r-universe.dev/search#${prefix}${quotedtopic}`;
+      var topicurl = `https://r-universe.dev/search?q=${prefix}${quotedtopic}`;
       $("<a>").attr("href", topicurl).addClass(`badge badge-${color} mr-1`).text(topic).appendTo(div);
     });
   }
@@ -1299,7 +1299,7 @@ function populate_package_details(package){
       $("#dependslist .labels").empty().append(make_badges(rundeps, 'danger', 'package:'));
     }
     if(src._usedby){
-      details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/#needs:${package}`)
+      details.find('.package-details-dependents').removeClass('d-none').append(` ${src._usedby} dependents`).attr('href', `https://r-universe.dev/search/?q=needs:${package}`)
     }
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
