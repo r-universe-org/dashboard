@@ -17,60 +17,60 @@
   <!-- Bootstrap row -->
   <div class="row" id="body-row">
     <!-- Sidebar -->
-    <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+    <div id="sidebar-container" class="sidebar-collapsed d-none d-md-block">
       <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
       <!-- Bootstrap List Group -->
       <ul class="sticky-top sticky-offset list-group">
 
-        <a href="../search" class="bg-dark list-group-item logo-item">
+        <a href=".." class="bg-dark list-group-item logo-item">
           <div class="ropensci-logo d-flex w-100 justify-content-start align-items-center">
-            <img src="https://r-universe.dev/runiverse.svg" class="menu-collapsed img img-fluid p-1">
-            <span class="fa fa-home fa-fw mr-3 menu-collapsed d-none"></span>
+            <img src="https://r-universe.dev/runiverse.svg" class="menu-collapsed d-none img img-fluid p-1">
+            <span class="fa fa-home fa-fw mr-3 menu-collapsed"></span>
           </div>
         </a>
 
         <!-- Separator with title -->
-        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+        <li class="list-group-item sidebar-separator-title text-muted align-items-center menu-collapsed d-none">
           <small>GLOBAL</small>
         </li>
 
         <a href="../builds" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-rocket fa-fw mr-3"></span>
-            <span class="menu-collapsed">Builds</span>
+            <span class="menu-collapsed d-none">Builds</span>
           </div>
         </a>
 
         <a href="../articles" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-passport fa-fw mr-3"></span>
-            <span class="menu-collapsed">Articles</span>
+            <span class="menu-collapsed d-none">Articles</span>
           </div>
         </a>
 
         <a href="../organizations" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-globe-americas fa-fw mr-3"></span>
-            <span class="menu-collapsed">Organizations</span>
+            <span class="menu-collapsed d-none">Organizations</span>
           </div>
         </a>
 
         <a href="../maintainers" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-user-astronaut fa-fw mr-3"></span>
-            <span class="menu-collapsed">Maintainers</span>
+            <span class="menu-collapsed d-none">Maintainers</span>
           </div>
         </a>
 
         <!-- Separator with title -->
-        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+        <li class="list-group-item sidebar-separator-title text-muted align-items-center menu-collapsed d-none">
           <small>METRICS</small>
         </li>
 
         <a href="../activity" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-chart-bar fa-fw mr-3"></span>
-            <span class="menu-collapsed">Activity</span>
+            <span class="menu-collapsed d-none">Activity</span>
           </div>
         </a>
 
@@ -78,24 +78,25 @@
         <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-project-diagram fa-fw mr-3"></span>
-            <span class="menu-collapsed">Dependencies</span>
+            <span class="menu-collapsed d-none">Dependencies</span>
           </div>
         </a>
         <a href="../sysdeps" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-cog fa-fw mr-3"></span>
-            <span class="menu-collapsed">System Libraries</span>
+            <span class="menu-collapsed d-none">System Libraries</span>
           </div>
         </a>
         <a href="#" class="text-muted disabled bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-calendar fa-fw mr-3"></span>
-            <span class="menu-collapsed">Citations</span>
+            <span class="menu-collapsed d-none">Citations</span>
           </div>
         </a>
 
+
         <!-- Separator without title -->
-        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+        <li class="list-group-item sidebar-separator-title text-muted align-items-center menu-collapsed d-none">
           <small>PARTICIPATE</small>
         </li>
         <!-- /END Separator -->
@@ -103,45 +104,35 @@
         <a href="https://github.com/apps/r-universe/installations/new" target="_blank" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-satellite-dish fa-fw mr-3"></span>
-            <span class="menu-collapsed">Setup</span>
+            <span class="menu-collapsed d-none">Setup</span>
           </div>
         </a>
 
-        <!-- Separator without title -->
-        <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
+        <li class="list-group-item sidebar-separator-title text-muted align-items-center menu-collapsed d-none">
           <small>INFORMATION</small>
         </li>
-
 
         <a href="https://ropensci.org/r-universe" target="_blank" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fab fa-r-project fa-fw mr-3"></span>
-            <span class="menu-collapsed">About</span>
+            <span class="menu-collapsed d-none">About</span>
           </div>
         </a>
 
         <a href="https://github.com/r-universe-org/help" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-question fa-fw mr-3"></span>
-            <span class="menu-collapsed">Help</span>
+            <span class="menu-collapsed d-none">Help</span>
           </div>
         </a>
 
         <a href="https://github.com/r-universe-org" class="bg-dark list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-start align-items-center">
             <span class="fa fa-wrench fa-fw mr-3"></span>
-            <span class="menu-collapsed">Source</span>
+            <span class="menu-collapsed d-none">Source</span>
           </div>
         </a>
 
-        <li class="list-group-item sidebar-separator menu-collapsed"></li>
-
-        <a href="#" data-toggle="sidebar-colapse" class="bg-dark list-group-item list-group-item-action d-flex align-items-center">
-          <div class="d-flex w-100 justify-content-start align-items-center">
-            <span id="collapse-icon" class="fa fa-2x mr-3"></span>
-            <span id="collapse-text" class="menu-collapsed">Collapse</span>
-          </div>
-        </a>
       </ul><!-- List Group END-->
     </div><!-- sidebar-container END -->
     <!-- MAIN -->
@@ -262,7 +253,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="../dashboard.js"></script>
-  <script src="search.js?nocache=2"></script>
+  <script src="search.js?nocache=4"></script>
 
 </body>
 </html>

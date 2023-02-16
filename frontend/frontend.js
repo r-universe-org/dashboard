@@ -38,7 +38,9 @@ $(function(){
     $('.sidebar-separator-title').toggleClass('d-flex');
   }
   $("#sidebar-container").mouseenter(SidebarCollapse);
-  $("#sidebar-container").mouseleave(SidebarCollapse);
+  $("#sidebar-container").one('mouseenter', function(){
+    $("#sidebar-container").mouseleave(SidebarCollapse);
+  });
 });
 
 function ndjson_batch_stream(path, cb){

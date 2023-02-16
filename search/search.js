@@ -14,6 +14,19 @@ const searchfields = {
   'exports' : 'name of a function or dataset in the package'
 }
 
+/* Menu example: https://www.codeply.com/p/eDmT9PMWW3 */
+$(function(){
+  function SidebarCollapse() {
+    $('.menu-collapsed').toggleClass('d-none');
+    $('#sidebar-container').toggleClass('sidebar-expanded sidebar-collapsed');
+    $('.sidebar-separator-title').toggleClass('d-flex');
+  }
+  $("#sidebar-container").mouseenter(SidebarCollapse);
+  $("#sidebar-container").one('mouseenter', function(){
+    $("#sidebar-container").mouseleave(SidebarCollapse);
+  });
+});
+
 $(function(){
 
   function build_search_fields(){
