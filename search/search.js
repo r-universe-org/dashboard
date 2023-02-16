@@ -270,6 +270,12 @@ function load_maintainers(){
   //for maintainers use: 'https://r-universe.dev/stats/maintainers?limit=100'
   get_ndjson('https://r-universe.dev/stats/universes?organization=1').then(function(data){
     data = data.filter(x => x.packages.length > 3);
+    if(window.location.search.match("demopage")){
+      pages = 1;
+      orgs = ['ropensci', 'bioconductor', 'tidyverse', 'r-spatial', 'pharmaverse', 'vimc',
+              'lcbc-uio', 'rstudio', 'ropengov', 'statisticsnorway', 'stan-dev', 'carpentries'];
+      data = orgs.map(org => data.find(x => x.universe == org));
+    }
     for(let i = 0; i < pages; i++) {
       var slide = $("#templatezone .carousel-item").clone();
       var row = slide.find('.maintainer-row');
