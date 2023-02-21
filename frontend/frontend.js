@@ -1197,7 +1197,7 @@ function populate_revdeps(package){
 }
 
 function populate_readme(package){
-  return get_path(`${server}/${package}/doc/readme.html`).then(function(res){
+  return get_path(`${server}/${package}/doc/readme?highlight=hljs`).then(function(res){
     var doc = $(res);
     doc.find("a").attr("target", "_blank").each(function(){
       if($(this).attr('href').startsWith("#")){
@@ -1219,7 +1219,6 @@ function populate_readme(package){
       }
     });
     $('.package-readme-content').html(doc);
-    hljs.highlightAll();
   });
 }
 
