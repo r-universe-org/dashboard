@@ -1022,7 +1022,7 @@ function tag_annotations(tags, activity_data){
         backgroundColor: 'rgb(0,0,0,0)',
         color: 'rgb(0,0,0,0)',
         enabled: true,
-        content: `${latest ? 'Latest tag' : 'Tag'}: ${x.name} (${x.date})`,
+        content: `${latest ? 'Latest' : 'Version'}: ${x.name || x.version} (${x.date})`,
         position: 'start',
         yAdjust: -25
       }
@@ -1030,10 +1030,10 @@ function tag_annotations(tags, activity_data){
   });
 }
 
-function detail_update_chart(package, gitstats){
+function detail_update_chart(package, gitstats, releases){
   const ctx = $('#package-updates-canvas').empty().attr('height', '300').height(300);
   const data = activity_data(gitstats.updates.map(x => ({total:x.n, week:x.week})));
-  const tags = tag_annotations(gitstats.tags || [], data);
+  const tags = tag_annotations(releases || gitstats.tags || [], data);
   const myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1367,7 +1367,7 @@ function populate_package_details(package){
       details.find('.vignette-failure-alert').removeClass('d-none');
     }
     if(gitstats.updates){
-      detail_update_chart(package, gitstats);
+      detail_update_chart(package, gitstats, src._contents.releases);
     }
     if(gitstats.contributions){
       var names = Object.keys(gitstats.contributions);
