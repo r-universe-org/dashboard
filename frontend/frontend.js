@@ -216,9 +216,14 @@ function attach_cran_badge(package, url, el, cranicon){
       var iconclass = cranicon || "fa fa-award";
       var tiptext = "Verified CRAN package!";
     } else {
-      var color = color_bad;
       var iconclass = "fa fa-question-circle popover-dismiss";
-      var tiptext = `A package '${package}' exists on CRAN but description does not link to:<br/><u>${url}</u>. This could be another source.`;
+      if (url.match('https://github.com/cran/')){
+        var tiptext = `A package '${package}' exists on CRAN but description does not link to any git repository or issue tracker`;
+        var color = color_meh;
+      } else {
+        var tiptext = `A package '${package}' exists on CRAN but description does not link to:<br/><u>${url}</u>. This could be another source.`;
+        var color = color_bad;
+      }
     }
     var icon = $("<i>").addClass(iconclass).css('color', color);
     var cranlink = $("<a>").attr("href", "https://cran.r-project.org/package=" + package).
@@ -268,7 +273,7 @@ function init_packages_table(server, user){
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
-      var longname = owner == user ? name : `${owner}/${name}`;
+      var longname = (owner == user || owner == 'cran') ? name : `${owner}/${name}`;
       var pkglink = $("<a>").text(longname);
       if(src.type !== 'failure'){
         pkglink.attr("href", link_to_pkg(org, name)).click(function(e){
@@ -474,6 +479,8 @@ function init_maintainer_list(user, server){
         add_maintainer_icon(maintainer);
       };
     });
+    //hide panel if no links
+    $(".maintainer-list-panel").toggle($('#maintainer-list').children().length > 0);
   });
 }
 
@@ -1103,6 +1110,8 @@ function guess_tracker_url(src){
     return src.BugReports;
   }
   var upstream = src._builder.upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
+  if(upstream.match("github.com/cran/") || upstream.match("git.bioconductor.org/packages/"))
+    return ""; //these are mirror urls
   if(upstream.match("github.com")){
     return upstream + '/issues';
   }
@@ -1392,6 +1401,8 @@ function populate_package_details(package){
         }).appendTo('.package-details-contributors');
       }
     }
+    // hide developmet chart for mirrors
+    $('#development').toggle(!src._builder.upstream.match("https://github.com/cran/"));
     var sysdeps = src['_contents'] && src['_contents'].sysdeps;
     if(sysdeps){
       var sysdeplist = details.find('.system-library-list');
