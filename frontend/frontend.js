@@ -628,9 +628,6 @@ function init_package_descriptions(server, user){
       item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
       item.find('.package-image').attr('src', get_package_image(pkg));
       item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-      if(!(contents.gitstats && contents.gitstats.bioconductor)){
-        attach_cran_badge(pkg.Package, buildinfo.upstream, item.find('.cranbadge'));
-      }
       add_badge_row(pkg.Package, org);
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
@@ -1282,7 +1279,6 @@ function populate_package_details(package){
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(src, details);
     var issuetracker = guess_tracker_url(src);
-    var gitstats = src['_contents'] && src['_contents'].gitstats || {};
     details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
     details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
     if(assets.includes("manual.pdf")){
@@ -1300,6 +1296,7 @@ function populate_package_details(package){
         details.find('.package-details-remoteref').text(` (via ${src.RemoteRef})`);
       }
     }
+    var gitstats = src['_contents'] && src['_contents'].gitstats || {};
     if(gitstats.stars){
       details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(gitstats.stars)} stars`);
     }
