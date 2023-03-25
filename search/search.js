@@ -103,13 +103,13 @@ $(function(){
   }
 
   function show_pkg_card(pkg, i){
-    var org = pkg['_user'];
+    var user = pkg['_user'];
     var item = $("#templatezone .package-description-item").clone();
     var maintainer = pkg.maintainer || {};
     if(maintainer.login) {
       item.find('.package-maintainer').attr('href', `https://${maintainer.login}.r-universe.dev`);
     }
-    item.find('.package-link').attr('href', `https://${org}.r-universe.dev/${pkg.Package}`);
+    item.find('.package-link').attr('href', `https://${user}.r-universe.dev/${pkg.Package}`);
     item.find('.package-name').text(pkg.Package);
     item.find('.package-maintainer').text(maintainer.name);
     item.find('.package-title').text(pkg.Title);
@@ -130,9 +130,9 @@ $(function(){
     if(pkg.match){
       item.find('.description-score').removeClass('d-none').append(` ${pkg.match.toFixed(1)} match`);
     }
-    item.find('.package-image').attr('src', avatar_url(pkg['_owner'], 140));
+    item.find('.package-image').attr('src', avatar_url(user, 140));
     item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-    item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
+    item.find('.package-org').toggleClass("d-none").append(a(`https://${user}.r-universe.dev`, user));
     var topics = pkg.topics || [];
     if(pkg.sysdeps){
       topics = topics.concat(pkg.sysdeps);
