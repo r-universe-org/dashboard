@@ -506,12 +506,19 @@ function pretty_dependencies(pkg){
 }
 
 function get_package_image(pkg){
+  var owner = pkg['_owner'];
   var pkglogo = pkg['_contents'] && pkg['_contents'].pkglogo;
   if(pkglogo && pkglogo.startsWith('http'))
     return pkglogo;
-  var maintainer = pkg['_builder'] && pkg['_builder'].maintainer || {};
-  var ghuser = pkg.login || maintainer.login || "r-universe";
-  return avatar_url(ghuser, 140);
+  var maintainerdata = pkg['_builder'] && pkg['_builder'].maintainer || {};
+  var maintainer = maintainerdata.login;
+  if(maintainer && maintainer != user){
+    return avatar_url(maintainer, 140);
+  }
+  if(owner && owner != user){
+    return avatar_url(owner, 140);
+  }
+  return avatar_url('r-universe', 140);
 }
 
 function make_topic_badges(pkginfo){
@@ -731,7 +738,7 @@ function init_article_list(data, user){
     if(pkg.user != user){
       item.find('.article-author-name').append(`<i>(via <a href="https://${pkg.user}.r-universe.dev">${pkg.user}</a>)</i>`);
     }
-    var img = item.find('.maintainer-avatar').attr('src', get_package_image(pkg));
+    var img = item.find('.maintainer-avatar').attr('src', avatar_url(pkg.login || "r-universe", 140));
     if(pkg.pkglogo)
       img.removeClass('rounded-circle');
     item.appendTo('#article-list-group');
