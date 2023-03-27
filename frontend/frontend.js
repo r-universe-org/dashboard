@@ -217,13 +217,13 @@ function attach_cran_badge(package, url, el, cranicon){
       var tiptext = "Verified CRAN package!";
     } else {
       var iconclass = "fa fa-question-circle popover-dismiss";
+      var color = color_bad;
       if (url.match('https://github.com/cran/')){
         var tiptext = `A package '${package}' exists on CRAN but description does not link to any git repository or issue tracker`;
-        var color = color_meh;
       } else {
         var tiptext = `A package '${package}' exists on CRAN but description does not link to:<br/><u>${url}</u>. This could be another source.`;
-        var color = color_bad;
       }
+      var color = color_bad;
     }
     var icon = $("<i>").addClass(iconclass).css('color', color);
     var cranlink = $("<a>").attr("href", "https://cran.r-project.org/package=" + package).
@@ -317,7 +317,7 @@ function init_packages_table(server, user){
           [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (user == 'bioconductor') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-        } else if(user != 'bioconductor') {
+        } else if(user != 'bioconductor' && owner != 'cran') {
           attach_cran_badge(name, pkg.upstream, pkglink);
         }
         rows[name] ? rows[name].after(row) : tbody.append(row);
