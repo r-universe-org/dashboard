@@ -533,14 +533,21 @@ function make_topic_badges(pkginfo){
   return make_badges(topics);
 }
 
+function help_page_url(package, index, topic){
+  if(!topic || !index || !index.length) return;
+  var chapter = index.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(topic)});
+  if(chapter && chapter.page){
+    return `${server}/${package}/doc/manual.html#${chapter.page.replace(/.html$/, "")}`;
+  }
+}
+
 function make_exports_badges(contents, package){
   var div = $("<span>");
   var labels = contents.exports || [];
-  var help = contents.help || [];
-  labels.forEach(function(label){
-    var page = help.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(label)});
-    var labelurl = `${server}/${package}/doc/manual.html#${page && page.page.replace(/.html$/, "")}`;
-    $("<a>").attr("target", "_blank").attr("href", labelurl).addClass(`badge badge-secondary mr-1`).text(label).appendTo(div);
+  var index = contents.help || [];
+  labels.forEach(function(topic){
+    var url = help_page_url(package, index, topic);
+    $("<a>").attr("target", "_blank").attr("href", url).addClass(`badge badge-secondary mr-1`).text(topic).appendTo(div);
   });
   return div;
 }
@@ -1431,8 +1438,10 @@ function populate_package_details(package){
       var datasetlist = details.find('.dataset-list');
       src._contents.datasets.forEach(function(x){
         if(!x.name || !x.title) return;
+        var topic = x.name.split(" ")[0]; //see e.g. hardhat package for weird name
         var li = $("<li>").appendTo(datasetlist);
-        $("<b>").text(x.name).appendTo(li);
+        var url = help_page_url(package, src._contents.help, topic);
+        var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(topic).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
         details.find(".dataset-row").removeClass('d-none');
       });
@@ -1536,7 +1545,7 @@ function basename(x){
 }
 
 //INIT
-var devtest = 'trevorhastie'
+var devtest = 'tidymodels'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
