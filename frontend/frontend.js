@@ -1109,6 +1109,13 @@ function normalize_authors(str){
   return str.replace(/\s*\([^()]*\)/g, '').replace(/\s*\([\s\S]+?\)/g,"");
 }
 
+function populate_issue_tracker(src, details){
+  var tracker = guess_tracker_url(src);
+  details.find(".package-details-issues a").text(tracker).attr('href', tracker);
+  details.find(".package-details-issues").toggle(!!tracker);
+  details.find(".package-details-notracker").toggle(!tracker);
+}
+
 function guess_tracker_url(src){
   if(src.BugReports){
     return src.BugReports;
@@ -1285,8 +1292,7 @@ function populate_package_details(package){
     details.find('.package-json-link').attr('href', `${server}/${package}/json`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(src, details);
-    var issuetracker = guess_tracker_url(src);
-    details.find(".package-details-issues").text(issuetracker).attr('href', issuetracker);
+    populate_issue_tracker(src, details);
     details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
     if(assets.includes("manual.pdf")){
       details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/${package}/${package}.pdf`);
@@ -1530,7 +1536,7 @@ function basename(x){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'trevorhastie'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
