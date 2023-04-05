@@ -1430,7 +1430,7 @@ function populate_package_details(package){
         var li = $("<li>").appendTo(sysdeplist);
         $("<b>").text(x.name).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.description) + " ").appendTo(li);
-        $("<a>").attr("target", "_blank").attr('href', x.homepage).append($("<sup>").addClass("fas fa-external-link-alt")).appendTo(li);
+        $("<a>").attr("target", "_blank").attr('href', x.homepage).toggle(!!x.homepage).append($("<sup>").addClass("fas fa-external-link-alt")).appendTo(li);
         details.find(".system-library-row").removeClass('d-none');
       });
     }
