@@ -1443,6 +1443,10 @@ function populate_package_details(package){
         var url = help_page_url(package, src._contents.help, topic);
         var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(topic).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
+        if(src.LazyData && x.class && x.class.indexOf('data.frame') > -1){
+          var dlink = $("<a>").append('<small class="fas fa-download"></small>').attr('target', '_blank').attr('href', `${server}/${package}/data/${x.name}/csv`).appendTo(li);
+          dlink.tooltip({title: "Export dataset as csv (experimental feature, takes a while)"});
+        }
         details.find(".dataset-row").removeClass('d-none');
       });
     }
