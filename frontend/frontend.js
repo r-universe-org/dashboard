@@ -533,9 +533,13 @@ function make_topic_badges(pkginfo){
   return make_badges(topics);
 }
 
-function help_page_url(package, index, topic){
+function get_topic_page(index, topic){
   if(!topic || !index || !index.length) return;
-  var chapter = index.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(topic)});
+  return index.find(function(x) {return Array.isArray(x.topics) && x.topics.includes(topic)});
+}
+
+function help_page_url(package, index, topic){
+  var chapter = get_topic_page(index, topic);
   if(chapter && chapter.page){
     return `${server}/${package}/doc/manual.html#${chapter.page.replace(/.html$/, "")}`;
   }
@@ -1249,6 +1253,22 @@ function populate_readme(package){
   });
 }
 
+function show_data_download(x, url, package){
+  $('#download-data-modal h5').text(x.title);
+  $('#download-data-modal .modal-body').empty().text("Loading...")
+  $('#download-data-modal').modal('show');
+  var isdf = Array.isArray(x.class) && x.class.indexOf('data.frame') > -1;
+  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
+  $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
+  $.get(url.replace("manual.html#", "page/"), function(str){
+    var el = $.parseHTML(`<div>${str}</div>`);
+    $(el).find("hr").remove();
+    $(el).find("h2").remove();
+    $(el).find("h3").addClass('h5');
+    $('#download-data-modal .modal-body').empty().append(el);
+  });
+}
+
 function populate_package_details(package){
   if(window.detailpkg == package) return;
   window.detailpkg = package;
@@ -1443,9 +1463,11 @@ function populate_package_details(package){
         var url = help_page_url(package, src._contents.help, topic);
         var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(topic).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
-        if(src.LazyData && x.class && x.class.indexOf('data.frame') > -1){
-          var dlink = $("<a>").append('<small class="fas fa-download"></small>').attr('target', '_blank').attr('href', `${server}/${package}/data/${x.name}/csv`).appendTo(li);
-          dlink.tooltip({title: "Export dataset as csv (experimental feature, takes a while)"});
+        if(src.LazyData == 'yes' || src.LazyData == 'true'){
+          var dlink = $('<a>').append('<small class="fas fa-download"></small>').attr('href', `${server}/${package}/data/${x.name}`).appendTo(li).click(function(e){
+            e.preventDefault();
+            show_data_download(x, url, package);
+          });
         }
         details.find(".dataset-row").removeClass('d-none');
       });
