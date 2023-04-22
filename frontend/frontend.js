@@ -1258,8 +1258,9 @@ function show_data_download(x, url, package){
   $('#download-data-modal .modal-body').empty().text("Loading...")
   $('#download-data-modal').modal('show');
   var isdf = Array.isArray(x.class) && x.class.indexOf('data.frame') > -1;
-  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
-  $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
+  var topic = x.name.split(" ")[0]; //see e.g. hardhat package for weird name
+  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${topic}/csv`).toggle(isdf);
+  $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${topic}/rda`);
   $.get(url.replace("manual.html#", "page/"), function(str){
     var el = $.parseHTML(`<div>${str}</div>`);
     $(el).find("hr").remove();
