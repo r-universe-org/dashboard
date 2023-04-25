@@ -273,7 +273,7 @@ function init_packages_table(server, user){
       var sysdeps = make_sysdeps(pkg, src.distro);
       var upstream = pkg.upstream.toLowerCase().split("/");
       var owner = upstream[upstream.length - 2];
-      var longname = (owner == user || owner == 'cran') ? name : `${owner}/${name}`;
+      var longname = (owner == user || owner == 'cran' || pkg.upstream.match('git.bioconductor')) ? name : `${owner}/${name}`;
       var pkglink = $("<a>").text(longname);
       if(src.type !== 'failure'){
         pkglink.attr("href", link_to_pkg(org, name)).click(function(e){
