@@ -1258,9 +1258,8 @@ function show_data_download(x, url, package){
   $('#download-data-modal .modal-body').empty().text("Loading...")
   $('#download-data-modal').modal('show');
   var isdf = Array.isArray(x.class) && x.class.indexOf('data.frame') > -1;
-  var topic = x.name.split(" ")[0]; //see e.g. hardhat package for weird name
-  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${topic}/csv`).toggle(isdf);
-  $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${topic}/rda`);
+  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
+  $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
   $.get(url.replace("manual.html#", "page/"), function(str){
     var el = $.parseHTML(`<div>${str}</div>`);
     $(el).find("hr").remove();
@@ -1459,12 +1458,12 @@ function populate_package_details(package){
       var datasetlist = details.find('.dataset-list');
       src._contents.datasets.forEach(function(x){
         if(!x.name || !x.title) return;
-        var topic = x.name.split(" ")[0]; //see e.g. hardhat package for weird name
         var li = $("<li>").appendTo(datasetlist);
-        var url = help_page_url(package, src._contents.help, topic);
-        var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(topic).appendTo(li);
+        var url = help_page_url(package, src._contents.help, x.name);
+        var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(x.name).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
-        if(src.LazyData == 'yes' || src.LazyData == 'true'){
+        var lazydata = (src.LazyData || "").toLowerCase();
+        if(lazydata == 'yes' || lazydata == 'true'){
           var dlink = $('<a>').append('<small class="fas fa-download"></small>').attr('href', `${server}/${package}/data/${x.name}`).appendTo(li).click(function(e){
             e.preventDefault();
             show_data_download(x, url, package);
