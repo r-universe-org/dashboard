@@ -1460,6 +1460,7 @@ function populate_package_details(package){
         if(!x.name || !x.title) return;
         var li = $("<li>").appendTo(datasetlist);
         var url = help_page_url(package, src._contents.help, x.name);
+        if(!url) return; // probably "internal" dataset
         var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(x.name).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
         var lazydata = (src.LazyData || "").toLowerCase();
