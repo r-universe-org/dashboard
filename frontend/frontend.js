@@ -1258,6 +1258,9 @@ function show_data_download(x, url, package){
   $('#download-data-modal .modal-body').empty().text("Loading...")
   $('#download-data-modal').modal('show');
   var isdf = Array.isArray(x.class) && x.class.indexOf('data.frame') > -1;
+  $('#download-data-modal .export-xlsx').attr('href', `${server}/${package}/data/${x.name}/xlsx`).toggle(isdf);
+  $('#download-data-modal .export-ndjson').attr('href', `${server}/${package}/data/${x.name}/ndjson`).toggle(isdf);
+  $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf);
   $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
   $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
   $.get(url.replace("manual.html#", "page/"), function(str){
@@ -1572,7 +1575,7 @@ function basename(x){
 }
 
 //INIT
-var devtest = 'tidymodels'
+var devtest = 'tidyverse'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
