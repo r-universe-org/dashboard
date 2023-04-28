@@ -1268,6 +1268,7 @@ function show_data_download(x, url, package){
     $(el).find("hr").remove();
     $(el).find("h2").remove();
     $(el).find("h3").addClass('h5');
+    $(el).find("table").addClass('table table-sm table-responsive');
     $('#download-data-modal .modal-body').empty().append(el);
   });
 }
@@ -1575,7 +1576,7 @@ function basename(x){
 }
 
 //INIT
-var devtest = 'tidyverse'
+var devtest = 'kjhealy'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
