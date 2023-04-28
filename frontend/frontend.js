@@ -1263,6 +1263,7 @@ function show_data_download(x, url, package){
   $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf);
   $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
   $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
+  $('#download-data-modal .export-rds').attr('href', `${server}/${package}/data/${x.name}/rds`);
   $.get(url.replace("manual.html#", "page/"), function(str){
     var el = $.parseHTML(`<div>${str}</div>`);
     $(el).find("hr").remove();
@@ -1576,7 +1577,7 @@ function basename(x){
 }
 
 //INIT
-var devtest = 'kjhealy'
+var devtest = 'tidyverse'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
