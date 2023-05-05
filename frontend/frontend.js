@@ -369,7 +369,12 @@ function bitbucket_api_info(ghuser, server){
 function gitlab_api_info(ghuser, server){
   var username = ghuser.substring(7);
   return get_json(`https://gitlab.com/api/v4/users?username=${username}`).then(function(res){
-    var user = res && res[0];
+    if(res && res[0]){
+      return res[0];
+    }
+    return get_json(`https://gitlab.com/api/v4/groups/${username}`)
+  }).then(function(user){
+    user = user || {};
     $("#github-user-name").text(user.name || ghuser);
     $("#github-user-avatar").attr('src', user.avatar_url && user.avatar_url.replace(/s=[0-9]+/, 's=400'));
   });
