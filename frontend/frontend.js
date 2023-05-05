@@ -1475,7 +1475,7 @@ function populate_package_details(package){
         var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(x.name).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
         var lazydata = (src.LazyData || "").toLowerCase();
-        if(lazydata == 'yes' || lazydata == 'true'){
+        if(x.file || lazydata == 'yes' || lazydata == 'true'){
           var dlink = $('<a>').append('<small class="fas fa-download"></small>').attr('href', `${server}/${package}/data/${x.name}`).appendTo(li).click(function(e){
             e.preventDefault();
             show_data_download(x, url, package);
