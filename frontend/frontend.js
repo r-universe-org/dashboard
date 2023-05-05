@@ -363,7 +363,7 @@ function update_registry_status(ghuser, server){
 
 function bitbucket_api_info(ghuser, server){
   //bitbucket has no public api?
-  $("#github-user-name").text(ghuser.substring(10));
+  $("#github-user-name").text(`${ghuser.substring(10)} (bitbucket)`);
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/atlassian.png?size=400');
 }
 
