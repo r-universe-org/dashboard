@@ -1244,7 +1244,7 @@ function populate_readme(package){
     doc.find("h1").addClass("h3");
     doc.find("h2").addClass("h4");
     doc.find("h3").addClass("h5");
-    doc.find("table").addClass("table table-sm");
+    doc.find("table").addClass("table table-sm").attr('style', 'display: block; overflow:auto; width: 0; min-width: 100%;');
     doc.find('img').addClass('d-none').on("load", function() {
       var img = $(this);
       /* Do not show badges and broken images */

@@ -131,9 +131,18 @@ body {
   word-break: break-all;
 }
 
-/* Test package: js */
+/* Test package: js, BOE */
 .package-readme-content pre, .package-citation-content pre{
   white-space: pre-wrap;
+  width:0;
+  min-width:100%;
+}
+
+.package-readme-content table .package-citation-content table {
+  display: block;
+  overflow: auto;
+  width:0;
+  min-width:100%;
 }
 
 .nav-tabs.show .nav-link.active {
