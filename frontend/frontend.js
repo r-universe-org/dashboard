@@ -443,6 +443,10 @@ function init_user_summary(server){
       e.preventDefault();
       $("#articles-tab-link").click();
     });
+    $("#github-user-datasets .content").text(stats.datasets + ' datasets').click(function(e){
+      e.preventDefault();
+      //$("#contributors-tab-link").click();
+    });
     $("#github-user-contributors .content").text(stats.contributors + ' contributors').click(function(e){
       e.preventDefault();
       $("#contributors-tab-link").click();
@@ -1243,7 +1247,7 @@ function populate_readme(package){
     });
     doc.find("h1").addClass("h3");
     doc.find("h2").addClass("h4");
-    doc.find("h3").addClass("h5");
+    doc.find("h3").addClass("h5"); /* Override bootstrap table css to prevent overflowing */
     doc.find("table").addClass("table table-sm").attr('style', 'display: block; overflow:auto; width: 0; min-width: 100%;');
     doc.find('img').addClass('d-none').on("load", function() {
       var img = $(this);
