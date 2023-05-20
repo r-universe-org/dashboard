@@ -119,8 +119,10 @@ function make_contributor_chart(universe, max, imsize){
   max = max || 100;
   return get_ndjson(`https://${universe && universe + "." || ""}r-universe.dev/stats/contributors?all=true&limit=${max}`).then(function(contributors){
     const size = imsize || 50;
+    contributors = contributors.sort(function(x,y){return x.repos.length < y.repos.length ? 1 : -1});
+    contributors = contributors.filter(x => x.login != 'nturaga') //this is a bot from BioConductor
     const logins = contributors.map(x => x.login);
-    const totals = contributors.map(x => x.total);
+    const totals = contributors.map(x => x.repos.length);
     const counts = contributors.map(x => sort_packages(x.repos).map(x => x.upstream.split(/[\\/]/).pop()));
     const avatars = logins.map(x => `https://r-universe.dev/avatars/${x.replace('[bot]', '')}.png?size=${size}`);
     const images = avatars.map(x => undefined);
@@ -154,7 +156,7 @@ function make_contributor_chart(universe, max, imsize){
       if(pts.length){
         const x = pts[0];
         const user = logins[x.index];
-        window.open(`https://${user}.r-universe.dev`, "_blank");
+        window.open(`https://${user}.r-universe.dev/contributors`, "_blank");
       }
     };
 
