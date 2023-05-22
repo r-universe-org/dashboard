@@ -602,7 +602,7 @@ function init_package_descriptions(server, user){
     const tooltip_text = 'Copy to clipboard';
     md_icon.tooltip({title: tooltip_text, placement: 'left'});
     md_icon.on("click", function(e){
-      const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev)`;
+      const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev/${name})`;
       navigator.clipboard.writeText(text).then(function(e){
         md_icon.attr('data-original-title', 'Copied!').tooltip('show');
         md_icon.attr('data-original-title', tooltip_text);
