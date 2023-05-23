@@ -10,7 +10,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
-  <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=3">
+  <link rel="stylesheet" href="https://r-universe.dev/dashboard.css?nocache=4">
 
   <link rel="stylesheet" type="text/css" href="https://r-universe.dev/static/prism.css">
   <link rel="stylesheet" type="text/css" href="https://r-universe.dev/static/manual.css">
@@ -168,6 +168,9 @@
                 <a class="nav-link" id="badges-tab-link" data-toggle="tab" href="#badges" role="tab"><i class="far fa-id-badge pr-2"></i> Badges</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" id="snapshot-tab-link" data-toggle="tab" href="#snapshot" role="tab"><i class="far fa-folder-open pr-2"></i> Snapshot</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" id="rss-feed" href="index.xml" target="_blank"><span class="fas fa-rss pr-2"></span> Feed</a>
               </li>
               <li class="nav-item d-none">
@@ -218,6 +221,64 @@
               <div class="tab-pane" id="articles" role="tabpanel">
                 <div id="article-list-group" class="list-group mt-4">
                   <p id="article-list-placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading articles...</p>
+                </div>
+              </div>
+              <div class="tab-pane" id="snapshot" role="tabpanel">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="api-snapshot-url">Snapshot API permanent URL</label>
+                      <div class="input-group">
+                        <input id="api-snapshot-url" type="text" class="form-control bg-light" value="https://jeroen.r-universe.dev/snapshot/zip" readonly>
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-primary" id="api-snapshot-download" type="button">Download</button>
+                        </div>
+                      </div>
+                      <small class="form-text text-muted">Download a full copy of the cran-like repository to backup or host elsewhere</small>
+                    </div>
+
+                    <div class="form-row" id="snapshot-form">
+
+                      <div class="form-group col-md-3">
+                        <label>Optional filters (default is everything):
+                      </div>
+
+                      <fieldset class="form-group col-md-2">
+                        <div class="form-check">
+                          <input class="form-check-input" name="types" type="checkbox" value="src" id="form-types-src">
+                          <label class="form-check-label" for="form-types-src">Source packages</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" name="types" type="checkbox" value="win" id="form-types-win">
+                          <label class="form-check-label" for="form-types-win">Windows binaries</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" name="types" type="checkbox" value="mac" id="form-types-mac">
+                          <label class="form-check-label" for="form-types-mac">MacOS binaries</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" name="types" type="checkbox" value="linux" id="form-types-linux">
+                          <label class="form-check-label" for="form-types-linux">Linux binaries</label>
+                        </div>
+                      </fieldset>
+
+
+                      <fieldset class="form-group col-md-2">
+                        <div class="form-check">
+                          <input class="form-check-input" name="binaries" type="checkbox" value="4.3" id="form-binaries-4.3">
+                          <label class="form-check-label" for="form-binaries-4.3">Binaries for R-4.3</label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" name="binaries" type="checkbox" value="4.2" id="form-binaries-4.2">
+                          <label class="form-check-label" for="form-binaries-4.2">Binaries for R-4.2</label>
+                        </div>
+                      </fieldset>
+
+                      <div class="form-group col-md-2" >
+                        <select multiple class="form-control" size="10" id="form-packages"></select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="tab-pane" id="badges" role="tabpanel">
@@ -573,6 +634,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=45"></script>
+  <script src="frontend/frontend.js?nocache=46"></script>
 </body>
 </html>

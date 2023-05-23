@@ -610,8 +610,10 @@ function init_package_descriptions(server, user){
     });
     $("<td>").append(md_icon).appendTo(tr);
   }
+
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
+  var pkglist = []
   ndjson_batch_stream(server + '/stats/descriptions?all=true', function(x){
     if(first_page && x.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
@@ -661,10 +663,12 @@ function init_package_descriptions(server, user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
       item.find('.description-topics').append(make_topic_badges(pkg['_contents']));
+      pkglist.push(pkg.Package);
     });
     $("#package-description-placeholder").hide();
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
+    pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#form-packages'));
     $("#package-description-placeholder").text("No packages found in this username.");
   });
   //});
@@ -1586,6 +1590,35 @@ function basename(x){
   return x.split(/[\\/]/).pop();
 }
 
+function activate_snapshot_panel(user){
+  function update_snapshot_url(){
+    var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get();
+    var binaries = $("input:checkbox[name=binaries]:checked").map(function(){return $(this).val()}).get();
+    var packages = $('#form-packages').val();
+    var params = [];
+    if(types.length){
+      params.push(`types=${types.join(',')}`);
+    }
+    if(binaries.length){
+      params.push(`binaries=${binaries.join(',')}`);
+    }
+    if(packages.length){
+      params.push(`packages=${packages.join(',')}`);
+    }
+
+    var url = `https://${user}.r-universe.dev/snapshot/zip`;
+    if(params.length){
+      url = url + "?" + params.join("&");
+    }
+    $("#api-snapshot-url").val(url);
+  }
+  $('#api-snapshot-download').click(function(){
+    window.open($("#api-snapshot-url").val());
+  });
+  $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url);
+  update_snapshot_url();
+}
+
 //INIT
 var devtest = 'tidyverse'
 var host = location.hostname;
@@ -1613,6 +1646,7 @@ init_user_info(user, server).then(function(){
   }
 });
 init_package_descriptions(server, user);
+activate_snapshot_panel(user);
 
 var articledatapromise = init_article_data(server);
 iFrameResize({ log: false, checkOrigin: false, warningTimeout: 0 }, '#viewerframe');

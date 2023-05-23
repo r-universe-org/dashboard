@@ -193,7 +193,7 @@ a {
   font-weight: 500;
   font-size: 12px;
   color: rgba(0,0,0,0.55);
-  padding: 17px 29px 16px 29px;
+  padding: 17px 29px 16px 14px;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
 }
 
