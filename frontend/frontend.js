@@ -1592,18 +1592,18 @@ function basename(x){
 
 function activate_snapshot_panel(user){
   function update_snapshot_url(){
-    var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get();
-    var binaries = $("input:checkbox[name=binaries]:checked").map(function(){return $(this).val()}).get();
-    var packages = $('#form-packages').val();
+    var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get().join();
+    var binaries = $("input:checkbox[name=binaries]:checked").map(function(){return $(this).val()}).get().join();
+    var packages = $('#form-packages').val().join();
     var params = [];
     if(types.length){
-      params.push(`types=${types.join()}`);
+      params.push(`types=${types}`);
     }
-    if(binaries.length){
-      params.push(`binaries=${binaries.join()}`);
+    if(binaries.length && types != 'src'){
+      params.push(`binaries=${binaries}`);
     }
     if(packages.length){
-      params.push(`packages=${packages.join()}`);
+      params.push(`packages=${packages}`);
     }
 
     var url = `https://${user}.r-universe.dev/snapshot/zip`;
@@ -1611,7 +1611,7 @@ function activate_snapshot_panel(user){
       url = url + "?" + params.join("&");
     }
     $("#api-snapshot-url").val(url);
-    $("input:checkbox[name=binaries]").prop('disabled', types.join() == 'src');
+    $("input:checkbox[name=binaries]").prop('disabled', types == 'src');
   }
   $('#api-snapshot-download').click(function(){
     window.open($("#api-snapshot-url").val());
