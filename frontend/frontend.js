@@ -1597,13 +1597,13 @@ function activate_snapshot_panel(user){
     var packages = $('#form-packages').val();
     var params = [];
     if(types.length){
-      params.push(`types=${types.join(',')}`);
+      params.push(`types=${types.join()}`);
     }
     if(binaries.length){
-      params.push(`binaries=${binaries.join(',')}`);
+      params.push(`binaries=${binaries.join()}`);
     }
     if(packages.length){
-      params.push(`packages=${packages.join(',')}`);
+      params.push(`packages=${packages.join()}`);
     }
 
     var url = `https://${user}.r-universe.dev/snapshot/zip`;
@@ -1611,6 +1611,7 @@ function activate_snapshot_panel(user){
       url = url + "?" + params.join("&");
     }
     $("#api-snapshot-url").val(url);
+    $("input:checkbox[name=binaries]").prop('disabled', types.join() == 'src');
   }
   $('#api-snapshot-download').click(function(){
     window.open($("#api-snapshot-url").val());
