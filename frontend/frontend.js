@@ -1271,13 +1271,13 @@ function show_data_download(x, url, package){
   $('#download-data-modal h5').text(x.title);
   $('#download-data-modal .modal-body').empty().text("Loading...")
   $('#download-data-modal').modal('show');
-  var isdf = Array.isArray(x.class) && x.class.indexOf('data.frame') > -1;
-  $('#download-data-modal .export-xlsx').attr('href', `${server}/${package}/data/${x.name}/xlsx`).toggle(isdf);
-  $('#download-data-modal .export-ndjson').attr('href', `${server}/${package}/data/${x.name}/ndjson`).toggle(isdf);
-  $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf);
-  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(isdf);
   $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
   $('#download-data-modal .export-rds').attr('href', `${server}/${package}/data/${x.name}/rds`);
+  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(x.table === true);
+  $('#download-data-modal .export-xlsx').attr('href', `${server}/${package}/data/${x.name}/xlsx`).toggle(x.table === true);
+  var isdf = Array.isArray(x.class) && x.class.includes('data.frame');
+  $('#download-data-modal .export-ndjson').attr('href', `${server}/${package}/data/${x.name}/ndjson`).toggle(isdf || x.json === true);
+  $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf || x.json === true);
   $.get(url.replace("manual.html#", "page/"), function(str){
     var el = $.parseHTML(`<div>${str}</div>`);
     $(el).find("hr").remove();
