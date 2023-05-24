@@ -1271,6 +1271,7 @@ function show_data_download(x, url, package){
   $('#download-data-modal h5').text(x.title);
   $('#download-data-modal .modal-body').empty().text("Loading...")
   $('#download-data-modal').modal('show');
+  $('#download-data-modal .export-classname').text(x.class.length && x.class[0]);
   $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
   $('#download-data-modal .export-rds').attr('href', `${server}/${package}/data/${x.name}/rds`);
   $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(x.table === true);
