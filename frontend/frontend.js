@@ -1608,7 +1608,7 @@ function activate_snapshot_panel(user){
       params.push(`packages=${packages}`);
     }
 
-    var url = `https://${user}.r-universe.dev/snapshot/zip`;
+    var url = `https://${user}.r-universe.dev/api/snapshot/zip`;
     if(params.length){
       url = url + "?" + params.join("&");
     }
