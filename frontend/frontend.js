@@ -1601,7 +1601,7 @@ function activate_snapshot_panel(user){
     if(types.length){
       params.push(`types=${types}`);
     }
-    if(binaries.length && types != 'src'){
+    if(binaries.length && types.match('win|mac|linux')){
       params.push(`binaries=${binaries}`);
     }
     if(packages.length){
@@ -1613,7 +1613,7 @@ function activate_snapshot_panel(user){
       url = url + "?" + params.join("&");
     }
     $("#api-snapshot-url").val(url);
-    $("input:checkbox[name=binaries]").prop('disabled', types == 'src');
+    $("input:checkbox[name=binaries]").prop('disabled', types && !types.match('win|mac|linux'));
   }
   $('#api-snapshot-download').click(function(){
     window.open($("#api-snapshot-url").val());
