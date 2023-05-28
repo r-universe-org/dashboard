@@ -168,7 +168,7 @@
                 <a class="nav-link" id="badges-tab-link" data-toggle="tab" href="#badges" role="tab"><i class="far fa-id-badge pr-2"></i> Badges</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="snapshot-tab-link" data-toggle="tab" href="#snapshot" role="tab"><i class="far fa-folder-open pr-2"></i> Snapshot</a>
+                <a class="nav-link" id="api-tab-link" data-toggle="tab" href="#api" role="tab"><i class="far fa-folder-open pr-2"></i> API</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="rss-feed" href="index.xml" target="_blank"><span class="fas fa-rss pr-2"></span> Feed</a>
@@ -223,18 +223,39 @@
                   <p id="article-list-placeholder"><span class="spinner-grow spinner-grow-sm" role="status"></span> Loading articles...</p>
                 </div>
               </div>
-              <div class="tab-pane" id="snapshot" role="tabpanel">
-                <div class="card">
+              <div class="tab-pane" id="api" role="tabpanel">
+                <div class="card m-2">
                   <div class="card-body">
                     <div class="form-group">
-                      <label for="api-snapshot-url">Snapshot API permanent URL</label>
+                      <h5 class="card-title">Package Data JSON API:</h5>
                       <div class="input-group">
-                        <input id="api-snapshot-url" type="text" class="form-control bg-light" value="https://jeroen.r-universe.dev/snapshot/zip" readonly>
+                        <input id="api-packages" type="text" class="form-control bg-light" readonly>
                         <div class="input-group-append">
-                          <button class="btn btn-outline-primary" id="api-snapshot-download" type="button">Download</button>
+                          <button class="btn btn-primary" id="api-packages-open" type="button">Open</button>
                         </div>
                       </div>
-                      <small class="form-text text-muted">Download a full copy of the cran-like repository to backup or host elsewhere</small>
+                      <small class="form-text text-muted">Get data from packages this universe</small>
+                    </div>
+                    <div class="form-row form-group">
+                      <div class="col-sm-3">
+                        <select class="form-control form-control-sm" id="api-package-select">
+                          <option value="">All packages</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card m-2">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <h5 class="card-title">Snapshot API:</h5>
+                      <div class="input-group">
+                        <input id="api-snapshot-url" type="text" class="form-control bg-light" readonly>
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" id="api-snapshot-download" type="button">Download</button>
+                        </div>
+                      </div>
+                      <small class="form-text text-muted">Download a full copy of the cran-like repository with docs to mirror or backup.</small>
                     </div>
 
                     <div class="form-row" id="snapshot-form">
@@ -279,7 +300,7 @@
                       </fieldset>
 
                       <div class="form-group col-sm" >
-                        <select multiple class="form-control" size="10" id="form-packages"></select>
+                        <select multiple class="form-control" size="10" id="api-snapshot-packages"></select>
                       </div>
                     </div>
                   </div>
@@ -639,6 +660,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=53"></script>
+  <script src="frontend/frontend.js?nocache=54"></script>
 </body>
 </html>

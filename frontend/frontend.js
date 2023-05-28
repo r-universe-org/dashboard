@@ -668,7 +668,7 @@ function init_package_descriptions(server, user){
     $("#package-description-placeholder").hide();
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
-    pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#form-packages'));
+    pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
     $("#package-description-placeholder").text("No packages found in this username.");
   });
   //});
@@ -1593,10 +1593,15 @@ function basename(x){
 }
 
 function activate_snapshot_panel(user){
+  function update_packages_url(){
+    var package = $('#api-package-select').val();
+    var url = `https://${user}.r-universe.dev/api/packages/${package}`;
+    $("#api-packages").val(url);
+  }
   function update_snapshot_url(){
     var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get().join();
     var binaries = $("input:checkbox[name=binaries]:checked").map(function(){return $(this).val()}).get().join();
-    var packages = $('#form-packages').val().join();
+    var packages = $('#api-snapshot-packages').val().join();
     var params = [];
     if(types.length){
       params.push(`types=${types}`);
@@ -1618,8 +1623,11 @@ function activate_snapshot_panel(user){
   $('#api-snapshot-download').click(function(){
     window.open($("#api-snapshot-url").val());
   });
-  $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url);
-  update_snapshot_url();
+  $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url).trigger('change');
+  $('#api-packages-open').click(function(){
+    window.open($("#api-packages").val());
+  });
+  $('#api-package-select').change(update_packages_url).trigger("change");
 }
 
 //INIT
