@@ -668,7 +668,6 @@ function init_package_descriptions(server, user){
     $("#package-description-placeholder").hide();
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
-    pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
     $("#package-description-placeholder").text("No packages found in this username.");
   });
   //});
@@ -1596,7 +1595,8 @@ function activate_snapshot_panel(user){
   function update_packages_url(){
     var package = $('#api-package-select').val();
     var url = `https://${user}.r-universe.dev/api/packages/${package}`;
-    $("#api-packages").val(url);
+    $("#api-packages-url input").val(url);
+    $("#api-packages-url a").attr('href', url);
   }
   function update_snapshot_url(){
     var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get().join();
@@ -1617,17 +1617,16 @@ function activate_snapshot_panel(user){
     if(params.length){
       url = url + "?" + params.join("&");
     }
-    $("#api-snapshot-url").val(url);
+    $("#api-snapshot-url input").val(url);
+    $("#api-snapshot-url a").attr('href', url);
     $("input:checkbox[name=binaries]").prop('disabled', types && !types.match('win|mac|linux'));
   }
-  $('#api-snapshot-download').click(function(){
-    window.open($("#api-snapshot-url").val());
-  });
   $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url).trigger('change');
-  $('#api-packages-open').click(function(){
-    window.open($("#api-packages").val());
-  });
   $('#api-package-select').change(update_packages_url).trigger("change");
+  get_json(`https://${user}.r-universe.dev/api/packages`).then(function(res){
+    var pkglist = res.map(x => x.Package);
+    pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
+  });
 }
 
 //INIT

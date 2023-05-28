@@ -228,10 +228,10 @@
                   <div class="card-body">
                     <div class="form-group">
                       <h5 class="card-title">Package Data JSON API:</h5>
-                      <div class="input-group">
-                        <input id="api-packages" type="text" class="form-control bg-light" readonly>
+                      <div class="input-group" id="api-packages-url">
+                        <input type="text" class="form-control bg-light" readonly>
                         <div class="input-group-append">
-                          <button class="btn btn-primary" id="api-packages-open" type="button">Open</button>
+                          <a target="_blank" class="btn btn-primary">Open</a>
                         </div>
                       </div>
                       <small class="form-text text-muted">Get data from packages this universe</small>
@@ -249,10 +249,10 @@
                   <div class="card-body">
                     <div class="form-group">
                       <h5 class="card-title">Snapshot API:</h5>
-                      <div class="input-group">
-                        <input id="api-snapshot-url" type="text" class="form-control bg-light" readonly>
+                      <div class="input-group" id="api-snapshot-url">
+                        <input type="text" class="form-control bg-light" readonly>
                         <div class="input-group-append">
-                          <button class="btn btn-primary" id="api-snapshot-download" type="button">Download</button>
+                          <a target="_blank" class="btn btn-primary">Download</a>
                         </div>
                       </div>
                       <small class="form-text text-muted">Download a full copy of the cran-like repository with docs to mirror or backup.</small>
@@ -660,6 +660,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=54"></script>
+  <script src="frontend/frontend.js?nocache=55"></script>
 </body>
 </html>
