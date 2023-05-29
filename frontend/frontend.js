@@ -1138,7 +1138,7 @@ function github_repo_info(repo){
     if(data.archived){
       $('.open-issues-count').text(`ARCHIVED on GitHub`)
     } else if(data.open_issues_count){
-      $('.open-issues-count').text(`${data.open_issues_count} open`)
+      $('.open-issues-count').text(`${data.open_issues_count} issues`)
     }
   });
 }
@@ -1150,7 +1150,7 @@ function populate_issue_tracker(src, details){
   details.find(".package-details-issues").toggle(!!tracker);
   details.find(".package-details-notracker").toggle(!tracker);
   if(tracker){
-    const ghrepo = tracker.match('github.com/(.*/.*)/issues')
+    const ghrepo = tracker.match('github.com/(.*/.*)/.*')
     if(ghrepo){
       github_repo_info(ghrepo[1]);
     }
