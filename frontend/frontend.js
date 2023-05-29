@@ -1619,11 +1619,12 @@ function activate_snapshot_panel(user){
     var types = $("input:checkbox[name=types]:checked").map(function(){return $(this).val()}).get().join();
     var binaries = $("input:checkbox[name=binaries]:checked").map(function(){return $(this).val()}).get().join();
     var packages = $('#api-snapshot-packages').val().join();
+    var need_binaries = !types || types.match('win|mac|linux')
     var params = [];
     if(types.length){
       params.push(`types=${types}`);
     }
-    if(binaries.length && types.match('win|mac|linux')){
+    if(binaries.length && need_binaries){
       params.push(`binaries=${binaries}`);
     }
     if(packages.length){
@@ -1636,7 +1637,7 @@ function activate_snapshot_panel(user){
     }
     $("#api-snapshot-url input").val(url);
     $("#api-snapshot-url a").attr('href', url);
-    $("input:checkbox[name=binaries]").prop('disabled', types && !types.match('win|mac|linux'));
+    $("input:checkbox[name=binaries]").prop('disabled', !need_binaries);
   }
   $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url).trigger('change');
   $('#api-package-select').change(update_packages_url).trigger("change");
