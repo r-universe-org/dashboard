@@ -381,7 +381,7 @@ function gitlab_api_info(ghuser, server){
   });
 }
 
-function github_api_info(ghuser, server){
+function github_user_info(ghuser, server){
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
   $("#rss-feed").attr("href", server + '/feed.xml');
   jQuery.get(`https://r-universe.dev/avatars/${user}.keys`).done(function(res){
@@ -429,7 +429,7 @@ function init_user_info(ghuser, server){
   } else if(ghuser.startsWith('gitlab-')){
     return gitlab_api_info(ghuser, server);
   } else {
-    return github_api_info(ghuser, server);
+    return github_user_info(ghuser, server);
   }
 }
 
@@ -1133,11 +1133,28 @@ function normalize_authors(str){
   return str.replace(/\s*\([^()]*\)/g, '').replace(/\s*\([\s\S]+?\)/g,"");
 }
 
+function github_repo_info(repo){
+  return get_json(server + '/gh/repos/' + repo).then(function(data){
+    if(data.archived){
+      $('.open-issues-count').text(`ARCHIVED on GitHub`)
+    } else if(data.open_issues_count){
+      $('.open-issues-count').text(`${data.open_issues_count} open`)
+    }
+  });
+}
+
 function populate_issue_tracker(src, details){
+  $('.open-issues-count').empty();
   var tracker = guess_tracker_url(src);
   details.find(".package-details-issues a").text(tracker).attr('href', tracker);
   details.find(".package-details-issues").toggle(!!tracker);
   details.find(".package-details-notracker").toggle(!tracker);
+  if(tracker){
+    const ghrepo = tracker.match('github.com/(.*/.*)/issues')
+    if(ghrepo){
+      github_repo_info(ghrepo[1]);
+    }
+  }
 }
 
 function guess_tracker_url(src){
