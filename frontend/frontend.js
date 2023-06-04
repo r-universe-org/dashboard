@@ -1290,12 +1290,12 @@ function show_data_download(x, url, package){
   $('#download-data-modal .export-classname').empty().append(`${x.name} is a <b>${x.class.length && x.class[0]}</b>`);
   $('#download-data-modal .export-rda').attr('href', `${server}/${package}/data/${x.name}/rda`);
   $('#download-data-modal .export-rds').attr('href', `${server}/${package}/data/${x.name}/rds`);
-  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(x.table === true);
-  $('#download-data-modal .export-xlsx').attr('href', `${server}/${package}/data/${x.name}/xlsx`).toggle(x.table === true);
   var isdf = Array.isArray(x.class) && x.class.includes('data.frame');
+  $('#download-data-modal .export-csv').attr('href', `${server}/${package}/data/${x.name}/csv`).toggle(x.table === true);
+  $('#download-data-modal .export-xlsx').attr('href', `${server}/${package}/data/${x.name}/xlsx`).toggle(x.table === true && isdf);
   //todo: once the db is all updated, /json below requires x.json and ndjson requires isdf && x.json
-  $('#download-data-modal .export-ndjson').attr('href', `${server}/${package}/data/${x.name}/ndjson`).toggle(isdf || x.json === true);
-  $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf || x.json === true);
+  $('#download-data-modal .export-ndjson').attr('href', `${server}/${package}/data/${x.name}/ndjson`).toggle(isdf && x.tojson !== false);
+  $('#download-data-modal .export-json').attr('href', `${server}/${package}/data/${x.name}/json`).toggle(isdf || x.tojson === true);
   $.get(url.replace("manual.html#", "page/"), function(str){
     var el = $.parseHTML(`<div>${str}</div>`);
     $(el).find("hr").remove();
