@@ -1181,7 +1181,7 @@ function populate_download_links(x, details){
   var linux = x.binaries.filter(x => x.os == 'linux');
   var srcfile = `${package}_${x.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
-  details.find('.package-details-json').attr('href', `${server}/${package}/json`).text(`${package}/json`);
+  details.find('.package-details-json').attr('href', `${server}/api/packages/${package}`).text(`${package}/json`);
   wins.sort(sortfun).forEach(function(binary){
     var build = binary.r.substring(0,3);
     var filename = `${package}_${binary.version}.zip`;
@@ -1327,7 +1327,7 @@ function populate_package_details(package){
   $('.package-details-installation-header').text(`Getting started with ${package} in R`);
   var details = $('#templatezone .details-card').clone();
   var promises = [populate_revdeps(package)];
-  get_path(`${server}/${package}/json`).then(function(src){
+  get_path(`${server}/api/packages/${package}`).then(function(src){
     if(!src){
       alert("Failed to find package " + package);
     }
@@ -1353,7 +1353,7 @@ function populate_package_details(package){
     details.find('.package-details-description').text(src.Description);
     details.find('.package-details-author').text(normalize_authors(src.Author));
     details.find('.citation-link').attr('href', `${server}/${package}/citation.cff`);
-    details.find('.package-json-link').attr('href', `${server}/${package}/json`);
+    details.find('.package-json-link').attr('href', `${server}/api/packages/${package}`);
     details.find('.upstream-git-link').attr('href', builder.upstream);
     populate_download_links(src, details);
     populate_issue_tracker(src, details);
