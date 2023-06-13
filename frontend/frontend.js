@@ -1658,12 +1658,16 @@ function activate_snapshot_panel(user){
     res.forEach(function(x){
       var datasets = (x['_contents'] || {}).datasets;
       if(datasets){
-        $('#api-dataset-data').trigger('change')
         datasets.forEach(function(data){
           $('<option>').text(`${x.Package}::${data.name} (${data.class[0]})`).attr('data-package',x.Package).attr('data-name', data.name).appendTo('#api-dataset-data');
         });
       }
     });
+    if($('#api-dataset-data option').length){
+      $('#api-dataset-data').trigger('change')
+    } else {
+      $('#api-dataset-container').hide();
+    };
   });
 }
 
