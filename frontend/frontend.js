@@ -1609,6 +1609,16 @@ function basename(x){
 }
 
 function activate_snapshot_panel(user){
+  function update_dataset_url(){
+    var selected = $('#api-dataset-data').find(":selected");
+    var name = selected.attr('data-name');
+    var package = selected.attr('data-package');
+    var format = $('#api-dataset-format').val();
+    var url = `https://${user}.r-universe.dev/${package}/data/${name}/${format}`;
+    $("#api-dataset-url input").val(url);
+    $("#api-dataset-url a").attr('href', url);
+  }
+
   function update_packages_url(){
     var package = $('#api-package-select').val();
     var url = `https://${user}.r-universe.dev/api/packages/${package}`;
@@ -1641,9 +1651,19 @@ function activate_snapshot_panel(user){
   }
   $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url).trigger('change');
   $('#api-package-select').change(update_packages_url).trigger("change");
+  $('#api-dataset-data,#api-dataset-format').change(update_dataset_url);
   get_json(`https://${user}.r-universe.dev/api/packages`).then(function(res){
     var pkglist = res.map(x => x.Package);
     pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
+    res.forEach(function(x){
+      var datasets = (x['_contents'] || {}).datasets;
+      if(datasets){
+        $('#api-dataset-data').trigger('change')
+        datasets.forEach(function(data){
+          $('<option>').text(`${x.Package}::${data.name} (${data.class[0]})`).attr('data-package',x.Package).attr('data-name', data.name).appendTo('#api-dataset-data');
+        });
+      }
+    });
   });
 }
 

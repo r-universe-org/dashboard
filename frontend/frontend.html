@@ -227,14 +227,14 @@
                 <div class="card m-2">
                   <div class="card-body">
                     <div class="form-group">
-                      <h5 class="card-title">Packages API:</h5>
+                      <h5 class="card-title">Packages API</h5>
                       <div class="input-group" id="api-packages-url">
                         <input type="text" class="form-control bg-light" readonly>
                         <div class="input-group-append">
                           <a target="_blank" class="btn btn-primary">Open</a>
                         </div>
                       </div>
-                      <small class="form-text text-muted">Get data from packages this universe</small>
+                      <small class="form-text text-muted">Information about packages in this universe</small>
                     </div>
                     <div class="form-row form-group">
                       <div class="col-sm-3">
@@ -245,10 +245,41 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="card m-2">
                   <div class="card-body">
                     <div class="form-group">
-                      <h5 class="card-title">Snapshot API:</h5>
+                      <h5 class="card-title">Datasets API</h5>
+                      <div class="input-group" id="api-dataset-url">
+                        <input type="text" class="form-control bg-light" readonly>
+                        <div class="input-group-append">
+                          <a target="_blank" class="btn btn-primary">Download</a>
+                        </div>
+                      </div>
+                      <small class="form-text text-muted">Export datasets to various formats</small>
+                    </div>
+                    <div class="form-row form-group">
+                      <div class="col-sm-3">
+                        <select class="form-control form-control-sm" id="api-dataset-data" placeholder="Select dataset"></select>
+                      </div>
+                      <div class="col-sm-3">
+                        <select class="form-control form-control-sm" id="api-dataset-format">
+                          <option>csv</option>
+                          <option>xlsx</option>
+                          <option>json</option>
+                          <option>ndjson</option>
+                          <option value="rda">RData</option>
+                          <option>rds</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card m-2">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <h5 class="card-title">Snapshot API</h5>
                       <div class="input-group" id="api-snapshot-url">
                         <input type="text" class="form-control bg-light" readonly>
                         <div class="input-group-append">
@@ -660,6 +691,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery_lazyload/2.0.0-rc.2/lazyload.min.js"></script>
     <!-- make chartjs work on some very old browsers -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver" async></script>
-  <script src="frontend/frontend.js?nocache=62"></script>
+  <script src="frontend/frontend.js?nocache=64"></script>
 </body>
 </html>
