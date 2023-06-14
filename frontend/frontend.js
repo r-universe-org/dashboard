@@ -414,6 +414,8 @@ function github_user_info(ghuser, server){
       $("#github-user-avatar").removeClass("rounded-circle");
       //$("#github-user-avatar").addClass("p-2");
     }
+  }).catch(function(err){
+    $("#github-user-bio").text(err);
   });
 }
 
