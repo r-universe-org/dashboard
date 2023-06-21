@@ -11,7 +11,8 @@ const searchfields = {
   'maintainer' : 'maintainer name (free text)',
   'topic' : 'keyword/topic label',
   'needs' : 'packages that transitively depend on this package',
-  'exports' : 'name of a function or dataset in the package'
+  'exports' : 'name of a function or object in the package',
+  'data' : 'match keyword in title of a dataset dataset '
 }
 
 /* Menu example: https://www.codeply.com/p/eDmT9PMWW3 */
