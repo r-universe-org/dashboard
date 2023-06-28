@@ -132,7 +132,7 @@ function docs_icon(pkg, url){
 function run_icon(run, src, binarystatus){
   //run.status ??= binarystatus;
   run.status = run.status || binarystatus;
-  if(run.skip)
+  if(run.skip || binarystatus === 'skipped')
     return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', 'slategrey');
   if(run.type == 'pending')
     return $('<span></span>')
