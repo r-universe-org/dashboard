@@ -476,7 +476,7 @@ function init_maintainer_list(user, server){
       if(a.count > b.count) return -1;
       return 0;
     }
-    x.sort(order).forEach(function(maintainer){
+    x.sort(order).slice(0,25).forEach(function(maintainer){
       if(maintainer.login == user && maintainer.orcid){
         $("#github-user-orcid").toggleClass("d-none").attr('href', 'https://orcid.org/' + maintainer.orcid);
       }
