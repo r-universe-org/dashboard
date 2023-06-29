@@ -1654,7 +1654,7 @@ function activate_snapshot_panel(user){
   $('#snapshot-form input,#snapshot-form select').change(update_snapshot_url).trigger('change');
   $('#api-package-select').change(update_packages_url).trigger("change");
   $('#api-dataset-data,#api-dataset-format').change(update_dataset_url);
-  get_json(`https://${user}.r-universe.dev/api/packages`).then(function(res){
+  get_json(`https://${user}.r-universe.dev/api/packages?fields=_contents.datasets`).then(function(res){
     var pkglist = res.map(x => x.Package);
     pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
     res.forEach(function(x){
