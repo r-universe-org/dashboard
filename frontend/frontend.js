@@ -314,7 +314,7 @@ function init_packages_table(server, user){
         var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
         maintainerlink.text(pkg.maintainer).addClass('text-secondary');
         var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src),
-          [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (user == 'bioconductor') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
+          [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
         } else if(user != 'bioconductor' && owner != 'cran') {
@@ -1209,6 +1209,7 @@ function populate_download_links(x, details){
   });
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
   details.find(".package-details-logs").attr('href', x._builder.url);
+  details.find('.winmac-binaries').toggle(x._user !== 'cran');
 }
 
 function link_to_pkg(owner, pkg){
@@ -1700,7 +1701,11 @@ init_user_info(user, server).then(function(){
   }
 });
 init_package_descriptions(server, user);
-activate_snapshot_panel(user);
+if(user == 'cran'){
+  $('#api-tab-link').parent().hide();
+} else {
+  activate_snapshot_panel(user);
+}
 
 var articledatapromise = init_article_data(server);
 iFrameResize({ log: false, checkOrigin: false, warningTimeout: 0 }, '#viewerframe');
@@ -1709,7 +1714,7 @@ $('#articles-tab-link').one('shown.bs.tab', function (e) {
 });
 
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
-  if(user == 'bioconductor') $(".nobioc").text("")
+  if(user == 'bioconductor' || user == 'cran') $(".nobioc").text("")
   init_packages_table(server, user);
   make_activity_chart(user);
 });
