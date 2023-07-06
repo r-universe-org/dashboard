@@ -317,7 +317,7 @@ function init_packages_table(server, user){
           [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (true || user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-        } else if(user != 'bioconductor' && owner != 'cran') {
+        } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
           attach_cran_badge(name, pkg.upstream, pkglink);
         }
         rows[name] ? rows[name].after(row) : tbody.append(row);
@@ -1520,7 +1520,7 @@ function populate_package_details(package){
       crandiv.find('.cran-title').text("On BioConductor:")
       crandiv.find('.cran-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
       crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
-    } else {
+    } else if(user != 'cran') {
       get_cran_status(package).then(function(x){
         if(x.version){
           var versiontxt = x.version === 'archived' ? `${package} (archived)` : `${package}-${x.version}`;
