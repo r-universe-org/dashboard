@@ -1564,10 +1564,14 @@ function populate_package_details(package){
   }
 }
 
+function fail_status(x){
+  return x && ["success", "skipped"].includes(x) == false;
+}
+
 function generate_status_icon(builder, os_type){
   var docfail = builder.status != 'success';
-  var winfail = builder.winbinary && builder.winbinary != 'success' && os_type != 'unix';
-  var macfail = builder.macbinary && builder.macbinary != 'success' && os_type != 'windows';
+  var winfail = fail_status(builder.winbinary) && os_type != 'unix';
+  var macfail = fail_status(builder.macbinary) && os_type != 'windows';
   var statustxt = 'Articles and win/mac binaries OK'
   var success = true;
   if(docfail || winfail || macfail){
