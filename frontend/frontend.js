@@ -519,10 +519,10 @@ function pretty_dependencies(pkg){
 
 function get_package_image(pkg){
   var owner = pkg['_owner'];
-  var pkglogo = pkg['_contents'] && pkg['_contents'].pkglogo;
+  var pkglogo = pkg._pkglogo;
   if(pkglogo && pkglogo.startsWith('http'))
     return pkglogo;
-  var maintainerdata = pkg['_builder'] && pkg['_builder'].maintainer || {};
+  var maintainerdata = pkg._maintainer || {};
   var maintainer = maintainerdata.login;
   if(maintainer && maintainer != user){
     return avatar_url(maintainer, 140);
@@ -533,10 +533,11 @@ function get_package_image(pkg){
   return avatar_url('r-universe', 140);
 }
 
-function make_topic_badges(pkginfo){
-  var topics = pkginfo.gitstats && pkginfo.gitstats.topics || [];
-  if(pkginfo.sysdeps){
-    pkginfo.sysdeps.forEach(function(x){
+//temp duplicate because of api overhaul
+function make_topic_badges(src){
+  var topics = src._gitstats && src._gitstats.topics || [];
+  if(src._sysdeps){
+    src._sysdeps.forEach(function(x){
       if(x.name && Array.isArray(topics) && !topics.includes(x.name)){
         topics.push(x.name)
       }
@@ -544,6 +545,7 @@ function make_topic_badges(pkginfo){
   }
   return make_badges(topics);
 }
+
 
 function get_topic_page(index, topic){
   if(!topic || !index || !index.length) return;
@@ -557,10 +559,11 @@ function help_page_url(package, index, topic){
   }
 }
 
-function make_exports_badges(contents, package){
+function make_exports_badges(src){
   var div = $("<span>");
-  var labels = contents.exports || [];
-  var index = contents.help || [];
+  var package = src.Package;
+  var labels = src._exports || [];
+  var index = src._help || [];
   labels.forEach(function(topic){
     var url = help_page_url(package, index, topic);
     $("<a>").attr("target", "_blank").attr("href", url).addClass(`badge badge-secondary mr-1`).text(topic).appendTo(div);
@@ -583,9 +586,10 @@ function make_badges(labels, color, prefix){
   return div;
 }
 
-function make_help_table(contents, package){
+function make_help_table(src){
+  var package = src.Package;
   var tbody = $('.manpages-table tbody').empty();
-  var help = contents.help || [];
+  var help = src._help || [];
   help.forEach(function(page){
     var name = page.page.replace(/\.html$/, "");
     var link = a(`${server}/${package}/doc/manual.html#${name}`, page.title || name).attr("target", "_blank");
@@ -627,7 +631,7 @@ function init_package_descriptions(server, user){
       //console.log(pkg)
       var org = pkg['_user'];
       var item = $("#templatezone .package-description-item").clone();
-      var login = pkg['_builder'].maintainer.login;
+      var login = pkg._maintainer.login;
       if(login) {
         item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
       }
@@ -642,15 +646,13 @@ function init_package_descriptions(server, user){
       item.find('.package-title').text(pkg.Title);
       item.find('.package-description').text(pkg.Description.replace('\n', ' '));
       //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
-      const buildinfo = pkg['_builder'];
-      const contents = pkg['_contents'];
-      if(buildinfo.commit.time){
-        item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(buildinfo.commit.time));
+      if(pkg._commit.time){
+        item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg._commit.time));
       }
-      if(contents.gitstats && contents.gitstats.stars){
-        item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(contents.gitstats.stars)} stars`)
+      if(pkg._gitstats && pkg._gitstats.stars){
+        item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(pkg._gitstats.stars)} stars`)
       }
-      var rundeps = pkg['_contents'] && pkg['_contents'].rundeps;
+      var rundeps = pkg._rundeps;
       if(rundeps){
         item.find('.description-dependencies').removeClass('d-none').append(` ${rundeps.length} dependencies`);
       }
@@ -664,7 +666,7 @@ function init_package_descriptions(server, user){
       if(org != user){
         item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
       }
-      item.find('.description-topics').append(make_topic_badges(pkg['_contents']));
+      item.find('.description-topics').append(make_topic_badges(pkg));
       pkglist.push(pkg.Package);
     });
     $("#package-description-placeholder").hide();
@@ -1163,7 +1165,7 @@ function guess_tracker_url(src){
   if(src.BugReports){
     return src.BugReports;
   }
-  var upstream = src._builder.upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
+  var upstream = src._upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
   if(upstream.match("github.com/cran/") || upstream.match("git.bioconductor.org/packages/"))
     return ""; //these are mirror urls
   if(upstream.match("github.com")){
@@ -1209,7 +1211,7 @@ function populate_download_links(x, details){
     linuxlinks.append(` (r-${build}-${distro}) `)
   });
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
-  details.find(".package-details-logs").attr('href', x._builder.url);
+  details.find(".package-details-logs").attr('href', x._url);
   details.find('.winmac-binaries').toggle(x._user !== 'cran');
 }
 
@@ -1342,8 +1344,7 @@ function populate_package_details(package){
       details.find('.build-failure-url').attr('href', src.failure.url);
     }
     $("head title").text(`R-universe: ${src._user}/${src.Package}`);
-    var builder = src['_builder'] || {};
-    var assets = src['_contents'] && src['_contents'].assets || [];
+    var assets = src['_assets'] || [];
     if(assets.find(x => x.endsWith('citation.html'))){
       promises.push(get_path(`${server}/${package}/citation.html`).then(function(htmlString){
         var htmlDoc = (new DOMParser()).parseFromString(htmlString, "text/html");
@@ -1358,30 +1359,30 @@ function populate_package_details(package){
     details.find('.package-details-author').text(normalize_authors(src.Author));
     details.find('.citation-link').attr('href', `${server}/${package}/citation.cff`);
     details.find('.package-json-link').attr('href', `${server}/api/packages/${package}`);
-    details.find('.upstream-git-link').attr('href', builder.upstream);
+    details.find('.upstream-git-link').attr('href', src._upstream);
     populate_download_links(src, details);
     populate_issue_tracker(src, details);
-    details.find('.package-details-topics').empty().append(make_topic_badges(src['_contents']));
+    details.find('.package-details-topics').empty().append(make_topic_badges(src));
     if(assets.includes("manual.pdf")){
       details.find('.package-details-manual').text(`${src.Package}.pdf`).attr('href', `${server}/${package}/${package}.pdf`);
     }
     if(assets.includes(`extra/${package}.html`)){
       details.find('.package-details-htmlmanual').text(`${src.Package}.html`).attr('href', `${server}/${package}/doc/manual.html`);
     }
-    var commit = builder.commit;
+    var commit = src._commit;
     if(commit.time){
       var committext = `<p class="text-left">Author: ${commit.author.replace(/<.*>/, "")} <br> Date:   ${new Date(commit.time*1000).toString().substring(0, 25)}<br>Message: ${commit.message.replace('\n', '<br>')}</p>`;
-      details.find('.package-details-sha').text(commit.id).attr('href',  `${builder.upstream}/commit/${commit.id}`).tooltip({title: committext, html: true});
-      details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(builder.commit.time));
+      details.find('.package-details-sha').text(commit.id).attr('href',  `${src._upstream}/commit/${commit.id}`).tooltip({title: committext, html: true});
+      details.find('.package-details-updated').text('Last updated ' + pretty_time_diff(src._commit.time));
       if(src.RemoteRef && src.RemoteRef != 'HEAD'){
         details.find('.package-details-remoteref').text(` (via ${src.RemoteRef})`);
       }
     }
-    var gitstats = src['_contents'] && src['_contents'].gitstats || {};
+    var gitstats = src._gitstats || {};
     if(gitstats.stars){
-      details.find('.package-details-stars').attr("href", `${builder.upstream}/stargazers`).removeClass('d-none').append(` ${countstr(gitstats.stars)} stars`);
+      details.find('.package-details-stars').attr("href", `${src._upstream}/stargazers`).removeClass('d-none').append(` ${countstr(gitstats.stars)} stars`);
     }
-    var rundeps = src._contents.rundeps;
+    var rundeps = src._rundeps;
     if(rundeps){
       details.find('.package-details-dependencies').removeClass('d-none').append(` ${rundeps.length} dependencies`);
       $("#dependslist .labels").empty().append(make_badges(rundeps, 'danger', 'package:'));
@@ -1392,21 +1393,21 @@ function populate_package_details(package){
     if(src._score){
       details.find('.package-details-pkgscore').removeClass('d-none').append(` ${Math.pow(src._score-1, 2).toFixed(2)} score`);
     }
-    if(src._contents && src._contents.exports){
-      details.find('.package-details-exports').removeClass('d-none').append(` ${src._contents.exports.length} exports`);
+    if(src._exports){
+      details.find('.package-details-exports').removeClass('d-none').append(` ${src._exports.length} exports`);
       if(assets.includes(`extra/${package}.html`)){
-        $("#exportlist .labels").empty().append(make_exports_badges(src._contents, package));
+        $("#exportlist .labels").empty().append(make_exports_badges(src));
       } else {
-        $("#exportlist .labels").empty().append(make_badges(src._contents.exports, 'secondary', 'exports:'));
+        $("#exportlist .labels").empty().append(make_badges(src._exports, 'secondary', 'exports:'));
       }
     }
-    if(src._contents && src._contents.help){
-      make_help_table(src._contents, package);
+    if(src._help){
+      make_help_table(src);
     }
-    if(src._contents && src._contents.pkglogo){
-      details.find('.package-details-logo').attr('src', src._contents.pkglogo).addClass('d-md-block');
+    if(src._pkglogo){
+      details.find('.package-details-logo').attr('src', src._pkglogo).addClass('d-md-block');
     }
-    var maintainer = builder.maintainer || {};
+    var maintainer = src._maintainer || {};
     details.find('.package-details-maintainer .maintainer-name').text(maintainer.name);
     if(maintainer.login !== user){
       details.find('.package-details-maintainer').removeClass('d-none');
@@ -1426,7 +1427,7 @@ function populate_package_details(package){
     } else {
       details.find('.details-news').hide()
     }
-    var vignettes = src['_contents'] && src['_contents'].vignettes;
+    var vignettes = src._vignettes;
     if(vignettes){
       var articles = details.find('.package-details-article-list');
       vignettes.forEach(function(x){
@@ -1449,12 +1450,12 @@ function populate_package_details(package){
         item.appendTo(articles);
       });
     }
-    if(builder.status == 'failure'){
-      details.find('.vignette-failure-url').attr('href', builder.url);
+    if(src._status == 'failure'){
+      details.find('.vignette-failure-url').attr('href', src._url);
       details.find('.vignette-failure-alert').removeClass('d-none');
     }
     if(gitstats.updates){
-      detail_update_chart(package, gitstats, src._contents.releases);
+      detail_update_chart(package, gitstats, src._releases);
     }
     if(gitstats.contributions){
       var names = Object.keys(gitstats.contributions);
@@ -1480,8 +1481,8 @@ function populate_package_details(package){
       }
     }
     // hide developmet chart for mirrors
-    $('#development').toggle(!src._builder.upstream.match("https://github.com/cran/"));
-    var sysdeps = src['_contents'] && src['_contents'].sysdeps;
+    $('#development').toggle(!src._upstream.match("https://github.com/cran/"));
+    var sysdeps = src._sysdeps;
     if(sysdeps){
       var sysdeplist = details.find('.system-library-list');
       var dupes = {};
@@ -1495,12 +1496,12 @@ function populate_package_details(package){
         details.find(".system-library-row").removeClass('d-none');
       });
     }
-    if(src._contents && src._contents.datasets){
+    if(src._datasets){
       var datasetlist = details.find('.dataset-list');
-      src._contents.datasets.forEach(function(x){
+      src._datasets.forEach(function(x){
         if(!x.name || !x.title) return;
         var li = $("<li>").appendTo(datasetlist);
-        var url = help_page_url(package, src._contents.help, x.name);
+        var url = help_page_url(package, src._help, x.name);
         if(!url) return; // probably "internal" dataset
         var a = $("<a>").addClass("font-weight-bold text-dark").attr('target', '_blank').attr('href', url).text(x.name).appendTo(li);
         $("<i>").text(" – " + cleanup_desc(x.title) + " ").appendTo(li);
@@ -1514,7 +1515,7 @@ function populate_package_details(package){
         details.find(".dataset-row").removeClass('d-none');
       });
     }
-    generate_status_icon(builder, src.OS_type);
+    generate_status_icon(src);
     var crandiv = details.find('.package-details-cran');
     if(gitstats.bioconductor && gitstats.bioconductor.release){
       var biocver = gitstats.bioconductor.release;
@@ -1532,7 +1533,7 @@ function populate_package_details(package){
         } else {
           crandiv.append("no")
         }
-        attach_cran_badge(package, builder.upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
+        attach_cran_badge(package, src._upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
       });
     }
     /* force re-scroll to target after  async content after page load */
@@ -1569,10 +1570,11 @@ function fail_status(x){
   return x && ["success", "skipped"].includes(x) == false;
 }
 
-function generate_status_icon(builder, os_type){
-  var docfail = builder.status != 'success';
-  var winfail = fail_status(builder.winbinary) && os_type != 'unix';
-  var macfail = fail_status(builder.macbinary) && os_type != 'windows';
+function generate_status_icon(src){
+  var os_type = src.OS_type
+  var docfail = src._status != 'success';
+  var winfail = fail_status(src._winbinary) && os_type != 'unix';
+  var macfail = fail_status(src._macbinary) && os_type != 'windows';
   var statustxt = 'Articles and win/mac binaries OK'
   var success = true;
   if(docfail || winfail || macfail){
@@ -1583,7 +1585,7 @@ function generate_status_icon(builder, os_type){
     if(macfail) statusarr.push('MacOS');
     var statustxt = 'Build/check failure for ' + statusarr.join(', ');
   }
-  var statusicon = $("<a>").attr("href", builder.url).appendTo(".last-build-status").addClass(success ? "fa fa-check" : "fa fa-question-circle").css('color', success ? color_ok : color_bad).tooltip({title: statustxt});
+  var statusicon = $("<a>").attr("href", src._url).appendTo(".last-build-status").addClass(success ? "fa fa-check" : "fa fa-question-circle").css('color', success ? color_ok : color_bad).tooltip({title: statustxt});
 
 }
 
@@ -1664,7 +1666,7 @@ function activate_snapshot_panel(user){
     var pkglist = res.map(x => x.Package);
     pkglist.sort().forEach(pkg => $('<option>').text(pkg).appendTo('#api-snapshot-packages,#api-package-select'));
     res.forEach(function(x){
-      var datasets = (x['_contents'] || {}).datasets;
+      var datasets = x._datasets;
       if(datasets){
         datasets.forEach(function(data){
           $('<option>').text(`${x.Package}::${data.name} (${data.class[0]})`).attr('data-package',x.Package).attr('data-name', data.name).appendTo('#api-dataset-data');
