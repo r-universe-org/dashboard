@@ -1178,9 +1178,10 @@ function sortfun(a,b){
 
 function populate_download_links(x, details){
   var package = x.Package;
-  var wins = x.binaries.filter(x => x.os == 'win');
-  var macs = x.binaries.filter(x => x.os == 'mac');
-  var linux = x.binaries.filter(x => x.os == 'linux');
+  var binaries = x._binaries || [];
+  var wins = binaries.filter(x => x.os == 'win');
+  var macs = binaries.filter(x => x.os == 'mac');
+  var linux = binaries.filter(x => x.os == 'linux');
   var srcfile = `${package}_${x.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
   details.find('.package-details-json').attr('href', `${server}/api/packages/${package}`).text(`${package}/json`);
