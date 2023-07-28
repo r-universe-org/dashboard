@@ -1209,7 +1209,7 @@ function populate_download_links(x, details){
     linuxlinks.append(` (r-${build}-${distro}) `)
   });
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
-  details.find(".package-details-logs").attr('href', x._url);
+  details.find(".package-details-logs").attr('href', x._buildurl);
   details.find('.winmac-binaries').toggle(x._user !== 'cran');
 }
 
@@ -1449,7 +1449,7 @@ function populate_package_details(package){
       });
     }
     if(src._status == 'failure'){
-      details.find('.vignette-failure-url').attr('href', src._url);
+      details.find('.vignette-failure-url').attr('href', src._buildurl);
       details.find('.vignette-failure-alert').removeClass('d-none');
     }
     if(gitstats.updates){
@@ -1583,7 +1583,7 @@ function generate_status_icon(src){
     if(macfail) statusarr.push('MacOS');
     var statustxt = 'Build/check failure for ' + statusarr.join(', ');
   }
-  var statusicon = $("<a>").attr("href", src._url).appendTo(".last-build-status").addClass(success ? "fa fa-check" : "fa fa-question-circle").css('color', success ? color_ok : color_bad).tooltip({title: statustxt});
+  var statusicon = $("<a>").attr("href", src._buildurl).appendTo(".last-build-status").addClass(success ? "fa fa-check" : "fa fa-question-circle").css('color', success ? color_ok : color_bad).tooltip({title: statustxt});
 
 }
 
