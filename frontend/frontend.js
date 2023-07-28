@@ -767,8 +767,6 @@ function init_article_list(data, user){
       item.find('.article-author-name').append(`<i>(via <a href="https://${pkg.user}.r-universe.dev">${pkg.user}</a>)</i>`);
     }
     var img = item.find('.maintainer-avatar').attr('src', avatar_url(pkg.login || "r-universe", 140));
-    if(pkg.pkglogo)
-      img.removeClass('rounded-circle');
     item.appendTo('#article-list-group');
   });
   if(x.length){
