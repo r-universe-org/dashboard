@@ -1701,10 +1701,12 @@ init_user_info(user, server).then(function(){
 init_package_descriptions(server, user);
 if(user == 'cran'){
   $('#api-tab-link').parent().hide();
-} else if(user == 'ropensci') {
-  $("#thdocs").text("Docs");
 } else {
   activate_snapshot_panel(user);
+}
+
+if(user == 'ropensci') {
+  $("#thdocs").text("Docs");
 }
 
 var articledatapromise = init_article_data(server);
