@@ -605,83 +605,79 @@ function make_help_table(src){
   });
 }
 
-function init_package_descriptions(server, user){
-  function add_badge_row(name, org){
-    var tr = $("<tr>").appendTo(name.startsWith(":") ? $("#badges-table-body1") : $("#badges-table-body2"));
-    const badge_url = "https://" + org + ".r-universe.dev/badges/" + name;
-    const badge_text = "https://" + org + ".r-universe.dev/badges/<b>" + name + "</b>";
-    $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
-    $("<td>").append($("<img>").attr("data-src", badge_url).addClass("lazyload")).appendTo(tr);
-    const md_icon = $('<a class="fab fa-markdown fa-lg">');
-    const tooltip_text = 'Copy to clipboard';
-    md_icon.tooltip({title: tooltip_text, placement: 'left'});
-    md_icon.on("click", function(e){
-      const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev/${name})`;
-      navigator.clipboard.writeText(text).then(function(e){
-        md_icon.attr('data-original-title', 'Copied!').tooltip('show');
-        md_icon.attr('data-original-title', tooltip_text);
-      });
-    });
-    $("<td>").append(md_icon).appendTo(tr);
+function add_package_card(x, i, user){
+  if(x._type == 'failure') return;
+  var org = x._user;
+  var item = $("#templatezone .package-description-item").clone();
+  var login = x._maintainer.login;
+  if(login) {
+    item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
   }
+  item.find('.package-name').text(x.Package)
+  item.find('.package-link').attr("href", link_to_pkg(org, x.Package)).click(function(e){
+    if(org == user){
+      e.preventDefault();
+      tab_to_package(x.Package);
+    }
+  });
+  item.find('.package-maintainer').text(x._maintainer.name);
+  item.find('.package-title').text(x.Title);
+  item.find('.package-description').text(x.Description.replace('\n', ' '));
+  item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(x._commit.time));
+  if(x._gitstats && x._gitstats.stars){
+    item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(x._gitstats.stars)} stars`)
+  }
+  if(x._rundeps){
+    item.find('.description-dependencies').removeClass('d-none').append(` ${x._rundeps.length} dependencies`);
+  }
+  if(x._usedby){
+    item.find('.description-dependents').removeClass('d-none').append(` ${x._usedby} dependents`);
+  }
+  item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(x._score-1, 2).toFixed(2)} score`);
+  item.find('.package-image').attr('src', get_package_image(x));
+  item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
+  add_badge_row(x.Package, org);
+  if(org != user){
+    item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
+  }
+  item.find('.description-topics').append(make_topic_badges(x));
+}
+
+function add_badge_row(name, org){
+  var tr = $("<tr>").appendTo(name.startsWith(":") ? $("#badges-table-body1") : $("#badges-table-body2"));
+  const badge_url = "https://" + org + ".r-universe.dev/badges/" + name;
+  const badge_text = "https://" + org + ".r-universe.dev/badges/<b>" + name + "</b>";
+  $("<td>").append($("<a>").attr("target", "_blank").attr("href", badge_url).append(badge_text).addClass('text-monospace')).appendTo(tr);
+  $("<td>").append($("<img>").attr("data-src", badge_url).addClass("lazyload")).appendTo(tr);
+  const md_icon = $('<a class="fab fa-markdown fa-lg">');
+  const tooltip_text = 'Copy to clipboard';
+  md_icon.tooltip({title: tooltip_text, placement: 'left'});
+  md_icon.on("click", function(e){
+    const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev/${name})`;
+    navigator.clipboard.writeText(text).then(function(e){
+      md_icon.attr('data-original-title', 'Copied!').tooltip('show');
+      md_icon.attr('data-original-title', tooltip_text);
+    });
+  });
+  $("<td>").append(md_icon).appendTo(tr);
+}
+
+function init_package_descriptions(server, user){
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
-  var pkglist = []
-  ndjson_batch_stream(server + '/stats/descriptions?all=true', function(x){
-    if(first_page && x.find(pkg => pkg['_user'] == user)){
+  ndjson_batch_stream(server + '/api/packages?all=true&stream=true', function(batch){
+    if(first_page && batch.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
       add_badge_row(":total", user);
       first_page = false;
     }
-    x.forEach(function(pkg, i){
-      //console.log(pkg)
-      var org = pkg['_user'];
-      var item = $("#templatezone .package-description-item").clone();
-      var login = pkg._maintainer.login;
-      if(login) {
-        item.find('.package-maintainer').attr('href', `https://${login}.r-universe.dev`);
-      }
-      item.find('.package-name').text(pkg.Package)
-      item.find('.package-link').attr("href", link_to_pkg(org, pkg.Package)).click(function(e){
-        if(org == user){
-          e.preventDefault();
-          tab_to_package(pkg.Package);
-        }
-      });
-      item.find('.package-maintainer').text(pkg.Maintainer.split("<")[0]);
-      item.find('.package-title').text(pkg.Title);
-      item.find('.package-description').text(pkg.Description.replace('\n', ' '));
-      //item.find('.package-dependencies').text("Dependencies: " + pretty_dependencies(pkg));
-      if(pkg._commit.time){
-        item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(pkg._commit.time));
-      }
-      if(pkg._gitstats && pkg._gitstats.stars){
-        item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(pkg._gitstats.stars)} stars`)
-      }
-      var rundeps = pkg._rundeps;
-      if(rundeps){
-        item.find('.description-dependencies').removeClass('d-none').append(` ${rundeps.length} dependencies`);
-      }
-      if(pkg._usedby){
-        item.find('.description-dependents').removeClass('d-none').append(` ${pkg._usedby} dependents`);
-      }
-      item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(pkg._score-1, 2).toFixed(2)} score`);
-      item.find('.package-image').attr('src', get_package_image(pkg));
-      item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-      add_badge_row(pkg.Package, org);
-      if(org != user){
-        item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
-      }
-      item.find('.description-topics').append(make_topic_badges(pkg));
-      pkglist.push(pkg.Package);
-    });
+    batch.forEach((x,i) => add_package_card(x, i, user));
     $("#package-description-placeholder").hide();
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
     $("#package-description-placeholder").text("No packages found in this username.");
   });
-  //});
 }
 
 function display_article(minilink){
