@@ -255,91 +255,90 @@ function compare_url(giturl, cran){
   return cran.join().toLowerCase().includes(str);
 }
 
+function add_table_row(x, user){
+  var org = x._user;
+  var package = x.Package
+  var version = x.Version || "-";
+  var owner = x._owner;
+  var commit = x._commit || {};
+  var maintainer = x._maintainer;
+  var upstream = x._upstream;
+  var binaries = x._binaries || [];
+  var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3') || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
+  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3') || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
+  var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'unix'};
+  var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'windows'};
+  var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
+  var commiturl = `${upstream}/commit/${commit.id}`;
+  var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
+  var commitdate = new Date(commit.time * 1000 || NaN).yyyymmdd();
+  var sysdeps = make_sysdeps(x);
+  var longname = (owner == user || owner == 'cran' || upstream.match('git.bioconductor')) ? package : `${owner}/${package}`;
+  var pkglink = $("<a>").text(longname);
+  if(x._type == 'failure'){
+    pkglink.attr('disabled', 'disabled').css('text-decoration', 'line-through');
+  } else {
+    pkglink.attr("href", link_to_pkg(org, package)).click(function(e){
+      if(org == user){
+        e.preventDefault();
+        tab_to_package(package);
+      }
+    });
+  }
+  //set the latest known status (in case of failed uploads)
+  win.status = x._winbinary;
+  mac.status = x._macbinary;
+  if(x._registered === false){
+    pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
+  }
+  if(x.OS_type){
+    pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + x.OS_type + " only)"));
+  }
+  var docslink = (user == 'ropensci') ? docs_icon(x) : "";
+  if(!all_ok([x,win,mac,oldwin,oldmac])){
+    var retrytype = x._failure ? 'failure' : 'src';
+    var retryversion = x._failure ? x._failure.version : version;
+    var rebuildlink = $("<a>").attr("href", x._buildurl).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
+      e.preventDefault();
+      rebuildlink.attr("disabled", true).off('click');
+      var req = $.ajax({
+        type: 'PATCH',
+        url: `https://${org}.r-universe.dev/packages/${package}/${retryversion}/${retrytype}`
+      }).done(function() {
+        alert(`Success! Retrying failed build for ${package} ${retryversion}`)
+        window.location = x._buildurl;;
+      }).fail((jqXHR, textStatus) => {
+        alert(jqXHR.responseText)
+        if(jqXHR.status == 429) window.location = src._buildurl;
+      }).always(xhr => rebuildlink.tooltip('dispose'));
+    });
+    rebuildlink.tooltip({title: `Retry failed builds for ${package} ${retryversion}`});
+  }
+  var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
+  maintainerlink.text(maintainer.name).addClass('text-secondary');
+  var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
+    [run_icon(win, x), run_icon(mac, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
+  if(x._failure){
+    pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+  } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
+    attach_cran_badge(package, upstream, pkglink);
+  }
+  row.appendTo("#packages-table-body");
+}
+
 function init_packages_table(server, user){
   if(user == 'ropensci') $("#thdocs").text("Docs");
-  let tbody = $("#packages-table-body");
-  var rows = {};
   var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
     '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs'];
+  var rows = 0;
   ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join(",")}`, function(batch){
-    batch.forEach(function(x, i){
-      //TODO: list packages with only a 'failure' value (these are currently not included in the server side api)
-      var org = x._user;
-      var package = x.Package
-      var version = x.Version || "-";
-      var owner = x._owner;
-      var commit = x._commit || {};
-      var maintainer = x._maintainer;
-      var upstream = x._upstream;
-      var binaries = x._binaries || [];
-      var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3') || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
-      var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3') || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
-      var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'unix'};
-      var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'windows'};
-      var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
-      var commiturl = `${upstream}/commit/${commit.id}`;
-      var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
-      var commitdate = new Date(commit.time * 1000 || NaN).yyyymmdd();
-      var sysdeps = make_sysdeps(x);
-      var longname = (owner == user || owner == 'cran' || upstream.match('git.bioconductor')) ? package : `${owner}/${package}`;
-      var pkglink = $("<a>").text(longname);
-      if(x._type == 'failure'){
-        pkglink.attr('disabled', 'disabled').css('text-decoration', 'line-through');
-      } else {
-        pkglink.attr("href", link_to_pkg(org, package)).click(function(e){
-          if(org == user){
-            e.preventDefault();
-            tab_to_package(package);
-          }
-        });
-      }
-      //set the latest known status (in case of failed uploads)
-      win.status = x._winbinary;
-      mac.status = x._macbinary;
-      if(x._registered === false){
-        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
-      }
-      if(x.OS_type){
-        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + x.OS_type + " only)"));
-      }
-      var docslink = (user == 'ropensci') ? docs_icon(x) : "";
-      if(!all_ok([x,win,mac,oldwin,oldmac])){
-        var retrytype = x._failure ? 'failure' : 'src';
-        var retryversion = x._failure ? x._failure.version : version;
-        var rebuildlink = $("<a>").attr("href", x._buildurl).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
-          e.preventDefault();
-          rebuildlink.attr("disabled", true).off('click');
-          var req = $.ajax({
-            type: 'PATCH',
-            url: `https://${org}.r-universe.dev/packages/${package}/${retryversion}/${retrytype}`
-          }).done(function() {
-            alert(`Success! Retrying failed build for ${package} ${retryversion}`)
-            window.location = x._buildurl;;
-          }).fail((jqXHR, textStatus) => {
-            alert(jqXHR.responseText)
-            if(jqXHR.status == 429) window.location = src._buildurl;
-          }).always(xhr => rebuildlink.tooltip('dispose'));
-        });
-        rebuildlink.tooltip({title: `Retry failed builds for ${package} ${retryversion}`});
-      }
-      var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
-      maintainerlink.text(maintainer.name).addClass('text-secondary');
-      var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
-        [run_icon(win, x), run_icon(mac, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
-      if(x._failure){
-        pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-      } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
-        attach_cran_badge(package, upstream, pkglink);
-      }
-      rows[package] ? rows[package].after(row) : tbody.append(row);
-      rows[package] = row;
-
-    });
+    batch.forEach(x => add_table_row(x, user));
+    rows = rows + batch.length;
   }).then(function(){
-    if(Object.keys(rows).length){
+    if(rows){
       $("#package-builds-placeholder").hide();
     } else {
-      $("#package-builds-placeholder").text("No packages found in this username.");
+      $("#package-builds-placeholder").text(`No packages found for: ${user}`);
     }
   }).catch(alert);
 };
@@ -625,7 +624,6 @@ function init_package_descriptions(server, user){
     });
     $("<td>").append(md_icon).appendTo(tr);
   }
-
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
   var pkglist = []
