@@ -813,6 +813,7 @@ function make_activity_chart(universe){
       },
       options: {
         responsive: true,
+        animation: false,
         maintainAspectRatio: false,
         plugins : {
           legend: false,
