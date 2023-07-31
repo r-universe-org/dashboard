@@ -130,7 +130,7 @@ function docs_icon(x){
 }
 
 function run_icon(bin, desc){
-  if(bin.skip)
+  if(bin.skip || bin.status === 'skipped')
     return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', 'slategrey');
   if(bin.type == 'pending')
     return $('<span></span>');
@@ -163,7 +163,7 @@ function run_icon(bin, desc){
 
 function is_success(x){
   var status = x.status || x._status || "";
-  return status.match(/(succ|pending)/i) || x.skip;
+  return status.match(/(succ|pending|skipped)/i) || x.skip;
 }
 
 function all_ok(builds){
@@ -265,10 +265,10 @@ function add_table_row(x, user){
   var maintainer = x._maintainer;
   var upstream = x._upstream;
   var binaries = x._binaries || [];
-  var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
-  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
-  var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {skip: x.OS_type === 'unix'};
-  var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {skip: x.OS_type === 'windows'};
+  var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix', status: x._winbinary}; //{type:'pending'};
+  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
+  var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
+  var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows'};
   var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
   var commiturl = `${upstream}/commit/${commit.id}`;
   var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
@@ -1676,7 +1676,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'r-forge'
+var devtest = 'cran'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
