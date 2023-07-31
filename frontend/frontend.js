@@ -261,13 +261,14 @@ function add_table_row(x, user){
   var version = x.Version || "-";
   var owner = x._owner;
   var commit = x._commit || {};
+  var id = commit.id;
   var maintainer = x._maintainer;
   var upstream = x._upstream;
   var binaries = x._binaries || [];
-  var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3') || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
-  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3') || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
-  var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'unix'};
-  var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'windows'};
+  var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
+  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
+  var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {skip: x.OS_type === 'unix'};
+  var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {skip: x.OS_type === 'windows'};
   var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
   var commiturl = `${upstream}/commit/${commit.id}`;
   var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
@@ -285,9 +286,10 @@ function add_table_row(x, user){
       }
     });
   }
-  //set the latest known status (in case of failed uploads)
-  win.status = x._winbinary;
-  mac.status = x._macbinary;
+  //in case of failed/lagging binaries, use the latest known status
+  //if(x._commit.id != win.commit) win.status = x._winbinary;
+  //if(x._commit.id != mac.comit) mac.status = x._macbinary;
+
   if(x._registered === false){
     pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
   }
@@ -1674,7 +1676,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'r-forge'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
