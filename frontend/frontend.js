@@ -636,7 +636,6 @@ function add_package_card(x, i, user){
   item.find('.description-pkgscore').removeClass('d-none').append(` ${Math.pow(x._score-1, 2).toFixed(2)} score`);
   item.find('.package-image').attr('src', get_package_image(x));
   item.appendTo('#package-description-col-' + ((i%2) ? 'two' : 'one'));
-  add_badge_row(x.Package, org);
   if(org != user){
     item.find('.package-org').toggleClass("d-none").append(a(`https://${org}.r-universe.dev`, org));
   }
@@ -666,6 +665,7 @@ function init_package_descriptions(server, user){
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
   ndjson_batch_stream(server + '/api/packages?all=true&stream=true', function(batch){
+    batch = batch.filter(x => x._registered);
     if(first_page && batch.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
@@ -673,6 +673,7 @@ function init_package_descriptions(server, user){
       first_page = false;
     }
     batch.forEach((x,i) => add_package_card(x, i, user));
+    batch.forEach(x => add_badge_row(x.Package, x._user));
     $("#package-description-placeholder").hide();
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
