@@ -108,20 +108,20 @@ function a(link, txt){
 }
 
 function docs_ok(pkg){
-  return pkg.pkgdocs && pkg.pkgdocs.match(/succ/i);
+  return pkg._pkgdocs && pkg._pkgdocs.match(/succ/i);
 }
 
-function docs_icon(pkg, url){
-  if(pkg.pkgdocs){
+function docs_icon(x){
+  if(x._pkgdocs){
     var i = $("<i>", {class : 'fa fa-book'});
-    var a = $("<a>").attr('href', url).append(i).css('margin-left', '5px');
-    if(!pkg.registered){
+    var a = $("<a>").attr('href', x._buildurl).append(i).css('margin-left', '5px');
+    if(!x._registered){
       /* This is a 'remote' package */
       return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', color_meh);
     }
-    if(docs_ok(pkg)){
+    if(docs_ok(x)){
       i.css('color', color_ok);
-      a.attr('href', 'https://docs.ropensci.org/' + pkg.package).attr("target", "_blank");
+      a.attr('href', 'https://docs.ropensci.org/' + x.Package).attr("target", "_blank");
     } else {
       i.css('color', color_bad);
     }
@@ -129,25 +129,26 @@ function docs_icon(pkg, url){
   }
 }
 
-function run_icon(run, src, binarystatus){
-  //run.status ??= binarystatus;
-  run.status = run.status || binarystatus;
-  if(run.skip || binarystatus === 'skipped')
+function run_icon(bin, desc){
+  if(bin.skip)
     return $("<b>").text("-").css('padding-right', '4px').css('padding-left', '7px').css('color', 'slategrey');
-  if(run.type == 'pending')
-    return $('<span></span>')
+  if(bin.type == 'pending')
+    return $('<span></span>');
   var iconmap = {
     src : "linux",
     win : "windows",
     mac : "apple"
   };
-  if(run && run.status && run.status !== 'none'){
-    var i = $("<i>", {class : 'fab fa-' + iconmap[run.type]});
-    var a = $("<a>").attr('href', run.url || src.url).append(i).css('margin-left', '5px');
+  var buildurl = bin._buildurl || desc._buildurl;
+  var type = bin.os || 'src';
+  var status = bin.status || bin._status || "none";
+  if(status !== 'none'){
+    var i = $("<i>", {class : 'fab fa-' + iconmap[type]});
+    var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px');
     // can be "success" or "Succeeded"
-    if(run.status.match(/succ/i)){
+    if(status.match(/succ/i)){
       i.css('color', '#22863a');
-    } else if(run.type == 'src'){
+    } else if(type == 'src'){
       i.css('color', '#cb2431');
     } else {
       i.css('color', 'slategrey');
@@ -155,24 +156,32 @@ function run_icon(run, src, binarystatus){
     return $('<span></span>').append(a);
   } else {
     var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-    var a = $("<a>").attr('href', src.url).append(i);
+    var a = $("<a>").attr('href', buildurl).append(i);
   }
   return $('<span></span>').append(a);
 }
 
-function is_success(run){
-  return run && run.status && run.status.match(/succ/i) || run.type == 'pending';
+function is_success(x){
+  var status = x.status || x._status || "";
+  return status.match(/(succ|pending)/i) || x.skip;
 }
 
-function all_ok(runs){
-  return runs.every(is_success);
+function all_ok(builds){
+  var src = builds[0];
+  if(user == 'ropensci'){
+    if(src._registered  && !docs_ok(src)){
+      return false;
+    }
+  }
+  return builds.every(is_success) && !src._failure;
 }
 
-function make_sysdeps(pkg, distro){
-  if(pkg && pkg.sysdeps){
+function make_sysdeps(desc){
+  var sysdeps = desc._sysdeps || [];
+  if(sysdeps.length){
     var div = $("<div>").css("max-width", "33vw");
     var unique = {};
-    pkg.sysdeps.forEach(x => unique[x.name] = x);
+    sysdeps.forEach(x => unique[x.name] = x);
     Object.keys(unique).sort().forEach(function(key){
       var x = unique[key];
       //var url = 'https://packages.ubuntu.com/' + distro + '/' + (x.headers || x.package);
@@ -250,84 +259,84 @@ function init_packages_table(server, user){
   if(user == 'ropensci') $("#thdocs").text("Docs");
   let tbody = $("#packages-table-body");
   var rows = {};
-  var universes = [];
-  var firstpkg;
-  ndjson_batch_stream(server + '/stats/builds?all=true', function(batch){
-    batch.forEach(function(pkg, i){
-      var org = pkg.user;
-      if(universes.indexOf(org) < 0){
-        universes.push(org);
-        //firstpkg = firstpkg || pkg.package;
-        //update_syntax_block(universes, firstpkg, user);
-      }
-      var name = pkg.package;
-      var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
-      var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.3') || {type: 'win', skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
-      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.3') || {type: 'mac', skip: pkg.os_restriction === 'windows'}; //{type:'pending'};
-      var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'unix'};
-      var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'windows'};
-      var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(src.date || NaN).yyyymmdd());
-      var commiturl = `${pkg.upstream}/commit/${pkg.commit}`;
-      var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
-      var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
-      var sysdeps = make_sysdeps(pkg, src.distro);
-      var upstream = pkg.upstream.toLowerCase().split("/");
-      var owner = upstream[upstream.length - 2];
-      var longname = (owner == user || owner == 'cran' || pkg.upstream.match('git.bioconductor')) ? name : `${owner}/${name}`;
+  var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
+    '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs'];
+  ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join(",")}`, function(batch){
+    batch.forEach(function(x, i){
+      //TODO: list packages with only a 'failure' value (these are currently not included in the server side api)
+      var org = x._user;
+      var package = x.Package
+      var version = x.Version || "-";
+      var owner = x._owner;
+      var commit = x._commit || {};
+      var maintainer = x._maintainer;
+      var upstream = x._upstream;
+      var binaries = x._binaries || [];
+      var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3') || {type: 'win', skip: x.OS_type === 'unix'}; //{type:'pending'};
+      var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3') || {type: 'mac', skip: x.OS_type === 'windows'}; //{type:'pending'};
+      var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'unix'};
+      var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2') || {skip: x.OS_type === 'windows'};
+      var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
+      var commiturl = `${upstream}/commit/${commit.id}`;
+      var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
+      var commitdate = new Date(commit.time * 1000 || NaN).yyyymmdd();
+      var sysdeps = make_sysdeps(x);
+      var longname = (owner == user || owner == 'cran' || upstream.match('git.bioconductor')) ? package : `${owner}/${package}`;
       var pkglink = $("<a>").text(longname);
-      if(src.type !== 'failure'){
-        pkglink.attr("href", link_to_pkg(org, name)).click(function(e){
+      if(x._type == 'failure'){
+        pkglink.attr('disabled', 'disabled').css('text-decoration', 'line-through');
+      } else {
+        pkglink.attr("href", link_to_pkg(org, package)).click(function(e){
           if(org == user){
             e.preventDefault();
-            tab_to_package(name);
+            tab_to_package(package);
           }
         });
       }
-      if(!pkg.registered){
+      //set the latest known status (in case of failed uploads)
+      win.status = x._winbinary;
+      mac.status = x._macbinary;
+      if(x._registered === false){
         pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(via remote)"));
       }
-      if(pkg.os_restriction){
-        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
+      if(x.OS_type){
+        pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + x.OS_type + " only)"));
       }
-      if(src.type){
-        var docslink = (user == 'ropensci') ? docs_icon(pkg, src.url) : "";
-        if(!all_ok([src,win,mac,oldwin,oldmac]) || (user == 'ropensci' && pkg.registered && !docs_ok(pkg))){
-          var rebuildlink = $("<a>").attr("href", src.url).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
-            e.preventDefault();
-            rebuildlink.attr("disabled", true).off('click');
-            var type = src.type === 'failure' ? 'failure' : 'src';
-            var req = $.ajax({
-              type: 'PATCH',
-              url: `https://${org}.r-universe.dev/packages/${name}/${pkg.version}/${type}`
-            }).done(function() {
-              alert(`Success! Retrying failed builds for ${name} ${pkg.version}`)
-              window.location = src.url;
-            })
-            .fail((jqXHR, textStatus) => {
-              alert(jqXHR.responseText)
-              if(jqXHR.status == 429) window.location = src.url;
-            })
-            .always(xhr => rebuildlink.tooltip('dispose'));
-          });
-          rebuildlink.tooltip({title: `Retry failed builds for ${name} ${pkg.version}`});
-        }
-        var maintainerlink = pkg.maintainerlogin ? $("<a>").attr("href", "https://" + pkg.maintainerlogin + ".r-universe.dev") :  $("<span>")
-        maintainerlink.text(pkg.maintainer).addClass('text-secondary');
-        var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(src, src),
-          [run_icon(win, src, pkg.winbinary), run_icon(mac, src, pkg.macbinary)], (true || user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, src), run_icon(oldmac, src)], rebuildlink, builddate, sysdeps]);
-        if(src.type === 'failure'){
-          pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-        } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
-          attach_cran_badge(name, pkg.upstream, pkglink);
-        }
-        rows[name] ? rows[name].after(row) : tbody.append(row);
-        rows[name] = row;
-      } else {
-        console.log("Not listing old win/mac binaries: " + name + " " + pkg.version )
+      var docslink = (user == 'ropensci') ? docs_icon(x) : "";
+      if(!all_ok([x,win,mac,oldwin,oldmac])){
+        var retrytype = x._failure ? 'failure' : 'src';
+        var retryversion = x._failure ? x._failure.version : version;
+        var rebuildlink = $("<a>").attr("href", x._buildurl).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
+          e.preventDefault();
+          rebuildlink.attr("disabled", true).off('click');
+          var req = $.ajax({
+            type: 'PATCH',
+            url: `https://${org}.r-universe.dev/packages/${package}/${retryversion}/${retrytype}`
+          }).done(function() {
+            alert(`Success! Retrying failed build for ${package} ${retryversion}`)
+            window.location = x._buildurl;;
+          }).fail((jqXHR, textStatus) => {
+            alert(jqXHR.responseText)
+            if(jqXHR.status == 429) window.location = src._buildurl;
+          }).always(xhr => rebuildlink.tooltip('dispose'));
+        });
+        rebuildlink.tooltip({title: `Retry failed builds for ${package} ${retryversion}`});
       }
+      var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
+      maintainerlink.text(maintainer.name).addClass('text-secondary');
+      var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
+        [run_icon(win, x), run_icon(mac, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
+      if(x._failure){
+        pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
+      } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
+        attach_cran_badge(package, upstream, pkglink);
+      }
+      rows[package] ? rows[package].after(row) : tbody.append(row);
+      rows[package] = row;
+
     });
   }).then(function(){
-    if(universes.length){
+    if(Object.keys(rows).length){
       $("#package-builds-placeholder").hide();
     } else {
       $("#package-builds-placeholder").text("No packages found in this username.");
@@ -1337,9 +1346,9 @@ function populate_package_details(package){
     }
     $('#package-details-spinner').hide();
     details.prependTo('.package-details-container');
-    if(src.failure){
+    if(src._failure){
       details.find('.build-failure-alert').removeClass('d-none');
-      details.find('.build-failure-url').attr('href', src.failure.url);
+      details.find('.build-failure-url').attr('href', src._failure.buildurl);
     }
     $("head title").text(`R-universe: ${src._user}/${src.Package}`);
     var assets = src['_assets'] || [];
@@ -1680,7 +1689,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'tidyverse'
+var devtest = 'gaborcsardi'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
@@ -1719,8 +1728,8 @@ $('#articles-tab-link').one('shown.bs.tab', function (e) {
 });
 
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
-  //if(user == 'bioconductor' || user == 'cran') $(".nobioc").text("")
-  $(".nobioc").text("")
+  if(user == 'bioconductor' || user == 'cran') $(".nobioc").text("")
+  //$(".nobioc").text("")
   init_packages_table(server, user);
   make_activity_chart(user);
 });
