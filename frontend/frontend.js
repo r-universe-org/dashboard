@@ -326,23 +326,6 @@ function add_table_row(x, user){
   row.appendTo("#packages-table-body");
 }
 
-function init_packages_table(server, user){
-  if(user == 'ropensci') $("#thdocs").text("Docs");
-  var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
-    '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs'];
-  var rows = 0;
-  ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join(",")}`, function(batch){
-    batch.forEach(x => add_table_row(x, user));
-    rows = rows + batch.length;
-  }).then(function(){
-    if(rows){
-      $("#package-builds-placeholder").hide();
-    } else {
-      $("#package-builds-placeholder").text(`No packages found for: ${user}`);
-    }
-  }).catch(alert);
-};
-
 function update_registry_status(ghuser, server){
   const tooltip_success = "Universe registry is up to date";
   const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
@@ -664,20 +647,26 @@ function add_badge_row(name, org){
 function init_package_descriptions(server, user){
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
-  ndjson_batch_stream(server + '/api/packages?all=true&stream=true', function(batch){
-    batch = batch.filter(x => x._registered);
+  var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
+    '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs',
+    'Title', 'Description', '_rundeps', '_gitstats.stars', '_score', '_gitstats.topics', '_pkglogo'];
+  ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join()}`, function(batch){
     if(first_page && batch.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
       add_badge_row(":total", user);
       first_page = false;
     }
+    batch.forEach(x => add_table_row(x, user));
+    batch = batch.filter(x => x._registered);
     batch.forEach((x,i) => add_package_card(x, i, user));
     batch.forEach(x => add_badge_row(x.Package, x._user));
     $("#package-description-placeholder").hide();
+    $("#package-builds-placeholder").hide()
   }).then(function(count){
     if(count > 0) lazyload(); //for badges
-    $("#package-description-placeholder").text("No packages found in this username.");
+    $("#package-builds-placeholder").text(`No packages found for: ${user}`);
+    $("#package-description-placeholder").text(`No packages found for: ${user}`);
   });
 }
 
@@ -1684,7 +1673,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'gaborcsardi'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
@@ -1712,6 +1701,8 @@ init_user_info(user, server).then(function(){
 init_package_descriptions(server, user);
 if(user == 'cran'){
   $('#api-tab-link').parent().hide();
+} else if(user == 'ropensci') {
+  $("#thdocs").text("Docs");
 } else {
   activate_snapshot_panel(user);
 }
@@ -1725,7 +1716,6 @@ $('#articles-tab-link').one('shown.bs.tab', function (e) {
 $('#builds-tab-link').one('shown.bs.tab', function (e) {
   if(user == 'bioconductor' || user == 'cran') $(".nobioc").text("")
   //$(".nobioc").text("")
-  init_packages_table(server, user);
   make_activity_chart(user);
 });
 $('#contributors-tab-link').one('shown.bs.tab', function (e) {
