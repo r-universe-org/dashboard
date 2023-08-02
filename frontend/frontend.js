@@ -528,7 +528,7 @@ function get_package_image(pkg){
 
 //temp duplicate because of api overhaul
 function make_topic_badges(src){
-  var topics = src._gitstats && src._gitstats.topics || [];
+  var topics = src._topics || [];
   if(src._sysdeps){
     src._sysdeps.forEach(function(x){
       if(x.name && Array.isArray(topics) && !topics.includes(x.name)){
@@ -609,8 +609,8 @@ function add_package_card(x, i, user){
   item.find('.package-title').text(x.Title);
   item.find('.package-description').text(x.Description.replace('\n', ' '));
   item.find('.description-last-updated').text('Last updated ' + pretty_time_diff(x._commit.time));
-  if(x._gitstats && x._gitstats.stars){
-    item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(x._gitstats.stars)} stars`)
+  if(x._stars){
+    item.find('.description-github-stars').removeClass("d-none").append(` ${countstr(x._stars)} stars`)
   }
   if(x._rundeps){
     item.find('.description-dependencies').removeClass('d-none').append(` ${x._rundeps.length} dependencies`);
@@ -651,7 +651,7 @@ function init_package_descriptions(server, user){
   var first_page = true;
   var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
     '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs',
-    'Title', 'Description', '_rundeps', '_gitstats.stars', '_score', '_gitstats.topics', '_pkglogo'];
+    'Title', 'Description', '_rundeps', '_stars', '_score', '_topics', '_pkglogo'];
   ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join()}`, function(batch){
     if(first_page && batch.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
@@ -1063,10 +1063,11 @@ function tag_annotations(tags, activity_data){
   });
 }
 
-function detail_update_chart(package, gitstats, releases){
+function detail_update_chart(package, description){
+  const releases = description._releases;
   const ctx = $('#package-updates-canvas').empty().attr('height', '300').height(300);
-  const data = activity_data(gitstats.updates.map(x => ({total:x.n, week:x.week})));
-  const tags = tag_annotations(releases || gitstats.tags || [], data);
+  const data = activity_data(description._updates.map(x => ({total:x.n, week:x.week})));
+  const tags = tag_annotations(releases || description._tags || [], data);
   const myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1372,9 +1373,8 @@ function populate_package_details(package){
         details.find('.package-details-remoteref').text(` (via ${src.RemoteRef})`);
       }
     }
-    var gitstats = src._gitstats || {};
-    if(gitstats.stars){
-      details.find('.package-details-stars').attr("href", `${src._upstream}/stargazers`).removeClass('d-none').append(` ${countstr(gitstats.stars)} stars`);
+    if(src._stars){
+      details.find('.package-details-stars').attr("href", `${src._upstream}/stargazers`).removeClass('d-none').append(` ${countstr(src._stars)} stars`);
     }
     var rundeps = src._rundeps;
     if(rundeps){
@@ -1448,16 +1448,16 @@ function populate_package_details(package){
       details.find('.vignette-failure-url').attr('href', src._buildurl);
       details.find('.vignette-failure-alert').removeClass('d-none');
     }
-    if(gitstats.updates){
-      detail_update_chart(package, gitstats, src._releases);
+    if(src._updates){
+      detail_update_chart(package, src);
     }
-    if(gitstats.contributions){
-      var names = Object.keys(gitstats.contributions);
+    if(src._contributions){
+      var names = Object.keys(src._contributions);
       var total = names.length;
       function add_one_contributor(){
         if(!names.length) return;
         var login = names.shift();
-        var count = gitstats.contributions[login];
+        var count = src._contributions[login];
         var item = $("#templatezone .package-details-contributor").clone();
         item.attr('href', `https://${login}.r-universe.dev/contributors`);
         item.find("img").attr('src', avatar_url(login, 160)).tooltip({title: `${login} made ${count} contributions to ${package}`});
@@ -1511,8 +1511,8 @@ function populate_package_details(package){
     }
     generate_status_icon(src);
     var crandiv = details.find('.package-details-cran');
-    if(gitstats.bioconductor && gitstats.bioconductor.release){
-      var biocver = gitstats.bioconductor.release;
+    if(src._bioconductor && src._bioconductor.release){
+      var biocver = src._bioconductor.release;
       crandiv.find('.cran-title').text("On BioConductor:")
       crandiv.find('.cran-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
       crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
@@ -1676,7 +1676,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'cran'
+var devtest = 'ropensci'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
