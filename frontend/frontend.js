@@ -1510,7 +1510,7 @@ function populate_package_details(package){
       });
     }
     generate_status_icon(src);
-    var crandiv = details.find('.package-details-cran');
+    var crandiv = details.find('.package-details-cran').toggle(user != 'cran');
     if(src._bioconductor && src._bioconductor.release){
       var biocver = src._bioconductor.release;
       crandiv.find('.cran-title').text("On BioConductor:")
