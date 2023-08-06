@@ -637,7 +637,12 @@ function add_badge_row(name, org){
   const tooltip_text = 'Copy to clipboard';
   md_icon.tooltip({title: tooltip_text, placement: 'left'});
   md_icon.on("click", function(e){
-    const text = `[![${name} status badge](${badge_url})](https://${org}.r-universe.dev/${name[0] == ":" ? "" : name})`;
+    if(name == ":registry") {
+      var link_url = `https://github.com/r-universe/${org}/actions/workflows/sync.yml`;
+    } else {
+      var link_url = `https://${org}.r-universe.dev/${name[0] == ":" ? "" : name}`;
+    }
+    const text = `[![${name} status badge](${badge_url})](${link_url})`;
     navigator.clipboard.writeText(text).then(function(e){
       md_icon.attr('data-original-title', 'Copied!').tooltip('show');
       md_icon.attr('data-original-title', tooltip_text);
