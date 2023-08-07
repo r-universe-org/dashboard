@@ -1688,7 +1688,7 @@ var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-univ
 
 //Hack for relative links within subpages
 if(server) $("head base").attr("href", location.pathname.replace(/[^/]*$/, ''))
-
+$(".nocran").toggle(user != 'cran');
 init_user_info(user, server).then(function(){
   init_maintainer_list(user, server);
   var isarticle = window.location.pathname.match(new RegExp('^(.*/)articles/(.*/.*)$'));
