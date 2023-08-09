@@ -1742,7 +1742,7 @@ $('#tab-list .nav-item:not(.d-none) .nav-link').on('show.bs.tab', function(e){
 
 $('#tab-list .nav-item .nav-link').on('show.bs.tab', function(e){
   var showtabs = $(this).attr('id') != 'package-tab-link';
-  $('#tab-list').toggleClass('d-lg-flex', showtabs).toggleClass('d-lg-none', !showtabs);
+  $('#tab-list').toggleClass('d-lg-flex', showtabs).toggleClass('d-lg-none', !showtabs).removeClass("show");
 });
 
 
