@@ -331,9 +331,9 @@ function add_table_row(x, user){
 function update_registry_status(ghuser, server){
   const tooltip_success = "Universe registry is up to date";
   const tooltip_failure = "There was a problem updating the registry. Please inspect the log files.";
-  const url = server + '/gh/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
+  const apipath = '/repos/r-universe/' + ghuser + '/actions/workflows/sync.yml/runs?per_page=1&status=completed';
   $("#registry-status-link").attr("href", 'https://github.com/r-universe/' + ghuser + '/actions/workflows/sync.yml');
-  return get_json(url).then(function(data){
+  return github_api(apipath).then(function(data){
     const success = data.workflow_runs[0].conclusion == 'success';
     if(data && data.workflow_runs && data.workflow_runs.length) {
       $("#registry-status-icon")
@@ -374,6 +374,13 @@ function gitlab_api_info(ghuser, server){
   });
 }
 
+function github_api(path){
+  return get_json('https://api.github.com' + path).catch(function(err){
+    console.log("Failed to contact api.github.com. Trying proxy...")
+    return get_json(server + '/gh' + path);
+  });
+}
+
 function github_user_info(ghuser, server){
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
   $("#rss-feed").attr("href", server + '/feed.xml');
@@ -382,7 +389,7 @@ function github_user_info(ghuser, server){
       $("#github-user-keys").toggleClass("d-none").attr('href', `https://github.com/${user}.keys`);
     }
   });
-  return get_json(server + '/gh/users/' + ghuser).then(function(user){
+  return github_api('/users/' + ghuser).then(function(user){
     $("#github-user-name").text(user.name || ghuser);
     $("#github-user-bio").text(user.bio);
     if(user.company){
@@ -1138,7 +1145,7 @@ function normalize_authors(str){
 }
 
 function github_repo_info(repo){
-  return get_json(server + '/gh/repos/' + repo).then(function(data){
+  return github_api('/repos/' + repo).then(function(data){
     if(data.archived){
       $('.open-issues-count').text(`ARCHIVED on GitHub`)
     } else if(data.open_issues_count !== undefined){
