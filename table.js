@@ -106,9 +106,10 @@ function init_packages_table(org = ":any", maintainer = ""){
       if(pkg.os_restriction){
         pkglink = pkglink.append($("<small>").addClass('pl-1 font-weight-bold').text("(" + pkg.os_restriction + " only)"));
       }
+      var skipped = pkg.user == 'cran' && '<span>-</span>';
       if(src.type){
         var row = tr([commitdate, userlink, pkglink, versionlink, maintainerlink, run_icon(src, src),
-          [run_icon(win, src), run_icon(mac, src)], [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
+          skipped || [run_icon(win, src), run_icon(mac, src)], skipped || [run_icon(oldwin, src), run_icon(oldmac, src)], sysdeps]);
         if(src.type === 'failure'){
           pkglink.css('text-decoration', 'line-through').after($("<a>").attr("href", src.url).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
         }
