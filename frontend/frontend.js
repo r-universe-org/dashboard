@@ -447,7 +447,7 @@ function init_user_summary(server){
     });
     $("#github-user-datasets .content").text(stats.datasets + ' datasets').click(function(e){
       e.preventDefault();
-      //$("#contributors-tab-link").click();
+      $("#api-tab-link").click();
     });
     $("#github-user-contributors .content").text(stats.contributors + ' contributors').click(function(e){
       e.preventDefault();
