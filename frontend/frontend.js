@@ -1191,6 +1191,7 @@ function populate_download_links(x, details){
   var wins = binaries.filter(x => x.os == 'win');
   var macs = binaries.filter(x => x.os == 'mac');
   var linux = binaries.filter(x => x.os == 'linux');
+  var wasm = binaries.filter(x => x.os == 'wasm');
   var srcfile = `${package}_${x.Version}.tar.gz`;
   details.find('.package-details-source').attr('href', `${server}/src/contrib/${srcfile}`).text(srcfile);
   details.find('.package-details-json').attr('href', `${server}/api/packages/${package}`).text(`${package}/json`);
@@ -1217,7 +1218,16 @@ function populate_download_links(x, details){
     $("<a>").text(filename).attr('href', `${server}/bin/linux/${distro}/${build}/src/contrib/${filename}`).appendTo(linuxlinks);
     linuxlinks.append(` (r-${build}-${distro}) `)
   });
-  $(".linux-binary-help").tooltip({title : "more information about linux binaries"})
+  wasm.sort(sortfun).forEach(function(binary){
+    var build = binary.r.substring(0,3);
+    var filename = `${package}_${binary.version}.tgz`;
+    var wasmlinks = details.find('.package-details-wasm');
+    $("<a>").text(filename).attr('href', `${server}/bin/emscripten/contrib/${build}/${filename}`).appendTo(wasmlinks);
+    wasmlinks.append(` (r-${build}-emscripen) `)
+    $('.wasm-binaries').removeClass('d-none')
+  });
+  $(".linux-binary-help").tooltip({title : "more information about linux binaries"});
+  $(".wasm-binary-help").tooltip({title : "more information about WebAssembly"})
   details.find(".package-details-logs").attr('href', x._buildurl);
   details.find('.winmac-binaries').toggle(x._user !== 'cran');
 }
