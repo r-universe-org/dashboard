@@ -513,10 +513,6 @@ function pretty_time_diff(ts){
   }
 }
 
-function pretty_dependencies(pkg){
-  return pkg['_hard_deps'].map(x => x.package).join(', ');
-}
-
 function get_package_image(pkg){
   var owner = pkg['_owner'];
   var pkglogo = pkg._pkglogo;
