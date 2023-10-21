@@ -1528,24 +1528,33 @@ function populate_package_details(package){
       });
     }
     generate_status_icon(src);
-    var crandiv = details.find('.package-details-cran').toggle(user != 'cran');
-    if(src._bioconductor && src._bioconductor.release){
+    var crandiv = details.find('.package-details-release').toggle(user != 'cran');
+    if(src._bioc && src._bioc.length){
+      crandiv.find('.release-title').text("On BioConductor:");
+
+      // bioc has two branches: 'devel' or 'release'
+      src._bioc.forEach(function(bioc){
+        crandiv.find(`.${bioc.branch}-version`).text(`${package}-${bioc.version}`).attr('href', `https://bioconductor.org/packages/${bioc.branch}/bioc/html/${package}.html`);
+        crandiv.find(`.${bioc.branch}-date`).text(`(bioc ${bioc.bioc}) `);
+      });
+    } else if(src._bioconductor && src._bioconductor.release){
+      /* legacy bioc data, remove this block */
       var biocver = src._bioconductor.release;
-      crandiv.find('.cran-title').text("On BioConductor:")
-      crandiv.find('.cran-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
-      crandiv.find('.cran-date').text(`(bioc ${biocver.bioc}) `);
+      crandiv.find('.release-title').text("On BioConductor:");
+      crandiv.find('.release-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
+      crandiv.find('.release-date').text(`(bioc ${biocver.bioc}) `);
     } else if(user != 'cran') {
       get_cran_status(package).then(function(x){
         if(x.version){
           var versiontxt = x.version === 'archived' ? `${package} (archived)` : `${package}-${x.version}`;
-          crandiv.find('.cran-version').text(versiontxt).attr('href', `https://cran.r-project.org/package=${package}`);
+          crandiv.find('.release-version').text(versiontxt).attr('href', `https://cran.r-project.org/package=${package}`);
           if(x.date) {
-            crandiv.find('.cran-date').text(`(${x.date.substring(0,10)}) `);
+            crandiv.find('.release-date').text(`(${x.date.substring(0,10)}) `);
           }
         } else {
           crandiv.append("no")
         }
-        attach_cran_badge(package, src._upstream, crandiv.find('.cran-checkmark'), "fa fa-check");
+        attach_cran_badge(package, src._upstream, crandiv.find('.release-comment'), "fa fa-check");
       });
     }
     /* force re-scroll to target after  async content after page load */
