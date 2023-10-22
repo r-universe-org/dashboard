@@ -1537,12 +1537,6 @@ function populate_package_details(package){
         crandiv.find(`.${bioc.branch}-version`).text(`${package}-${bioc.version}`).attr('href', `https://bioconductor.org/packages/${bioc.branch}/bioc/html/${package}.html`);
         crandiv.find(`.${bioc.branch}-date`).text(`(bioc ${bioc.bioc}) `);
       });
-    } else if(src._bioconductor && src._bioconductor.release){
-      /* legacy bioc data, remove this block */
-      var biocver = src._bioconductor.release;
-      crandiv.find('.release-title').text("On BioConductor:");
-      crandiv.find('.release-version').text(`${package}-${biocver.version}`).attr('href', `https://bioconductor.org/packages/${package}`);
-      crandiv.find('.release-date').text(`(bioc ${biocver.bioc}) `);
     } else if(user != 'cran') {
       get_cran_status(package).then(function(x){
         if(x.version){
