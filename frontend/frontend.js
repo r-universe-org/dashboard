@@ -1220,8 +1220,8 @@ function populate_download_links(x, details){
     var wasmlinks = details.find('.package-details-wasm');
     $("<a>").text(filename).attr('href', `${server}/bin/emscripten/contrib/${build}/${filename}`).appendTo(wasmlinks);
     wasmlinks.append(` (r-${build}-emscripen) `)
-    $('.wasm-binaries').removeClass('d-none')
   });
+  $('.wasm-binaries').toggleClass('d-none', wasm.length == 0)
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"});
   $(".wasm-binary-help").tooltip({title : "more information about WebAssembly"})
   details.find(".package-details-logs").attr('href', x._buildurl);
