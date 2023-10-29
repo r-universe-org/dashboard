@@ -1219,7 +1219,7 @@ function populate_download_links(x, details){
     var filename = `${package}_${binary.version}.tgz`;
     var wasmlinks = details.find('.package-details-wasm');
     $("<a>").text(filename).attr('href', `${server}/bin/emscripten/contrib/${build}/${filename}`).appendTo(wasmlinks);
-    wasmlinks.append(` (r-${build}-emscripen) `)
+    wasmlinks.append(` (r-${build}-emscripten) `)
   });
   $('.wasm-binaries').toggleClass('d-none', wasm.length == 0)
   $(".linux-binary-help").tooltip({title : "more information about linux binaries"});
