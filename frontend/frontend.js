@@ -143,9 +143,12 @@ function run_icon(bin, desc){
   var buildurl = bin._buildurl || desc._buildurl;
   var type = bin.os || 'src';
   var status = bin.status || bin._status || "none";
-  if(status !== 'none'){
+  if(status === 'none'){
+    var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
+    var a = $("<a>").attr('href', buildurl).append(i);
+  } else {
     var i = $("<i>", {class : 'fab fa-' + iconmap[type]});
-    var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px').tooltip({title: `${type} build`});
+    var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px');
     // can be "success" or "Succeeded"
     if(status.match(/succ/i)){
       i.css('color', '#22863a');
@@ -156,13 +159,9 @@ function run_icon(bin, desc){
     } else {
       i.css('color', 'slategrey');
     }
-    return $('<span></span>').append(a);
-  } else {
-    var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
-    var a = $("<a>").attr('href', buildurl).append(i);
   }
   //return $('<span></span>').append(a);
-  return a;
+  return a.tooltip({title: `${type} build: ${status}`});
 }
 
 function is_success(x){
@@ -1707,7 +1706,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'ropensci'
+var devtest = 'eddelbuettel'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
