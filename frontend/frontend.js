@@ -135,6 +135,7 @@ function run_icon(bin, desc){
   if(bin.type == 'pending')
     return $('<span></span>');
   var iconmap = {
+    wasm: "chrome",
     src : "linux",
     win : "windows",
     mac : "apple"
@@ -267,6 +268,7 @@ function add_table_row(x, user){
   var binaries = x._binaries || [];
   var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix', status: x._winbinary}; //{type:'pending'};
   var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
+  var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', type:'pending'};
   var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
   var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows'};
   var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
@@ -319,7 +321,7 @@ function add_table_row(x, user){
   var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
   maintainerlink.text(maintainer.name).addClass('text-secondary');
   var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
-    [run_icon(win, x), run_icon(mac, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
+    [run_icon(win, x), run_icon(mac, x), run_icon(wasm, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
   if(x._failure){
     pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
   } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
