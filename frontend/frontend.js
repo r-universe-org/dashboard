@@ -277,7 +277,7 @@ function add_table_row(x, user){
   var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', status: 'failure'};
   var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
   var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows'};
-  var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
+  var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._created || NaN).yyyymmdd());
   var commiturl = `${upstream}/commit/${commit.id}`;
   var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
   var commitdate = new Date(commit.time * 1000 || NaN).yyyymmdd();
@@ -667,7 +667,7 @@ function init_package_descriptions(server, user){
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
   var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
-    '_published', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_published', '_type', '_registered', '_pkgdocs',
+    '_created', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_type', '_registered', '_pkgdocs',
     'Title', 'Description', '_rundeps', '_stars', '_score', '_topics', '_pkglogo'];
   ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join()}`, function(batch){
     if(first_page && batch.find(pkg => pkg['_user'] == user)){
@@ -1463,7 +1463,7 @@ function populate_package_details(package){
         }
         item.find('.detail-article-source').text(x.source);
         item.find('.detail-article-engine').text(x.engine);
-        item.find('.detail-article-build').text(src._published.substring(0, 19).replace("T", " "));
+        item.find('.detail-article-build').text(src._created.substring(0, 19).replace("T", " "));
         item.find('.article-modified').text('Last update: ' + (x.modified || "??").substring(0, 10));
         item.find('.article-created').text('Started: ' + (x.created || "??").substring(0, 10));
         item.find('.package-details-article-author').text(x.author);
