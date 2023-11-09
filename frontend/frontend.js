@@ -151,6 +151,8 @@ function run_icon(bin, desc){
       i.css('color', '#22863a');
     } else if(type == 'src'){
       i.css('color', '#cb2431');
+    } else if(type == 'wasm'){
+      i.css('color', '#e0e0e0');
     } else {
       i.css('color', 'slategrey');
     }
@@ -268,7 +270,7 @@ function add_table_row(x, user){
   var binaries = x._binaries || [];
   var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix', status: x._winbinary}; //{type:'pending'};
   var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
-  var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', type:'pending'};
+  var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', status: 'failure'};
   var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
   var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows'};
   var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._published || NaN).yyyymmdd());
