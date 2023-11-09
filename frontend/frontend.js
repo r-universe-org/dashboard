@@ -301,7 +301,7 @@ function add_table_row(x, user){
     pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + x.OS_type + " only)"));
   }
   var docslink = (user == 'ropensci') ? docs_icon(x) : "";
-  if(!all_ok([x,win,mac])){
+  if(!all_ok([x,win,mac,wasm])){
     var retrytype = x._failure ? 'failure' : 'src';
     var retryversion = x._failure ? x._failure.version : version;
     var rebuildlink = $("<a>").attr("href", x._buildurl).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
