@@ -299,7 +299,7 @@ function add_table_row(x, user){
     pkglink = $("<span>").append(pkglink).append($("<small>").addClass('pl-1 font-weight-bold').text("(" + x.OS_type + " only)"));
   }
   var docslink = (user == 'ropensci') ? docs_icon(x) : "";
-  if(!all_ok([x,win,mac,oldwin,oldmac])){
+  if(!all_ok([x,win,mac])){
     var retrytype = x._failure ? 'failure' : 'src';
     var retryversion = x._failure ? x._failure.version : version;
     var rebuildlink = $("<a>").attr("href", x._buildurl).addClass('fa fa-sync-alt d-none d-xl-inline').click(function(e){
@@ -321,7 +321,7 @@ function add_table_row(x, user){
   var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
   maintainerlink.text(maintainer.name).addClass('text-secondary');
   var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
-    [run_icon(win, x), run_icon(mac, x), run_icon(wasm, x)], (user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], rebuildlink, builddate, sysdeps]);
+    [run_icon(win, x), run_icon(mac, x), run_icon(wasm, x)], /*(user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], */ rebuildlink, builddate, sysdeps]);
   if(x._failure){
     pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
   } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
