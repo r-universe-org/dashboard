@@ -145,7 +145,7 @@ function run_icon(bin, desc){
   var status = bin.status || bin._status || "none";
   if(status !== 'none'){
     var i = $("<i>", {class : 'fab fa-' + iconmap[type]});
-    var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px');
+    var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px').tooltip({title: `${type} build`});
     // can be "success" or "Succeeded"
     if(status.match(/succ/i)){
       i.css('color', '#22863a');
