@@ -161,7 +161,8 @@ function run_icon(bin, desc){
     var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
     var a = $("<a>").attr('href', buildurl).append(i);
   }
-  return $('<span></span>').append(a);
+  //return $('<span></span>').append(a);
+  return a;
 }
 
 function is_success(x){
@@ -258,6 +259,10 @@ function compare_url(giturl, cran){
   return cran.join().toLowerCase().includes(str);
 }
 
+function nowrap_span(x){
+  return $("<span></span>").addClass('text-nowrap').append(x);
+}
+
 function add_table_row(x, user){
   var org = x._user;
   var package = x.Package
@@ -322,8 +327,9 @@ function add_table_row(x, user){
   }
   var maintainerlink = maintainer.login ? $("<a>").attr("href", "https://" + maintainer.login + ".r-universe.dev") :  $("<span>")
   maintainerlink.text(maintainer.name).addClass('text-secondary');
+  var binaries = nowrap_span([run_icon(win, x), run_icon(mac, x), run_icon(wasm, x)]);
   var row = tr([commitdate, pkglink, versionlink, maintainerlink, docslink, run_icon(x, x),
-    [run_icon(win, x), run_icon(mac, x), run_icon(wasm, x)], /*(user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], */ rebuildlink, builddate, sysdeps]);
+    binaries, /*(user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], */ rebuildlink, builddate, sysdeps]);
   if(x._failure){
     pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
   } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
