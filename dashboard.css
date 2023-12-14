@@ -138,7 +138,7 @@ body {
   min-width:100%;
 }
 
-.package-readme-content table .package-citation-content table {
+.package-readme-content table, .package-citation-content table {
   display: block;
   overflow: auto;
   width:0;
