@@ -172,6 +172,7 @@ body {
 
 .manpages-table td {
   border-color: #eeeeee;
+  word-break: break-word;
 }
 
 /* Below is copied from bootstrap material design theme */
