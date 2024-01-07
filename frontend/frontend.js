@@ -1209,10 +1209,12 @@ function populate_download_links(x, details){
   });
   macs.sort(sortfun).forEach(function(binary){
     var build = binary.r.substring(0,3);
+    var arch = (binary.arch || "any").replace("aarch64", "arm64");
     var filename = `${package}_${binary.version}.tgz`;
     var maclinks = details.find('.package-details-macos');
-    $("<a>").text(filename).attr('href', `${server}/bin/macosx/contrib/${build}/${filename}`).appendTo(maclinks);
-    maclinks.append(` (r-${build}) `)
+    var platform = arch.match("arm64") ? 'big-sur-arm64' : 'big-sur-x86_64';
+    $("<a>").text(filename).attr('href', `${server}/bin/macosx/${platform}/contrib/${build}/${filename}`).appendTo(maclinks);
+    maclinks.append(` (r-${build}-${arch}) `)
   });
 
   linux.forEach(function(binary){
@@ -1706,7 +1708,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'eddelbuettel'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
