@@ -1336,6 +1336,23 @@ function show_data_download(x, url, package){
   });
 }
 
+function update_copy_gist(universe, package){
+  var link = $('#copy-code-button').unbind("click");
+  var tooltip_text = 'Copy to clipboard';
+  link.click(function(e){
+    var txt = (universe == 'cran') ?
+    `install.packages("${package}", repos = "https://cran.r-project.org")` :
+    `install.packages("${package}", repos = c("https://${universe}.r-universe.dev", "https://cran.r-project.org"))`;
+    navigator.clipboard.writeText(txt).then(function(e){
+      link.attr('data-original-title', 'Copied!').tooltip('show');
+      link.attr('data-original-title', tooltip_text);
+    });
+    link.blur();
+    return false;
+  });
+  link.tooltip({title: tooltip_text});
+}
+
 function populate_package_details(package){
   if(window.detailpkg == package) return;
   window.detailpkg = package;
@@ -1539,6 +1556,7 @@ function populate_package_details(package){
       });
     }
     generate_status_icon(src);
+    update_copy_gist(src._user, package);
     var crandiv = details.find('.package-details-release').toggle(user != 'cran');
     if(src._bioc && src._bioc.length){
       crandiv.find('.release-title').text("On BioConductor:");
