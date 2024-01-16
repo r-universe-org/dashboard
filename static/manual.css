@@ -1,3 +1,9 @@
+body.macintosh, body.postdoc {
+  padding: 1em;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
 h1.manual-title{
   text-align: center;
   margin-top: 1em;
