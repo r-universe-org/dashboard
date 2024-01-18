@@ -152,6 +152,8 @@ function run_icon(bin, desc){
     // can be "success" or "Succeeded"
     if(status.match(/succ/i)){
       i.css('color', '#22863a');
+    } else if(status === 'arm64-failure'){
+      i.css('color', '#cb2431');
     } else if(type == 'src'){
       i.css('color', '#cb2431');
     } else if(type == 'wasm'){
@@ -273,7 +275,7 @@ function add_table_row(x, user){
   var upstream = x._upstream;
   var binaries = x._binaries || [];
   var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix', status: x._winbinary}; //{type:'pending'};
-  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
+  var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id && bin.arch != 'x86_64') || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
   var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', status: 'failure'};
   var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
   var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.2' && bin.commit == id) || {os: 'mac', skip: x.OS_type === 'windows'};
