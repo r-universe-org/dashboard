@@ -43,6 +43,16 @@ $(function(){
   });
 });
 
+/* Experiment with fixed-width */
+$(function(){
+  addEventListener("keydown", function(e){
+    if(e.key == 'w'){
+      let size = prompt("Please enter max-width in pixels", "1200");
+      $("#content-container").removeClass('container-flex').addClass('container').css('max-width', size+"px");
+    }
+  });
+});
+
 function ndjson_batch_stream(path, cb){
   var start = 0;
   var count = 0;
