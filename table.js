@@ -90,10 +90,10 @@ function init_packages_table(org = ":any", maintainer = ""){
       //console.log(pkg)
       var name = pkg.package;
       var src = pkg.runs && pkg.runs.find(x => x.type == 'failure') || pkg.runs.find(x => x.type == 'src') || {};
-      var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.3') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
-      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.3' && x.built.Platform != 'x86_64-apple-darwin20') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
-      var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'unix'};
-      var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.2') || {skip: pkg.os_restriction === 'windows'};
+      var win = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.4') || {skip: pkg.os_restriction === 'unix'}; //{type:'pending'};
+      var mac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.4' && x.built.Platform != 'x86_64-apple-darwin20') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
+      var oldwin = pkg.runs && pkg.runs.find(x => x.type == 'win' && x.built.R.substring(0,3) == '4.3') || {skip: pkg.os_restriction === 'unix'};
+      var oldmac = pkg.runs && pkg.runs.find(x => x.type == 'mac' && x.built.R.substring(0,3) == '4.3' && x.built.Platform != 'x86_64-apple-darwin20') || {skip: pkg.os_restriction === 'windows'}; //{type:'pending'}
       var commiturl = `${pkg.upstream}/commit/${pkg.commit}`;
       var versionlink = $("<a>").text(pkg.version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
       var commitdate = new Date(pkg.timestamp * 1000 || NaN).yyyymmdd();
