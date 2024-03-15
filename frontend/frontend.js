@@ -145,7 +145,7 @@ function run_icon(bin, desc){
   if(bin.type == 'pending')
     return $('<span></span>');
   var iconmap = {
-    wasm: "wasm",
+    wasm: "wasm-custom",
     src : "linux",
     win : "windows",
     mac : "apple"
