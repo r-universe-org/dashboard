@@ -145,7 +145,7 @@ function run_icon(bin, desc){
   if(bin.type == 'pending')
     return $('<span></span>');
   var iconmap = {
-    wasm: "wasm-custom",
+    wasm: "chrome",
     src : "linux",
     win : "windows",
     mac : "apple"
@@ -159,21 +159,17 @@ function run_icon(bin, desc){
   } else {
     var i = $("<i>", {class : 'fab fa-' + iconmap[type]});
     var a = $("<a>").attr('href', buildurl).append(i).css('margin-left', '5px');
-
-    // until there's an official FontAwesome wasm logo, current logo uses svg mask + background color
-    const attr = type == 'wasm' ? 'background-color' : 'color';
-
     // can be "success" or "Succeeded"
     if(status.match(/succ/i)){
-      i.css(attr, '#22863a');
+      i.css('color', '#22863a');
     } else if(status === 'arm64-failure'){
-      i.css(attr, '#cb2431');
+      i.css('color', '#cb2431');
     } else if(type == 'src'){
-      i.css(attr, '#cb2431');
+      i.css('color', '#cb2431');
     } else if(type == 'wasm'){
-      i.css(attr, '#e0e0e0');
+      i.css('color', '#e0e0e0');
     } else {
-      i.css(attr, 'slategrey');
+      i.css('color', 'slategrey');
     }
   }
   //return $('<span></span>').append(a);
