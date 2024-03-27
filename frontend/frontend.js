@@ -403,6 +403,9 @@ function github_api(path){
 }
 
 function github_user_info(ghuser, server){
+  if(ghuser == 'bioc'){
+    ghuser = 'bioconductor' //bioc is the mirror or for bioconductor
+  }
   $("#github-user-avatar").attr('src', 'https://r-universe.dev/avatars/' + ghuser + '.png');
   $("#rss-feed").attr("href", server + '/feed.xml');
   jQuery.get(`https://r-universe.dev/avatars/${user}.keys`).done(function(res){
