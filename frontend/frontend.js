@@ -1193,7 +1193,7 @@ function guess_tracker_url(src){
     return src.BugReports;
   }
   var upstream = src._upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
-  if(upstream.match("github.com/cran/") || upstream.match("git.bioconductor.org/packages/"))
+  if(upstream.match("github.com/(bioc|cran)/") || upstream.match("git.bioconductor.org/packages/"))
     return ""; //these are mirror urls
   if(upstream.match("github.com")){
     return upstream + '/issues';
