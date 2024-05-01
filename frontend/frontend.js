@@ -684,7 +684,8 @@ function init_package_descriptions(server, user){
   var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
     '_created', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_type', '_registered', '_pkgdocs',
     'Title', 'Description', '_rundeps', '_stars', '_score', '_topics', '_pkglogo'];
-  ndjson_batch_stream(server + `/api/packages?all=true&stream=true&fields=${fields.join()}`, function(batch){
+  var total = 0;
+  ndjson_batch_stream(server + `/api/packages?limit=2500&all=true&stream=true&fields=${fields.join()}`, function(batch){
     if(first_page && batch.find(pkg => pkg['_user'] == user)){
       add_badge_row(":name", user);
       add_badge_row(":registry", user);
@@ -693,7 +694,10 @@ function init_package_descriptions(server, user){
     }
     batch.forEach(x => add_table_row(x, user));
     batch = batch.filter(x => x._registered);
-    batch.forEach((x,i) => add_package_card(x, i, user));
+    total = total + batch.length;
+    if(total < 350){ //ropensci is 350
+      batch.forEach((x,i) => add_package_card(x, i, user));
+    }
     batch.forEach(x => add_badge_row(x.Package, x._user));
     $("#package-description-placeholder").hide();
     $("#package-builds-placeholder").hide()
@@ -1747,7 +1751,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'jeroen'
+var devtest = 'bioc'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
