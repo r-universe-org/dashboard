@@ -343,7 +343,7 @@ function add_table_row(x, user){
     binaries, /*(user == 'bioconductor' || user == 'cran') ? null : [run_icon(oldwin, x), run_icon(oldmac, x)], */ rebuildlink, builddate, sysdeps]);
   if(x._failure){
     pkglink.after($("<a>").attr("href", x._failure.buildurl).append($("<small>").addClass('pl-1 font-weight-bold').text("(build failure)").css('color', 'red')));
-  } else if(user != 'bioconductor' && user != 'cran' && owner != 'cran') {
+  } else if(user != 'bioconductor' && user != 'bioc' && user != 'cran' && owner != 'cran') {
     attach_cran_badge(package, upstream, pkglink);
   }
   row.appendTo("#packages-table-body");
