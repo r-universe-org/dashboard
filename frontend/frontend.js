@@ -1193,16 +1193,8 @@ function populate_issue_tracker(src, details){
 }
 
 function guess_tracker_url(src){
-  /* this can be the only method once all pkgs have been updated */
-  if(typeof src._devurl === 'string'){
-    return src._devurl;
-  }
-
-  /* Legacy methods */
-  if(src.BugReports){
-    return src.BugReports;
-  }
-  var upstream = src._upstream.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/')
+  var devurl = src._devurl || src._upstream;
+  var upstream = devurl.replace('https://github.com/r-forge/', 'https://r-forge.r-project.org/projects/');
   if(upstream.match("github.com/(bioc|cran)/") || upstream.match("git.bioconductor.org/packages/"))
     return ""; //these are mirror urls
   if(upstream.match("github.com")){
