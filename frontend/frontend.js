@@ -153,7 +153,7 @@ function run_icon(bin, desc){
   var buildurl = bin._buildurl || desc._buildurl;
   var type = bin.os || 'src';
   var status = bin.status || bin._status || "none";
-  if(status === 'none'){
+  if(status === 'none' && bin.os != 'wasm'){
     var i = $("<i>", {class : 'fa fa-times'}).css('margin-left', '5px').css('color', '#cb2431');
     var a = $("<a>").attr('href', buildurl).append(i);
   } else {
@@ -286,7 +286,7 @@ function add_table_row(x, user){
   var binaries = x._binaries || [];
   var win = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.4' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix', status: x._winbinary}; //{type:'pending'};
   var mac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.4' && bin.commit == id && bin.arch != 'x86_64') || {os: 'mac', skip: x.OS_type === 'windows', status: x._macbinary}; //{type:'pending'};
-  var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', status: 'failure'};
+  var wasm = binaries.find(bin => bin.os == 'wasm' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'wasm', skip: x.OS_type === 'windows', status: x._wasmbinary};
   //var oldwin = binaries.find(bin => bin.os == 'win' && bin.r.substring(0,3) == '4.3' && bin.commit == id) || {os: 'win', skip: x.OS_type === 'unix'};
   //var oldmac = binaries.find(bin => bin.os == 'mac' && bin.r.substring(0,3) == '4.3' && bin.commit == id && bin.arch != 'x86_64') || {os: 'mac', skip: x.OS_type === 'windows'};
   var builddate = $("<span>").addClass("d-none d-xl-inline").append(new Date(x._created || NaN).yyyymmdd());
@@ -682,7 +682,7 @@ function init_package_descriptions(server, user){
   //get_ndjson(server + '/stats/descriptions?all=true').then(function(x){
   var first_page = true;
   var fields = ['Package', 'Version', 'OS_type', '_user', '_owner', '_commit', '_maintainer', '_upstream', '_binaries', '_sysdeps',
-    '_created', '_winbinary', '_macbinary', '_status', '_buildurl', '_failure', '_type', '_registered', '_pkgdocs',
+    '_created', '_winbinary', '_macbinary', '_wasmbinary', '_status', '_buildurl', '_failure', '_type', '_registered', '_pkgdocs',
     'Title', 'Description', '_rundeps', '_stars', '_score', '_topics', '_pkglogo'];
   var total = 0;
   ndjson_batch_stream(server + `/api/packages?limit=2500&all=true&stream=true&fields=${fields.join()}`, function(batch){
