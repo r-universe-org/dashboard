@@ -1476,7 +1476,7 @@ function populate_package_details(package){
     details.find(".metric-icons a").click(function(e){
       $(this).blur();
     });
-    if(assets.includes("readme.html")){
+    if(assets.includes("readme.html") || assets.includes("extra/readme.html")){
       promises.push(populate_readme(package));
     }
     if(assets.includes("extra/NEWS.html")){
