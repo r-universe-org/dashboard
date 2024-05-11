@@ -294,7 +294,7 @@ function add_table_row(x, user){
   var versionlink = $("<a>").text(version).attr("href", commiturl).attr("target", "_blank").addClass('text-dark');
   var commitdate = new Date(commit.time * 1000 || NaN).yyyymmdd();
   var sysdeps = make_sysdeps(x);
-  var longname = (owner == user || owner == 'cran' || upstream.match('git.bioconductor')) ? package : `${owner}/${package}`;
+  var longname = (owner == user && user == org || owner == 'cran' || upstream.match('git.bioconductor')) ? package : `${owner == user ? org : owner }/${package}`;
   var pkglink = $("<a>").text(longname);
   if(x._type == 'failure'){
     pkglink.attr('disabled', 'disabled').css('text-decoration', 'line-through');
