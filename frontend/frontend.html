@@ -537,11 +537,11 @@
            <!--<link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-c77408be8058.css">-->
            <link rel="stylesheet" href="https://r-universe.dev/static/gist-embed.css">
            <div class="gist">
+              <button type="button" id="copy-code-button" class="float-right btn btn-outline-dark far fa-copy p-2 m-1"></button>
               <table>
                  <tbody>
-                    <button type="button" id="copy-code-button" class="float-right btn btn-outline-dark far fa-copy p-2 m-1"></button>
                     <tr>
-                       <td class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">#</span> Install <span class="package-details-gist-name"></span> in R:</td>
+                       <td class="blob-code blob-code-inner js-file-line"><span class="pl-c">#</span> Install <span class="package-details-gist-name"></span> in R:</td>
                     </tr>
                     <tr>
                       <td id="file-install-r-LC2" class="blob-code blob-code-inner js-file-line">install.packages(<span class="pl-s"><span class="pl-pds">&#39;</span><span class="package-details-gist-name"></span><span class="pl-pds">&#39;</span></span>, <span class="pl-v">repos</span> <span class="pl-k">=</span> <span class="nocran">c(<span class="pl-s"><span class="pl-pds">&#39;</span>https://<span class="title-universe-name"></span>.r-universe.dev<span class="pl-pds">&#39;</span></span>, </span><span class="pl-s"><span class="pl-pds">&#39;</span>https://cloud.r-project.org<span class="pl-pds">&#39;</span></span>)<span class="nocran">)</span></td>
@@ -573,15 +573,15 @@
         <p class="card-text package-details-topics clearfix"></p>
         <p class="metric-icons">
           <a data-toggle="collapse" href="#exportlist" class="text-muted badge badge-light package-details-exports p-1 border d-none"><i class="fas fa-shapes text-dark"></i></a>
-          <a target="_blank" class="text-muted badge badge-light package-details-stars d-none p-1 border"><i class="fas fa-star text-warning"></i></span></a>
+          <a target="_blank" class="text-muted badge badge-light package-details-stars d-none p-1 border"><i class="fas fa-star text-warning"></i></a>
           <a target="_blank" href="https://github.com/r-universe-org/help#how-is-the-package-rank-score-calculated" class="text-muted badge badge-light package-details-pkgscore p-1 border"><i class="fas fa-chart-line text-primary"></i></a>
           <a data-toggle="collapse" href="#dependslist" class="text-muted badge badge-light package-details-dependencies p-1 border d-none"><i class="fas fa-cube text-danger"></i></a>
           <a class="text-muted badge badge-light package-details-dependents p-1 border d-none"><i class="fas fa-cubes text-success"></i></a>
           <a target="_blank" class="text-muted badge badge-light package-details-mentions p-1 border d-none"><i class="fas fa-file-pdf text-secondary"></i></a>
         </p>
         <p class="card-text"><small class="text-muted"><span class="last-build-status"></span> <span class="package-details-updated">Last updated ??</span> from: <a target="_blank" class="package-details-sha text-secondary"></a> <span class="package-details-remoteref"></span></small> </p>
-        <p id="exportlist" class="card-text clearfix noanim collapse"><b>Exports:</b> <span class="labels"></p>
-        <p id="dependslist" class="card-text clearfix noanim collapse"><b>Dependencies:</b> <span class="labels"></p>
+        <p id="exportlist" class="card-text clearfix noanim collapse"><b>Exports:</b> <span class="labels"></span></p>
+        <p id="dependslist" class="card-text clearfix noanim collapse"><b>Dependencies:</b> <span class="labels"></span></p>
       </div>
       <div class="package-details-article-list list-group">
         <div class="vignette-failure-alert alert alert-warning m-0 d-none" role="alert">

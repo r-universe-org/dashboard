@@ -1743,7 +1743,7 @@ function activate_snapshot_panel(user){
 }
 
 //INIT
-var devtest = 'bioc'
+var devtest = 'jeroen'
 var host = location.hostname;
 var user = host.endsWith("r-universe.dev") ? host.split(".")[0] : devtest;
 var server = host.endsWith("r-universe.dev") ? "" : 'https://' + user + '.r-universe.dev';
