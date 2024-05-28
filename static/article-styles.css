@@ -8,18 +8,16 @@ body {
 }
 
 /* Headings -------------------------------------------- */
-
-h2 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-h3 { margin-top: 1.5em; font-size: 1.2rem; }
-h4 { margin-top: 1.5em; font-size: 1.1rem; }
-h5 { margin-top: 1.5em; font-size: 1rem; }
+h1.title { font-size: 2.5rem; }
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.3rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
 
 h1, h2, h3, h4, h5 {
-  line-height: 1.3;
+  margin-top: 1em;
+  margin-bottom: 0.4em;
 }
 
 /* Tables ---------------------------------------------- */
@@ -252,4 +250,14 @@ main ol > li:first-child, main ul > li:first-child {
   #topcontainer.container-fluid {
     padding: 0;
   }
+}
+
+/* For new front-end: hide title within iframe */
+#topcontainer.article-in-iframe h1.title{
+  display: none;
+}
+
+/* Legacy version of the above */
+#topcontainer.container-fluid h1.title{
+  display: none;
 }

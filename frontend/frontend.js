@@ -734,6 +734,7 @@ function update_article_info(){
   articledatapromise.then(function(data){
     var pkg = data[window.iframestate];
     if(pkg){
+      $('#article-info-title').text(pkg.vignette.title);
       $('#article-info-author').text(pkg.vignette.author || pkg.maintainer.split("<")[0]);
       if(!pkg.vignette.author && pkg.login){
         $('#article-info-author').attr("href", `https://${pkg.login}.r-universe.dev`);
