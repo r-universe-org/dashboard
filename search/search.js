@@ -166,7 +166,7 @@ $(function(){
     $('#results-placeholder').hide();
     $('svg').hide('fast');
     $(window).scrollTop(0);
-    get_path('https://r-universe.dev/stats/powersearch?limit=50&all=true&q=' + q).then(function(x){
+    get_path('https://r-universe.dev/api/search?limit=50&all=true&q=' + q).then(function(x){
       if(!x.total){
         $('#search-results-comment').text(`No results for "${decodeURIComponent(q)}"`);
       } else {
