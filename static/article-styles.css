@@ -37,18 +37,25 @@ pre {
   overflow: auto;
   border: 1px solid #eee;
   padding: 0.5rem;
-  margin: 0 -0.5rem 1rem -0.5rem;
   background-image: linear-gradient(160deg,#f8f8f8 0,#f1f1f1 100%);
 }
 
+/* Expand <pre> background color into margins. Disable on xs because iframe <main> does not have margin */
+@media (min-width: 576px) {
+  pre {
+    margin: 0 -0.5rem 1rem -0.5rem;
+  }
+}
+
+/* Make background span full width on mobile
 @media (max-width: 767.98px) {
-  /* Make background span full width on mobile */
   .section > .sourceCode > pre {
     margin: 0 -1rem 1rem -1rem;
     padding: 0.5rem 1rem;
     width: 100vw;
   }
 }
+*/
 
 code {
   background-color: #f8f8f8;
